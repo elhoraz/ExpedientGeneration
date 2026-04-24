@@ -80,3 +80,21 @@ $routes->get('/sovereign', 'SovereignController::index');
 
 // 4. Ruang Kendali: Profil Entitas & Manajemen Kunci Keamanan
 $routes->get('/profil', 'ProfilController::index');
+
+// --- SOVEREIGN VAULT ROUTES ---
+
+// 1. Halaman Registrasi (Form Input Data)
+$routes->get('register', 'Vault::register');
+$routes->post('register/simpan', 'Vault::simpan_register');
+
+// 2. Gateway saat KTA di-scan (Muncul Pop-up 2 Opsi)
+$routes->get('scan/(:num)', 'Vault::scan_gateway/$1');
+
+// 3. Opsi 1: Hologram AR
+$routes->get('ar_hologram/(:num)', 'Vault::ar_hologram/$1');
+
+// 4. Opsi 2: Download vCard Eksekutif
+$routes->get('download_vcard/(:num)', 'Vault::download_vcard/$1');
+
+// 5. Halaman Profil Kaca 3D (Tujuan Akhir)
+$routes->get('profil/(:num)', 'Vault::profil/$1');
