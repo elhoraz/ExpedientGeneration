@@ -138,37 +138,81 @@ Expedient Vault - Protokol Keamanan Tingkat Tinggi
     .locked-card { filter: grayscale(100%); opacity: 0.5; pointer-events: none; }
     .locked-card .card-icon { color: #ff3366 !important; }
 
+    /* ================= MODE SIANG (LIGHT THEME) ================= */
+    :root[data-theme="light"] body {
+        background-color: #f8faf9;
+        background-image: 
+            radial-gradient(circle at 50% -20%, rgba(212,175,55,0.1) 0%, transparent 50%),
+            linear-gradient(180deg, #f8faf9 0%, #eef1ef 100%);
+    }
+
+    :root[data-theme="light"] .dashboard-title {
+        color: #aa771c;
+        text-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    :root[data-theme="light"] .dashboard-subtitle {
+        color: #64748b;
+    }
+
+    :root[data-theme="light"] .premium-card {
+        background-color: #ffffff;
+        box-shadow: 0 15px 40px rgba(0,20,40,0.1);
+        border: 1px solid rgba(212,175,55,0.15);
+    }
+
+    :root[data-theme="light"] .premium-card .card-bg {
+        filter: grayscale(50%) brightness(0.6);
+    }
+
+    :root[data-theme="light"] .premium-card:hover .card-bg {
+        filter: grayscale(0%) brightness(0.8);
+    }
+
+    :root[data-theme="light"] .card-title {
+        color: #0f1714;
+    }
+
+    :root[data-theme="light"] .card-desc {
+        color: #64748b;
+    }
+
+    :root[data-theme="light"] .launch-btn {
+        color: #aa771c;
+    }
+
+    :root[data-theme="light"] .card-icon {
+        color: rgba(0,0,0,0.15);
+    }
+
+    :root[data-theme="light"] .premium-card:hover .card-icon {
+        color: #aa771c;
+    }
+
+    :root[data-theme="light"] .premium-card::before {
+        background: radial-gradient(circle at 50% 100%, rgba(212,175,55,0.1) 0%, transparent 60%);
+    }
+
+    :root[data-theme="light"] .locked-card {
+        filter: grayscale(100%); opacity: 0.35;
+    }
+
+    :root[data-theme="light"] .status-badge {
+        background: rgba(255,255,255,0.8);
+        border: 1px solid rgba(212,175,55,0.3);
+        color: #0f1714;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    }
+
 </style>
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
 <main class="vault-wrapper">
 
-    <div class="auth-vault" id="authVault">
-        <div class="hud-container">
-            <div class="hud-bracket hud-tl" id="hudTl"></div>
-            <div class="hud-bracket hud-tr" id="hudTr"></div>
-            <div class="hud-bracket hud-bl" id="hudBl"></div>
-            <div class="hud-bracket hud-br" id="hudBr"></div>
-            
-            <div class="camera-ring">
-                <video id="cameraFeed" class="camera-feed" autoplay playsinline muted></video>
-                <div class="scanner-sweep" id="scannerSweep"></div>
-            </div>
-        </div>
 
-        <div class="liveness-steps">
-            <div class="step-dot" id="step1"></div>
-            <div class="step-dot" id="step2"></div>
-            <div class="step-dot" id="step3"></div>
-        </div>
 
-        <div class="status-badge" id="statusBadge">
-            <span id="statusText">INISIASI SISTEM...</span>
-        </div>
-    </div>
-
-    <div class="features-dashboard" id="featuresDashboard">
+    <div class="features-dashboard" id="featuresDashboard" style="display:flex; opacity:1;">
         <div class="dashboard-header">
             <h1 class="dashboard-title">The Sovereign Vault</h1>
             <p class="dashboard-subtitle">Akses Eksklusif Entitas Expedient Terverifikasi</p>
@@ -195,25 +239,85 @@ Expedient Vault - Protokol Keamanan Tingkat Tinggi
                 </div>
             </a>
 
-            <div class="premium-card locked-card js-tilt-card">
-                <div class="card-bg" style="background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2672&auto=format&fit=crop');"></div>
-                <i class="fa-solid fa-address-book card-icon"></i>
+            <a href="/wasiat" class="premium-card js-tilt-card">
+                <div class="card-bg" style="background-image: url('https://images.unsplash.com/photo-1614064641913-a520f596a247?q=80&w=2574&auto=format&fit=crop'); filter: grayscale(80%) brightness(0.3);"></div>
+                <i class="fa-solid fa-vault card-icon"></i>
                 <div class="card-content">
-                    <h3 class="card-title">Direktori Global</h3>
-                    <p class="card-desc">Peta pelacakan interaktif. Memvisualisasikan lokasi terenkripsi dari seluruh entitas Expedient.</p>
-                    <div class="launch-btn" style="color:#ff3366;">Akses Dikunci</div>
+                    <h3 class="card-title">Amanah & Wasiat</h3>
+                    <p class="card-desc">Brankas pesan terenkripsi tingkat tinggi. Titipkan pesan rahasia, wasiat, atau data vital yang hanya terbuka dengan pemicu otentikasi spesifik.</p>
+                    <div class="launch-btn">Akses Keamanan Maksimal <i class="fa-solid fa-arrow-right-long"></i></div>
                 </div>
-            </div>
+            </a>
 
-            <div class="premium-card locked-card js-tilt-card">
-                <div class="card-bg" style="background-image: url('https://images.unsplash.com/photo-1481819613568-3701cbc70156?q=80&w=2680&auto=format&fit=crop');"></div>
-                <i class="fa-solid fa-images card-icon"></i>
+            <a href="/baitul-maal" class="premium-card js-tilt-card">
+                <div class="card-bg" style="background-image: url('https://images.unsplash.com/photo-1579621970795-87facc2f976d?q=80&w=2670&auto=format&fit=crop'); filter: grayscale(80%) brightness(0.4);"></div>
+                <i class="fa-solid fa-coins card-icon"></i>
                 <div class="card-content">
-                    <h3 class="card-title">Ekho Memori</h3>
-                    <p class="card-desc">Rekaman visual sejarah angkatan. Disusun dalam galeri masonry tingkat militer.</p>
-                    <div class="launch-btn" style="color:#ff3366;">Akses Dikunci</div>
+                    <h3 class="card-title">Baitul Maal</h3>
+                    <p class="card-desc">Pusat kontribusi dan wakaf elit. Visualisasi rekam jejak sedekah jariyah angkatan dalam bentuk tabungan cahaya keabadian.</p>
+                    <div class="launch-btn">Buka Khasanah <i class="fa-solid fa-arrow-right-long"></i></div>
                 </div>
-            </div>
+            </a>
+
+            <a href="/majlis" class="premium-card js-tilt-card">
+                <div class="card-bg" style="background-image: url('https://images.unsplash.com/photo-1594954002661-8f55fc15d7de?q=80&w=2670&auto=format&fit=crop'); filter: grayscale(80%) brightness(0.4);"></div>
+                <i class="fa-solid fa-microphone-lines card-icon"></i>
+                <div class="card-content">
+                    <h3 class="card-title">Majlis Syura</h3>
+                    <p class="card-desc">Bilik suara VVIP eksklusif. Dengarkan kajian, bertukar pikiran, dan jalin ukhuwah dalam keheningan yang elegan.</p>
+                    <div class="launch-btn">Masuk Ruang Majlis <i class="fa-solid fa-arrow-right-long"></i></div>
+                </div>
+            </a>
+
+            <a href="/tarbiyah" class="premium-card js-tilt-card">
+                <div class="card-bg" style="background-image: url('https://images.unsplash.com/photo-1556761175-5973dc0f32b7?q=80&w=2532&auto=format&fit=crop'); filter: grayscale(80%) brightness(0.4);"></div>
+                <i class="fa-solid fa-handshake-angle card-icon"></i>
+                <div class="card-content">
+                    <h3 class="card-title">Tarbiyah Nexus</h3>
+                    <p class="card-desc">Jaringan mentorship elit & ekosistem B2B Halal. Ruang kolaborasi profesional antar entitas untuk memperkuat muamalah dan karir.</p>
+                    <div class="launch-btn">Buka Jaringan <i class="fa-solid fa-arrow-right-long"></i></div>
+                </div>
+            </a>
+
+            <a href="/oracle" class="premium-card js-tilt-card">
+                <div class="card-bg" style="background-image: url('https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=2565&auto=format&fit=crop');"></div>
+                <i class="fa-solid fa-eye card-icon"></i>
+                <div class="card-content">
+                    <h3 class="card-title">The Oracle's Vision</h3>
+                    <p class="card-desc">Pemindai kamera interaktif untuk mengekstraksi dan membaca Aura Eksekutif Anda secara langsung.</p>
+                    <div class="launch-btn">Inisiasi Visi <i class="fa-solid fa-arrow-right-long"></i></div>
+                </div>
+            </a>
+
+            <a href="/multazam" class="premium-card js-tilt-card">
+                <div class="card-bg" style="background-image: url('https://images.unsplash.com/photo-1542642510-48227b613eec?q=80&w=2670&auto=format&fit=crop'); filter: grayscale(80%) brightness(0.4);"></div>
+                <i class="fa-solid fa-ticket card-icon"></i>
+                <div class="card-content">
+                    <h3 class="card-title">Protokol Multazam</h3>
+                    <p class="card-desc">Sistem RSVP & Tiket Cerdas untuk acara VVIP. Hadiri kajian akbar dan gala diner angkatan dengan otorisasi pass digital eksklusif.</p>
+                    <div class="launch-btn">Akses Protokol Acara <i class="fa-solid fa-arrow-right-long"></i></div>
+                </div>
+            </a>
+
+            <a href="/kontemplasi" class="premium-card js-tilt-card">
+                <div class="card-bg" style="background-image: url('https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?q=80&w=2574&auto=format&fit=crop'); filter: grayscale(80%) brightness(0.3);"></div>
+                <i class="fa-solid fa-peace card-icon"></i>
+                <div class="card-content">
+                    <h3 class="card-title">Ruang Kontemplasi</h3>
+                    <p class="card-desc">Mode sanctuary layar penuh. Temukan kedamaian dari bisingnya dunia dengan keheningan, tata napas, dan audio ambience Islami.</p>
+                    <div class="launch-btn">Masuki Keheningan <i class="fa-solid fa-arrow-right-long"></i></div>
+                </div>
+            </a>
+
+            <a href="/celestial" class="premium-card js-tilt-card">
+                <div class="card-bg" style="background-image: url('https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?q=80&w=2670&auto=format&fit=crop');"></div>
+                <i class="fa-solid fa-star card-icon"></i>
+                <div class="card-content">
+                    <h3 class="card-title">The Celestial Codex</h3>
+                    <p class="card-desc">Tarik tiga kartu takdir dari dek misterius. Ungkap ramalan dan kebijaksanaan hari ini.</p>
+                    <div class="launch-btn">Buka Codex <i class="fa-solid fa-arrow-right-long"></i></div>
+                </div>
+            </a>
         </div>
     </div>
 
@@ -222,210 +326,38 @@ Expedient Vault - Protokol Keamanan Tingkat Tinggi
 
 <?= $this->section('scripts') ?>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api/dist/face-api.min.js"></script>
-
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-    // === ELEMEN UI ===
-    const videoElement = document.getElementById('cameraFeed');
-    const statusText = document.getElementById('statusText');
-    const statusBadge = document.getElementById('statusBadge');
-    const authVault = document.getElementById('authVault');
-    const featuresDashboard = document.getElementById('featuresDashboard');
-    const scannerSweep = document.getElementById('scannerSweep');
-    
-    // HUD & Steps
-    const brackets = document.querySelectorAll('.hud-bracket');
-    const s1 = document.getElementById('step1');
-    const s2 = document.getElementById('step2');
-    const s3 = document.getElementById('step3');
-
-    // === STATE ===
-    let streamRef = null;
-    let authInterval = null;
-    let isAuthenticating = false;
-    let currentStep = 'matching'; // matching -> smiling -> turning
-
-    // Ambil Data Wajah
-    const dbFaceDataRaw = <?= empty($face_data_db) || $face_data_db === 'null' ? 'null' : $face_data_db ?>;
-    let targetDescriptor = null;
-
-    // === HELPER UI ===
-    const updateHUD = (text, color, sweepOn, step) => {
-        statusText.innerText = text;
-        statusText.style.color = color;
-        statusBadge.style.borderLeftColor = color;
-        scannerSweep.style.display = sweepOn ? "block" : "none";
-        
-        // Ubah warna HUD Bracket
-        brackets.forEach(b => {
-            b.style.borderColor = color;
-            b.style.boxShadow = `0 0 15px ${color}`;
-        });
-
-        // Update Indikator Step
-        if(step === 1) { s1.className = 'step-dot active'; s2.className = 'step-dot'; s3.className = 'step-dot'; }
-        if(step === 2) { s1.className = 'step-dot done'; s2.className = 'step-dot active'; s3.className = 'step-dot'; }
-        if(step === 3) { s1.className = 'step-dot done'; s2.className = 'step-dot done'; s3.className = 'step-dot active'; }
-        if(step === 'done') { s1.className = 'step-dot done'; s2.className = 'step-dot done'; s3.className = 'step-dot done'; }
-    };
-
-   // === SISTEM LIVENESS 3 TAHAP (REVISI KETAT) ===
-    const startFaceVerification = async () => {
-        if (dbFaceDataRaw === null) {
-            updateHUD("DATA WAJAH KOSONG", "#ff3366", false, 0);
-            authVault.innerHTML += `<br><button onclick="unlockVault()" style="margin-top:20px; padding:10px 20px; background:transparent; border:1px solid var(--gold-main); color:var(--gold-main); border-radius:5px; cursor:pointer;">BYPASS PROTOKOL</button>`;
-            return;
-        }
-
-        targetDescriptor = new Float32Array(dbFaceDataRaw);
-        updateHUD("MEMUAT MODEL AI (8 FILES)...", "var(--gold-main)", false, 0);
-
-        try {
-            const MODEL_URL = window.location.origin + '/assets/models';
-            await Promise.all([
-                faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
-                faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
-                faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL),
-                faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL)
-            ]);
-        } catch (err) {
-            return updateHUD("GAGAL MEMUAT MODEL AI", "#ff3366", false, 0);
-        }
-
-        updateHUD("MENGHUBUNGKAN OPTIK...", "var(--gold-main)", false, 0);
-
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
-            videoElement.srcObject = stream;
-            streamRef = stream;
-        } catch (err) {
-            updateHUD("AKSES KAMERA DITOLAK", "#ff3366", false, 0);
-            return;
-        }
-
-        videoElement.onplay = () => {
-            updateHUD("MENCOCOKKAN MATRIKS WAJAH...", "var(--gold-main)", true, 1);
-            
-            authInterval = setInterval(async () => {
-                if (isAuthenticating) return;
-
-                const detection = await faceapi.detectSingleFace(videoElement, new faceapi.TinyFaceDetectorOptions())
-                                               .withFaceLandmarks().withFaceDescriptor().withFaceExpressions();
-                
-                if (!detection) return updateHUD("WAJAH TIDAK TERDETEKSI", "var(--gold-main)", true, currentStep === 'matching'? 1 : (currentStep==='smiling'? 2:3));
-
-                // TAHAP 1: PENCOCOKAN WAJAH
-                if (currentStep === 'matching') {
-                    const distance = faceapi.euclideanDistance(targetDescriptor, detection.descriptor);
-                    if (distance < 0.5) {
-                        currentStep = 'smiling';
-                        isAuthenticating = true;
-                        updateHUD("COCOK. SILAKAN TERSENYUM...", "var(--neon-blue)", true, 2);
-                        setTimeout(() => { isAuthenticating = false; }, 1200); // Jeda 1.2 detik
-                    } else {
-                        updateHUD("ENTITAS TIDAK DIKENALI", "#ff3366", true, 1);
-                    }
-                } 
-                // TAHAP 2: DETEKSI SENYUM
-                else if (currentStep === 'smiling') {
-                    if (detection.expressions.happy > 0.85) {
-                        currentStep = 'turning';
-                        isAuthenticating = true;
-                        updateHUD("BAGUS. TOLEHKAN KEPALA ANDA...", "var(--neon-blue)", true, 3);
-                        // Jeda diperpanjang agar AI tidak langsung membaca kemiringan kepala sisa senyum
-                        setTimeout(() => { isAuthenticating = false; }, 1500); 
-                    } else {
-                        updateHUD("SISTEM MENUNGGU SENYUMAN ANDA...", "var(--neon-blue)", true, 2);
-                    }
-                } 
-                // TAHAP 3: DETEKSI MENOLEH (Kalkulasi Absolut)
-                else if (currentStep === 'turning') {
-                    const landmarks = detection.landmarks;
-                    const nose = landmarks.getNose()[0];
-                    const leftEye = landmarks.getLeftEye()[0];
-                    const rightEye = landmarks.getRightEye()[0];
-                    
-                    // Gunakan Math.abs agar selalu bernilai positif mutlak
-                    const distLeft = Math.abs(nose.x - leftEye.x);
-                    const distRight = Math.abs(nose.x - rightEye.x);
-                    
-                    if (distRight === 0) return; // Mencegah error pembagian nol
-                    
-                    const ratio = distLeft / distRight;
-                    
-                    // Toleransi diperketat menjadi < 0.35 atau > 2.5 (Memaksa user benar-benar menoleh tajam)
-                    if (ratio < 0.35 || ratio > 2.5) {
-                        clearInterval(authInterval);
-                        updateHUD("OTORISASI ABSOLUT BERHASIL!", "var(--neon-green)", false, 'done');
-                        setTimeout(unlockVault, 1200);
-                    } else {
-                        // Jika belum mencapai rasio tajam, paksa user terus mencoba
-                        updateHUD("TOLEHKAN KEPALA LEBIH JAUH...", "var(--neon-blue)", true, 3);
-                    }
-                }
-            }, 600);
-        };
-    };
-
-    // === FUNGSI UNLOCK & AJAX ===
-    window.unlockVault = async () => {
-        if (streamRef) streamRef.getTracks().forEach(track => track.stop());
-
-        try {
-            await fetch('/fitur/unlock', {
-                method: 'POST',
-                headers: { 'X-Requested-With': 'XMLHttpRequest', 'Content-Type': 'application/json' }
-            });
-        } catch (error) {}
-
-        // GSAP Transisi Epik
-        gsap.to(authVault, {
-            opacity: 0, scale: 0.5, y: -50, duration: 1, ease: "power3.in",
-            onComplete: () => {
-                authVault.style.display = "none";
-                featuresDashboard.style.display = "flex";
-                
-                gsap.to(featuresDashboard, { opacity: 1, duration: 1 });
-                gsap.from(".dashboard-header", { opacity: 0, y: -50, duration: 1.5, ease: "expo.out" });
-                
-                // Stagger efek kartu masuk dari bawah
-                gsap.from(".premium-card", { 
-                    opacity: 0, y: 100, rotationX: -20, duration: 1.2, 
-                    stagger: 0.15, ease: "back.out(1.5)", delay: 0.2 
-                });
-            }
-        });
-    };
-
     // === MAGNETIC 3D TILT EFFECT (AWWWARDS JS) ===
     const cards = document.querySelectorAll('.js-tilt-card');
     cards.forEach(card => {
         card.addEventListener('mousemove', (e) => {
             const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left; // x position within the element.
-            const y = e.clientY - rect.top;  // y position within the element.
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
             
             const centerX = rect.width / 2;
             const centerY = rect.height / 2;
             
-            // Calculate rotation (max 15 degrees)
             const rotateX = ((y - centerY) / centerY) * -15;
             const rotateY = ((x - centerX) / centerX) * 15;
 
             card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
-            card.style.transition = "none"; // Remove transition for smooth tracking
+            card.style.transition = "none";
         });
 
         card.addEventListener('mouseleave', () => {
-            // Reset position smoothly
             card.style.transition = "transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)";
             card.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)";
         });
     });
 
-    // Start!
-    startFaceVerification();
+    // Intro Animation
+    gsap.from(".dashboard-header", { opacity: 0, y: -50, duration: 1.5, ease: "expo.out" });
+    gsap.from(".premium-card", { 
+        opacity: 0, y: 100, rotationX: -20, duration: 1.2, 
+        stagger: 0.15, ease: "back.out(1.5)", delay: 0.2 
+    });
 });
 </script>
 <?= $this->endSection() ?>

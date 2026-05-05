@@ -286,7 +286,7 @@
         <a href="/syndicate" class="nav-item hover-trigger <?= (uri_string() == 'syndicate') ? 'active' : '' ?>" data-tooltip="The Council" onclick="hapticNav()"><i class="fa-solid fa-chess-knight"></i></a>
         <a href="/fitur" class="nav-item hover-trigger <?= (uri_string() == 'fitur') ? 'active' : '' ?>" data-tooltip="Fitur Eksekutif" onclick="hapticNav()"><i class="fa-solid fa-gem"></i></a>
         <div style="flex-grow: 1;" class="nav-spacer"></div>
-        <a href="/logout" class="nav-item hover-trigger" data-tooltip="Sever Connection" style="color: #ff3366;" onclick="hapticNav()"><i class="fa-solid fa-power-off"></i></a>
+        <a href="/profil" class="nav-item hover-trigger <?= (uri_string() == 'profil') ? 'active' : '' ?>" data-tooltip="Ruang Kendali" onclick="hapticNav()"><i class="fa-solid fa-user-astronaut"></i></a>
     </nav>
 
     <button class="theme-widget hover-trigger" id="btnTheme" title="Ganti Mode">

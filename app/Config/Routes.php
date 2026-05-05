@@ -38,6 +38,16 @@ $routes->get('/beranda', 'BerandaController::index', ['filter' => 'auth']);
 $routes->get('/direktori', 'DirektoriController::index', ['filter' => 'auth']);
 $routes->get('/galeri', 'GaleriController::index', ['filter' => 'auth']);
 $routes->get('/fitur', 'FiturController::index', ['filter' => 'auth']);
+$routes->get('/oracle', 'OracleController::index', ['filter' => 'auth']);
+$routes->get('/enigma', 'EnigmaController::index', ['filter' => 'auth']);
+$routes->get('/genesis', 'GenesisController::index', ['filter' => 'auth']);
+$routes->get('/celestial', 'CelestialController::index', ['filter' => 'auth']);
+$routes->get('/majlis', 'MajlisController::index', ['filter' => 'auth']);
+$routes->get('/tarbiyah', 'TarbiyahController::index', ['filter' => 'auth']);
+$routes->get('/baitul-maal', 'BaitulMaalController::index', ['filter' => 'auth']);
+$routes->get('/wasiat', 'WasiatController::index', ['filter' => 'auth']);
+$routes->get('/multazam', 'MultazamController::index', ['filter' => 'auth']);
+$routes->get('/kontemplasi', 'KontemplasiController::index', ['filter' => 'auth']);
 // ================= FASILITAS: GLOBAL RADAR =================
 // Menampilkan halaman Peta 3D
 $routes->get('/radar', 'RadarController::index', ['filter' => 'auth']);
@@ -56,6 +66,7 @@ $routes->post('/syndicate/store', 'SyndicateController::store', ['filter' => 'au
 // ================= FASILITAS: COMMAND CENTER (PROFIL) =================
 // Menampilkan halaman profil dan pengaturan biometrik agen
 $routes->get('/profil', 'ProfileController::index', ['filter' => 'auth']);
+$routes->post('/profil/update', 'ProfileController::updateProfile', ['filter' => 'auth']);
 // ==========================================================
 // 4. RUTE BIOMETRIK (SUDAH DISELARASKAN DENGAN CONTROLLER)
 // ==========================================================
@@ -72,16 +83,10 @@ $routes->post('/biometric/register-verify', 'BiometricController::registerVerify
 
 
 
-// 2. Sinyal Rahasia (AJAX) - Jabat tangan antara Face ID dan Server
-$routes->post('/fitur/unlock', 'FiturController::unlockVaultSession');
 
 // 3. Panggung Mahakarya: Sovereign ID Card 5D
 $routes->get('/sovereign', 'SovereignController::index');
 
-// 4. Ruang Kendali: Profil Entitas & Manajemen Kunci Keamanan
-$routes->get('/profil', 'ProfilController::index');
-
-// --- SOVEREIGN VAULT ROUTES ---
 
 // 1. Halaman Registrasi (Form Input Data)
 $routes->get('register', 'Vault::register');
