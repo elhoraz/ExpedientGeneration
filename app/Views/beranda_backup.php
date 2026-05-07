@@ -226,92 +226,57 @@ Museum Utama Expedient
     .god-tier-element { position: absolute; pointer-events: none; }
     .god-tier-svg { overflow: visible; position: absolute; }
 
-    /* MODAL MANUSKRIP SEJARAH */
+    /* SOVEREIGN ARCHIVES MODAL */
     .archive-modal {
         position: fixed; inset: 0; z-index: 99999; display: flex; justify-content: center; align-items: center;
-        opacity: 0; pointer-events: none; transition: 0.5s;
+        opacity: 0; pointer-events: none; transition: 0.5s cubic-bezier(0.25, 1, 0.5, 1);
     }
     .archive-modal.active { opacity: 1; pointer-events: auto; }
-    .archive-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(5px); }
-    :root[data-theme="light"] .archive-backdrop { background: rgba(200,200,200,0.8); }
+    .archive-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); }
+    :root[data-theme="light"] .archive-backdrop { background: rgba(255,255,255,0.7); }
     
     .archive-paper {
-        position: relative; width: 90%; max-width: 700px; max-height: 85vh; overflow-y: auto;
-        background: #fdfbf7; color: #111; padding: 50px; font-family: 'Playfair Display', serif;
-        box-shadow: 0 20px 50px rgba(0,0,0,0.5); transform: translateY(50px); transition: 0.5s cubic-bezier(0.25, 1, 0.5, 1);
-        background-image: radial-gradient(#d4af37 0.5px, transparent 0.5px); background-size: 10px 10px; background-position: 0 0;
+        position: relative; width: 90%; max-width: 800px; max-height: 85vh; overflow-y: auto;
+        background: var(--glass-bg); color: var(--text-primary); padding: 50px; 
+        border: 1px solid var(--glass-border); border-radius: 20px;
+        box-shadow: var(--glass-shadow); transform: translateY(50px) scale(0.95); transition: 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+        backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
     }
-    .archive-modal.active .archive-paper { transform: translateY(0); }
+    .archive-modal.active .archive-paper { transform: translateY(0) scale(1); }
     
-    /* Golden Sheen Animation */
-    .scanner-line {
-        position: absolute; top: 0; left: 0; width: 100%; height: 5px; background: rgba(212,175,55,0.8);
-        box-shadow: 0 0 20px rgba(212,175,55,1); opacity: 0; z-index: 50; pointer-events: none;
-    }
-    .archive-modal.active .scanner-line {
-        animation: scanDoc 3s ease-in-out;
-    }
-    @keyframes scanDoc { 0% { top: 0; opacity: 1; } 50% { top: 100%; opacity: 1; } 100% { top: 100%; opacity: 0; } }
-
-    .archive-header { display: flex; justify-content: space-between; border-bottom: 2px solid #111; padding-bottom: 10px; margin-bottom: 30px; font-weight: bold; position: relative; font-family: 'Inter', sans-serif;}
-    .confidential-stamp {
-        position: absolute; top: -10px; left: 50%; transform: translateX(-50%) rotate(-5deg);
-        color: #d4af37; border: 2px solid #d4af37; padding: 5px 15px; font-size: 1.2rem; letter-spacing: 5px;
-        opacity: 0.9; pointer-events: none; background: rgba(253, 251, 247, 0.8);
-    }
+    .archive-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--glass-border); padding-bottom: 20px; margin-bottom: 30px; font-weight: 500; font-family: 'Inter', sans-serif; letter-spacing: 3px; font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; }
+    .archive-title { font-family: 'Playfair Display', serif; font-size: 2.5rem; margin-bottom: 30px; color: var(--gold-premium); line-height: 1.2; font-weight: 400; text-align: center; }
+    .archive-body p { line-height: 1.8; margin-bottom: 20px; font-size: 1.05rem; font-family: 'Inter', sans-serif; color: var(--text-primary); font-weight: 300; text-align: justify; }
     
-    .archive-title { font-family: 'Playfair Display', serif; font-size: 2rem; margin-bottom: 20px; text-transform: uppercase; text-align: center; }
-    
-    .archive-body p { line-height: 1.8; margin-bottom: 15px; font-size: 1.1rem; text-align: justify; }
-    
-    /* Gold highlight blocks */
-    .redacted {
-        background: #d4af37; color: #d4af37; display: inline-block; padding: 0 5px; cursor: pointer; transition: 0.3s; border-radius: 2px;
-    }
-    .redacted.revealed { background: transparent; color: #000; font-weight: bold; border-bottom: 2px solid #d4af37; }
-    
-    .archive-paper::-webkit-scrollbar { width: 8px; }
-    .archive-paper::-webkit-scrollbar-track { background: #e0dcd3; }
-    .archive-paper::-webkit-scrollbar-thumb { background: #d4af37; }
-
-    /* MOBILE VIP FEATURES */
-    .touch-hold-progress { position: absolute; bottom: -5px; left: 0; height: 2px; background: #d4af37; width: 0%; pointer-events: none; transition: width 0.1s linear; }
-    .touch-hold-trigger { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; outline: none; }
-    
+    /* VVIP MOBILE RESPONSIVE (BOTTOM SHEETS) */
     @media (max-width: 768px) {
-        .jiwa-anim-container { transform: scale(0.4); transform-origin: center center; }
+        .archive-modal { align-items: flex-end; }
+        .archive-paper { width: 100%; border-radius: 30px 30px 0 0; padding: 40px 25px; transform: translateY(100%) scale(1); max-height: 90vh; }
+        .archive-paper::before { content: ''; position: absolute; top: 15px; left: 50%; transform: translateX(-50%); width: 40px; height: 4px; background: var(--glass-border); border-radius: 10px; }
+        .archive-title { font-size: 1.8rem; }
         
-        .archive-paper, .jiwa-content { 
-            position: relative !important; width: 90% !important; bottom: auto !important; left: auto !important;
-            border-radius: 20px !important; margin: 0 auto !important; 
-            max-height: 80vh !important; padding: 30px 20px !important;
-            overflow-y: auto !important; -webkit-overflow-scrolling: touch !important; 
-            box-sizing: border-box !important; pointer-events: auto !important; display: block !important;
-            overscroll-behavior: contain !important;
-        }
-        
-        .jiwa-title { font-size: 2rem !important; margin-bottom: 15px; }
-        .jiwa-desc { font-size: 0.95rem !important; text-align: left; }
-        
-        .news-link { position: relative; padding-bottom: 5px; }
-        
-        .swipe-to-seal-container {
-            position: relative; width: 100%; height: 60px; background: rgba(212, 175, 55, 0.05);
-            border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 30px; overflow: hidden;
-            display: flex; align-items: center; justify-content: center; margin-top: 20px;
-        }
-        .swipe-text { color: #d4af37; font-size: 0.85rem; letter-spacing: 3px; text-transform: uppercase; z-index: 1; font-family: 'Inter', sans-serif;}
-        .swipe-knob {
-            position: absolute; left: 5px; top: 5px; width: 50px; height: 50px;
-            background: #d4af37; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            color: #000; cursor: grab; z-index: 2; transition: transform 0.1s;
-        }
-        .swipe-fill { position: absolute; left: 0; top: 0; height: 100%; background: rgba(212, 175, 55, 0.2); width: 0; z-index: 1; }
-        .btn-stamp-desktop { display: none !important; }
+        .jiwa-modal { align-items: flex-end; justify-content: flex-end; }
+        .jiwa-content { width: 100%; border-radius: 30px 30px 0 0; padding: 40px 25px; transform: translateY(100%); margin-bottom: 0; }
+        .jiwa-content.show { transform: translateY(0); }
+        .jiwa-anim-container { height: 50vh; top: 0; }
     }
-    @media (min-width: 769px) {
-        .swipe-to-seal-container { display: none !important; }
+
+    /* SWIPE TO SEAL ELEMENT (MOBILE) */
+    .swipe-seal-container { position: relative; width: 100%; height: 60px; background: rgba(212,175,55,0.05); border: 1px solid var(--glass-border); border-radius: 30px; overflow: hidden; margin-top: 30px; display: none; }
+    @media (max-width: 768px) {
+        .swipe-seal-container { display: block; }
+        .btn-stamp { display: none; }
     }
+    .swipe-text { position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; color: var(--gold-premium); font-size: 0.75rem; letter-spacing: 3px; text-transform: uppercase; font-weight: 600; pointer-events: none; z-index: 1; transition: 0.3s; opacity: 0.7; }
+    .swipe-knob { position: absolute; top: 5px; left: 5px; width: 50px; height: 50px; background: var(--gold-premium); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: #030504; font-size: 1.2rem; cursor: grab; z-index: 2; box-shadow: 0 0 15px rgba(212,175,55,0.4); transition: transform 0.1s; }
+    .swipe-knob:active { cursor: grabbing; transform: scale(0.95); }
+    .swipe-fill { position: absolute; top: 0; left: 0; height: 100%; width: 0; background: rgba(212,175,55,0.15); z-index: 0; }
+
+    /* HAPTIC HOLD EFFECT */
+    .haptic-ring { position: fixed; border: 2px solid var(--gold-premium); border-radius: 50%; pointer-events: none; opacity: 0; transform: scale(0); z-index: 999999; box-shadow: 0 0 20px rgba(212,175,55,0.5); }
+    
+    /* GANTI FONT SIGNATURE */
+    .input-signature { font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.5rem !important; }
 </style>
 <?= $this->endSection() ?>
 
@@ -400,34 +365,32 @@ Museum Utama Expedient
     <section class="hall-section">
         <h2 class="section-title reveal-up">Manuskrip Sejarah</h2>
         <div class="news-list">
-            <article class="news-item reveal-up">
+            <article class="news-item reveal-up press-hold-trigger" data-archive="visi">
                 <span class="news-date">30 MARET 2026</span>
                 <h3 class="news-title">Penetapan Visi Angkatan</h3>
-                <a href="javascript:void(0)" class="news-link touch-hold-trigger" data-key="visi">BACA MANUSKRIP <i class="fa-solid fa-fingerprint"></i><div class="touch-hold-progress"></div></a>
+                <a href="javascript:void(0)" class="news-link"><span class="desktop-hint">BACA DOKUMEN</span><span class="mobile-hint" style="display:none;">TAHAN UNTUK MEMBUKA</span> <i class="fa-solid fa-book-open"></i></a>
             </article>
-            <article class="news-item reveal-up">
+            <article class="news-item reveal-up press-hold-trigger" data-archive="simpul">
                 <span class="news-date">15 FEBRUARI 2026</span>
                 <h3 class="news-title">Simpul Kesucian: Menjaga Nilai-Nilai Arrisalah</h3>
-                <a href="javascript:void(0)" class="news-link touch-hold-trigger" data-key="simpul">BACA MANUSKRIP <i class="fa-solid fa-fingerprint"></i><div class="touch-hold-progress"></div></a>
+                <a href="javascript:void(0)" class="news-link"><span class="desktop-hint">BACA DOKUMEN</span><span class="mobile-hint" style="display:none;">TAHAN UNTUK MEMBUKA</span> <i class="fa-solid fa-book-open"></i></a>
             </article>
         </div>
     </section>
 
-    <!-- Modal Arsip Deklasifikasi -->
+    <!-- Modal Sovereign Archives -->
     <div class="archive-modal" id="archiveModal">
         <div class="archive-backdrop" onclick="closeArchive()"></div>
         <div class="archive-paper" id="archivePaper">
-            <div class="scanner-line"></div>
             <div class="archive-header">
-                <div class="confidential-stamp">EXHIBIT NO.</div>
-                <div>ID: <span id="arcId">---</span></div>
-                <div>DATE: <span id="arcDate">---</span></div>
+                <div>SOVEREIGN ARCHIVE</div>
+                <div id="arcDate">---</div>
             </div>
             <h1 class="archive-title" id="arcTitle">TITLE</h1>
             <div class="archive-body" id="arcBody">
                 <!-- Content injected here -->
             </div>
-            <button class="btn-stamp" style="margin-top:40px; display:block; width:100%;" onclick="closeArchive()">SELESAI MEMBACA</button>
+            <button class="btn-stamp" style="margin-top:40px; display:block; width:100%; border-color: var(--glass-border); color: var(--text-primary);" onclick="closeArchive()">TUTUP MANUSKRIP</button>
         </div>
     </div>
 
@@ -453,11 +416,11 @@ Museum Utama Expedient
 
     <section class="hall-section monolith-section">
         <div class="monolith-pillar">
-            <h2 class="gold-engraving panca-jiwa touch-hold-trigger" data-action="jiwa" data-key="keikhlasan" style="position:relative;">Keikhlasan<div class="touch-hold-progress" style="bottom: -10px;"></div></h2>
-            <h2 class="gold-engraving panca-jiwa touch-hold-trigger" data-action="jiwa" data-key="kesederhanaan" style="position:relative;">Kesederhanaan<div class="touch-hold-progress" style="bottom: -10px;"></div></h2>
-            <h2 class="gold-engraving panca-jiwa touch-hold-trigger" data-action="jiwa" data-key="kemandirian" style="position:relative;">Kemandirian<div class="touch-hold-progress" style="bottom: -10px;"></div></h2>
-            <h2 class="gold-engraving panca-jiwa touch-hold-trigger" data-action="jiwa" data-key="ukhuwah" style="position:relative;">Ukhuwwah Islamiyyah<div class="touch-hold-progress" style="bottom: -10px;"></div></h2>
-            <h2 class="gold-engraving panca-jiwa touch-hold-trigger" data-action="jiwa" data-key="kebebasan" style="position:relative;">Kebebasan<div class="touch-hold-progress" style="bottom: -10px;"></div></h2>
+            <h2 class="gold-engraving panca-jiwa" onclick="openJiwa('keikhlasan')">Keikhlasan</h2>
+            <h2 class="gold-engraving panca-jiwa" onclick="openJiwa('kesederhanaan')">Kesederhanaan</h2>
+            <h2 class="gold-engraving panca-jiwa" onclick="openJiwa('kemandirian')">Kemandirian</h2>
+            <h2 class="gold-engraving panca-jiwa" onclick="openJiwa('ukhuwah')">Ukhuwwah Islamiyyah</h2>
+            <h2 class="gold-engraving panca-jiwa" onclick="openJiwa('kebebasan')">Kebebasan</h2>
         </div>
     </section>
 
@@ -494,18 +457,20 @@ Museum Utama Expedient
     </section>
 
     <section class="hall-section ledger-section reveal-up">
-        <h2 class="section-title" style="margin-bottom: 20px;">Tinggalkan Jejak</h2>
-        <p style="color: var(--text-muted, #5e7a6b); margin-bottom: 40px; font-size: 0.9rem;">Catatkan namamu di dinding pameran waktu.</p>
+        <h2 class="section-title" style="margin-bottom: 20px;">Buku Tamu Eksklusif</h2>
+        <p style="color: var(--text-muted, #5e7a6b); margin-bottom: 40px; font-size: 0.9rem;">Segel kehadiran Anda di dalam sejarah peradaban.</p>
         
-        <form action="/beranda/simpan_pesan" method="POST" class="ledger-form">
+        <form action="/beranda/simpan_pesan" method="POST" class="ledger-form" id="ledgerForm">
             <?= csrf_field() ?>
-            <input type="text" name="nama" class="luxury-input" placeholder="Identitas Anda (Kodenama)" required>
-            <textarea name="pesan" class="luxury-input" placeholder="Tuliskan transmisi atau pesan rahasia..." rows="2" required></textarea>
+            <input type="text" name="nama" class="luxury-input input-signature" placeholder="Tanda Tangan (Nama)" required>
+            <textarea name="pesan" class="luxury-input" placeholder="Tuliskan pesan berharga Anda..." rows="2" required></textarea>
             <div>
-                <button type="submit" class="btn-stamp btn-stamp-desktop" id="btnSubmitDesktop">STEMPEL PESAN</button>
-                <div class="swipe-to-seal-container" id="swipeSealContainer">
+                <button type="submit" class="btn-stamp" id="desktopSubmitBtn">STEMPEL KEHADIRAN</button>
+                
+                <!-- Tuas Segel Emas (Mobile Swipe) -->
+                <div class="swipe-seal-container" id="swipeSealContainer">
                     <div class="swipe-fill" id="swipeFill"></div>
-                    <div class="swipe-text">Geser Untuk Menyegel</div>
+                    <div class="swipe-text" id="swipeText">GESER UNTUK MENYEGEL <i class="fa-solid fa-arrow-right" style="margin-left:10px;"></i></div>
                     <div class="swipe-knob" id="swipeKnob"><i class="fa-solid fa-fingerprint"></i></div>
                 </div>
             </div>
@@ -1273,172 +1238,35 @@ Museum Utama Expedient
     // =========================================================
     const archiveData = {
         'visi': {
-            id: 'EXP-VS-001', date: '30 MARET 2026', title: 'Penetapan Visi Angkatan',
+            date: '30 MARET 2026', title: 'Deklarasi Visi Sovereign',
             content: `
-                <p>Manuskrip ini mencatat deklarasi resmi dari angkatan Expedient mengenai visi dan arah tujuan di masa depan.</p>
-                <p>Kami bersumpah untuk selalu memegang teguh nilai-nilai <span class="redacted" onclick="revealRedacted(this)">KEISLAMAN</span> dan terus berjuang dalam <span class="redacted" onclick="revealRedacted(this)">UKHUWAH ISLAMIYYAH</span>.</p>
-                <p>Seluruh kurator yang tergabung dalam barisan ini diamanahkan untuk menjaga warisan kehormatan ini tanpa persetujuan khusus dari <span class="redacted" onclick="revealRedacted(this)">MAJLIS SYURA</span>.</p>
-                <p><em>Sovereign Document.</em></p>
+                <p>Naskah ini mencatat sumpah agung angkatan Expedient mengenai visi dan arah tujuan masa depan.</p>
+                <p>Kami berjanji untuk memelihara warisan <span class="redacted" onclick="revealRedacted(this)">KEISLAMAN</span> dan mengikat erat <span class="redacted" onclick="revealRedacted(this)">PERSAUDARAAN</span>.</p>
+                <p>Nilai-nilai ini diukir bukan pada batu, melainkan pada karakter setiap individu.</p>
+                <p><em>Selesai.</em></p>
             `
         },
         'simpul': {
-            id: 'EXP-SM-044', date: '15 FEBRUARI 2026', title: 'Simpul Kesucian: Menjaga Nilai-Nilai Arrisalah',
+            date: '15 FEBRUARI 2026', title: 'Simpul Kesucian: Menjaga Nilai Arrisalah',
             content: `
-                <p>Catatan kurator terkait pemeliharaan nilai-nilai pesantren dalam kehidupan bermasyarakat.</p>
-                <p>Ditemukan bahwa tantangan terbesar bagi setiap individu adalah <span class="redacted" onclick="revealRedacted(this)">HEDONISME</span> duniawi. Oleh karena itu, komitmen <strong>Simpul Kesucian</strong> harus diaktifkan setiap saat.</p>
-                <p>Setiap anggota diwajibkan untuk saling mengingatkan melalui ikatan batin <span class="redacted" onclick="revealRedacted(this)">Tarbiyah Nexus</span> setidaknya satu kali setiap pergantian musim.</p>
-                <p><em>Amanat ini bersifat abadi.</em></p>
+                <p>Manuskrip mengenai pemeliharaan nilai-nilai murni dalam harmoni pasca-kelulusan.</p>
+                <p>Di balik kemewahan dunia, pondasi kita tetap bersandar pada <span class="redacted" onclick="revealRedacted(this)">KESEDERHANAAN</span> hati.</p>
+                <p>Setiap duta angkatan diharapkan menjadi mercusuar teladan di manapun mereka memijakkan kaki.</p>
+                <p><em>Tertanda, Dewan Kehormatan.</em></p>
             `
         }
     };
-
-    // =========================================================
-    // MOBILE TOUCH & HOLD ENGINE & SWIPE TO SEAL
-    // =========================================================
-    document.querySelectorAll('.touch-hold-trigger').forEach(trigger => {
-        let holdTimer;
-        let isHolding = false;
-        let startY = 0;
-        const progress = trigger.querySelector('.touch-hold-progress');
-        const key = trigger.getAttribute('data-key');
-        const action = trigger.getAttribute('data-action') || 'archive';
-        
-        const executeAction = () => {
-            if (action === 'archive') {
-                if (typeof window.openArchive === 'function') window.openArchive(key);
-            } else if (action === 'jiwa') {
-                if (typeof window.openJiwa === 'function') window.openJiwa(key);
-            }
-        };
-        
-        // Desktop Click Behavior
-        trigger.addEventListener('click', (e) => {
-            if (window.innerWidth > 768) {
-                executeAction();
-            }
-        });
-
-        // Mobile Touch Behavior
-        trigger.addEventListener('touchstart', (e) => {
-            if (window.innerWidth > 768) return;
-            isHolding = true;
-            startY = e.touches[0].clientY;
-            
-            if (progress) {
-                // Instantly reset width to 0
-                progress.style.transition = 'none';
-                progress.style.width = '0%';
-                // Force browser reflow to guarantee the animation plays
-                void progress.offsetWidth;
-                // Start animation
-                progress.style.transition = 'width 1s linear';
-                progress.style.width = '100%';
-            }
-            if (navigator.vibrate) navigator.vibrate(30);
-            
-            holdTimer = setTimeout(() => {
-                if (!isHolding) return;
-                if (navigator.vibrate) navigator.vibrate([80, 40, 80]);
-                executeAction();
-                if (progress) {
-                    progress.style.transition = 'none';
-                    progress.style.width = '0%';
-                }
-                isHolding = false;
-            }, 1000);
-        }, {passive: true});
-
-        const cancelTouch = () => {
-            if (!isHolding) return;
-            isHolding = false;
-            clearTimeout(holdTimer);
-            if (progress) {
-                progress.style.transition = 'none';
-                progress.style.width = '0%';
-            }
-        };
-
-        trigger.addEventListener('touchmove', (e) => {
-            if (!isHolding) return;
-            // Cancel if they scroll down/up (30px threshold for shaky thumbs)
-            if (Math.abs(e.touches[0].clientY - startY) > 30) {
-                cancelTouch();
-            }
-        }, {passive: true});
-
-        trigger.addEventListener('touchend', cancelTouch);
-        trigger.addEventListener('touchcancel', cancelTouch);
-    });
-
-    const swipeKnob = document.getElementById('swipeKnob');
-    if (swipeKnob) {
-        const container = document.getElementById('swipeSealContainer');
-        const fill = document.getElementById('swipeFill');
-        const form = document.querySelector('.ledger-form');
-        let isDragging = false;
-        let startX = 0;
-        let currentX = 0;
-        let maxDrag = container.offsetWidth - swipeKnob.offsetWidth - 10;
-        
-        window.addEventListener('resize', () => {
-            maxDrag = container.offsetWidth - swipeKnob.offsetWidth - 10;
-        });
-
-        const startDrag = (e) => {
-            isDragging = true;
-            startX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
-            swipeKnob.style.transition = 'none';
-            fill.style.transition = 'none';
-        };
-
-        const onDrag = (e) => {
-            if (!isDragging) return;
-            const x = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
-            currentX = Math.max(0, Math.min(x - startX, maxDrag));
-            swipeKnob.style.transform = `translateX(${currentX}px)`;
-            fill.style.width = `${currentX + 25}px`;
-        };
-
-        const endDrag = () => {
-            if (!isDragging) return;
-            isDragging = false;
-            if (currentX >= maxDrag * 0.9) {
-                // Success
-                swipeKnob.style.transform = `translateX(${maxDrag}px)`;
-                fill.style.width = '100%';
-                if(navigator.vibrate) navigator.vibrate([100, 50, 100]);
-                setTimeout(() => {
-                    if (form && form.reportValidity()) form.submit();
-                }, 500);
-            } else {
-                // Reset
-                swipeKnob.style.transition = 'transform 0.3s ease';
-                fill.style.transition = 'width 0.3s ease';
-                swipeKnob.style.transform = 'translateX(0)';
-                fill.style.width = '0';
-            }
-        };
-
-        swipeKnob.addEventListener('mousedown', startDrag);
-        swipeKnob.addEventListener('touchstart', startDrag, {passive: true});
-        window.addEventListener('mousemove', onDrag);
-        window.addEventListener('touchmove', onDrag, {passive: true});
-        window.addEventListener('mouseup', endDrag);
-        window.addEventListener('touchend', endDrag);
-    }
 
     window.openArchive = function(key) {
         const modal = document.getElementById('archiveModal');
         const data = archiveData[key];
         if(!data) return;
 
-        document.getElementById('arcId').innerText = data.id;
         document.getElementById('arcDate').innerText = data.date;
         document.getElementById('arcTitle').innerText = data.title;
         document.getElementById('arcBody').innerHTML = data.content;
 
         modal.classList.add('active');
-        // Reset scroll position
         document.getElementById('archivePaper').scrollTop = 0;
     };
 
@@ -1449,5 +1277,141 @@ Museum Utama Expedient
     window.revealRedacted = function(el) {
         el.classList.add('revealed');
     };
+
+    // =========================================================
+    // VVIP MOBILE & SENSOR INTERACTION
+    // =========================================================
+    
+    // 1. Swipe to Seal (Ledger)
+    const knob = document.getElementById('swipeKnob');
+    const fill = document.getElementById('swipeFill');
+    const container = document.getElementById('swipeSealContainer');
+    const form = document.getElementById('ledgerForm');
+    
+    if(knob && container) {
+        let isDragging = false;
+        let startX = 0;
+        let maxDrag = container.offsetWidth - knob.offsetWidth - 10;
+        
+        window.addEventListener('resize', () => { maxDrag = container.offsetWidth - knob.offsetWidth - 10; });
+
+        const onStart = (e) => {
+            isDragging = true;
+            startX = e.type.includes('mouse') ? e.pageX : e.touches[0].pageX;
+            knob.style.transition = 'none';
+            fill.style.transition = 'none';
+        };
+
+        const onMove = (e) => {
+            if(!isDragging) return;
+            const currentX = e.type.includes('mouse') ? e.pageX : e.touches[0].pageX;
+            let diff = currentX - startX;
+            if(diff < 0) diff = 0;
+            if(diff > maxDrag) diff = maxDrag;
+            
+            knob.style.transform = `translateX(${diff}px)`;
+            fill.style.width = (diff + 25) + 'px';
+        };
+
+        const onEnd = () => {
+            if(!isDragging) return;
+            isDragging = false;
+            
+            const currentTransform = knob.style.transform;
+            const diff = parseFloat(currentTransform.replace('translateX(','').replace('px)','')) || 0;
+            
+            knob.style.transition = '0.3s ease';
+            fill.style.transition = '0.3s ease';
+            
+            if(diff >= maxDrag * 0.95) {
+                // Success!
+                knob.style.transform = `translateX(${maxDrag}px)`;
+                fill.style.width = '100%';
+                if (navigator.vibrate) navigator.vibrate([50, 100, 50]);
+                document.getElementById('swipeText').innerHTML = "PESAN DISEGEL <i class='fa-solid fa-check'></i>";
+                setTimeout(() => form.submit(), 800);
+            } else {
+                // Reset
+                knob.style.transform = `translateX(0px)`;
+                fill.style.width = '0px';
+            }
+        };
+
+        knob.addEventListener('mousedown', onStart);
+        window.addEventListener('mousemove', onMove);
+        window.addEventListener('mouseup', onEnd);
+        
+        knob.addEventListener('touchstart', onStart, {passive: true});
+        window.addEventListener('touchmove', onMove, {passive: true});
+        window.addEventListener('touchend', onEnd);
+    }
+
+    // 2. Press and Hold to Reveal (Mobile)
+    const holdTriggers = document.querySelectorAll('.press-hold-trigger');
+    const isMobileDevice = window.matchMedia("(max-width: 768px)").matches;
+    
+    // Add rings to body
+    const ring = document.createElement('div');
+    ring.className = 'haptic-ring';
+    document.body.appendChild(ring);
+
+    holdTriggers.forEach(trigger => {
+        if(isMobileDevice) {
+            trigger.querySelector('.desktop-hint').style.display = 'none';
+            trigger.querySelector('.mobile-hint').style.display = 'inline';
+            
+            let holdTimer;
+            
+            const startHold = (e) => {
+                const touch = e.touches[0];
+                ring.style.left = touch.clientX - 50 + 'px';
+                ring.style.top = touch.clientY - 50 + 'px';
+                ring.style.width = '100px';
+                ring.style.height = '100px';
+                
+                gsap.set(ring, { opacity: 1, scale: 0.1 });
+                gsap.to(ring, { scale: 1.5, opacity: 0, duration: 1.5, ease: "power2.out" });
+                
+                if (navigator.vibrate) navigator.vibrate(50);
+                
+                holdTimer = setTimeout(() => {
+                    if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+                    const key = trigger.getAttribute('data-archive');
+                    openArchive(key);
+                }, 1000);
+            };
+            
+            const endHold = () => {
+                clearTimeout(holdTimer);
+                gsap.killTweensOf(ring);
+                gsap.to(ring, { opacity: 0, duration: 0.2 });
+            };
+            
+            trigger.addEventListener('touchstart', startHold, {passive: true});
+            trigger.addEventListener('touchend', endHold);
+            trigger.addEventListener('touchmove', endHold); // Cancel if swiped
+        } else {
+            // Click for desktop
+            trigger.addEventListener('click', () => {
+                const key = trigger.getAttribute('data-archive');
+                openArchive(key);
+            });
+        }
+    });
+
+    // 3. Gyroscope Parallax for the Stage
+    if(window.DeviceOrientationEvent && isMobileDevice) {
+        window.addEventListener('deviceorientation', (e) => {
+            const tiltX = Math.min(Math.max(e.gamma, -45), 45); // Left to right
+            const tiltY = Math.min(Math.max(e.beta - 45, -45), 45); // Front to back
+            
+            const xNorm = tiltX / 45; // -1 to 1
+            const yNorm = tiltY / 45; // -1 to 1
+            
+            if(typeof isAnimating !== 'undefined' && !isAnimating && typeof applyParallax === 'function') {
+                applyParallax(xNorm, yNorm);
+            }
+        });
+    }
 </script>
 <?= $this->endSection() ?>
