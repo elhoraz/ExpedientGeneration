@@ -93,10 +93,10 @@
         .php-error-box ul { margin-left: 20px; color: #ff99aa; font-size: 0.9rem; line-height: 1.6; }
 
         /* ================= 5. SMART GRID, FLUID INPUTS & ERROR HINTS ================= */
-        .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px 35px; } /* Jarak vertical ditambah untuk tempat error text */
+        .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px 35px; } /* Increased gap to prevent error overlaps */
         .span-full { grid-column: 1 / -1; }
 
-        .input-group { position: relative; opacity: 0; transform: translateY(20px); animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .input-group { position: relative; opacity: 0; transform: translateY(20px); animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; margin-bottom: 5px; }
         .input-group:nth-child(1){animation-delay:0.1s;} .input-group:nth-child(2){animation-delay:0.15s;}
         .input-group:nth-child(3){animation-delay:0.2s;} .input-group:nth-child(4){animation-delay:0.25s;}
         .input-group:nth-child(5){animation-delay:0.3s;} .input-group:nth-child(6){animation-delay:0.35s;}
@@ -141,8 +141,8 @@
         .btn-change-photo { margin-top: 15px; background: rgba(255,255,255,0.05); border: 1px solid var(--text-secondary); color: var(--text-secondary); padding: 8px 20px; border-radius: 20px; cursor: pointer; transition: 0.3s; font-weight: 600; font-size: 0.85rem;}
 
         /* ================= 7. MAGNETIC CHECKBOX & BUTTON ================= */
-        .checkbox-container { display: flex; align-items: flex-start; gap: 15px; margin-top: 15px; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid transparent; transition: 0.3s; position: relative;}
-        .checkbox-container.is-invalid { border-color: #ff3366; background: rgba(255, 51, 102, 0.05); animation: shakeError 0.4s; }
+        .checkbox-container { display: flex; align-items: flex-start; gap: 15px; margin-top: 15px; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid transparent; transition: 0.3s; position: relative; opacity: 1 !important; transform: none !important; animation: none !important; z-index: 10;}
+        .checkbox-container.is-invalid { border-color: #ff3366; background: rgba(255, 51, 102, 0.05); animation: shakeError 0.4s !important; }
         [data-theme="light"] .checkbox-container { background: rgba(255,255,255,0.4); }
         .checkbox-container input { width: 20px; height: 20px; accent-color: #d4af37; cursor: pointer; margin-top: 3px; }
         .checkbox-container label { color: var(--text-secondary); font-size: 0.85rem; line-height: 1.6; cursor: pointer; margin: 0; pointer-events: auto;}
@@ -161,21 +161,44 @@
         .toast-success { border-bottom: 4px solid #00ff88; border-right: 2px solid #00ff88; } .toast-success i { color: #00ff88; }
         .toast-error { border-bottom: 4px solid #ff3366; border-right: 2px solid #ff3366; } .toast-error i { color: #ff3366; }
 
-        /* ================= 9. CROPPER & FACE MODALS ================= */
-        .crop-modal, .face-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 10000; justify-content: center; align-items: center; backdrop-filter: blur(15px); }
-        .face-modal { z-index: 10001; } /* Harus lebih di atas dari cropper */
-        .crop-content, .face-content { background: var(--glass-bg); border: 1px solid var(--glass-edge); padding: 30px; border-radius: 24px; width: 90%; max-width: 500px; box-shadow: var(--glass-shadow); text-align: center; }
-        .crop-img-wrap { width: 100%; max-height: 50vh; margin-bottom: 25px; border-radius: 12px; overflow: hidden; } .crop-img-wrap img { max-width: 100%; }
+        /* ================= 9. CROPPER & BIOMETRIC GATEWAY ================= */
+        .crop-modal, .auth-vault { display: none; position: fixed; inset: 0; background: rgba(2,4,6,0.95); z-index: 10000; justify-content: center; align-items: center; backdrop-filter: blur(25px); flex-direction: column; }
+        .auth-vault { z-index: 10001; } /* Harus lebih di atas dari cropper */
+        .crop-content { background: var(--glass-bg); border: 1px solid var(--glass-edge); padding: 40px; border-radius: 28px; width: 90%; max-width: 500px; box-shadow: var(--glass-shadow); text-align: center; }
+        .crop-img-wrap { width: 100%; max-height: 50vh; margin-bottom: 30px; border-radius: 16px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.5); } .crop-img-wrap img { max-width: 100%; }
         .crop-actions { display: flex; justify-content: flex-end; gap: 15px; }
-        .crop-btn-cancel { padding: 12px 25px; background: transparent; border: 1px solid var(--text-secondary); color: var(--text-secondary); border-radius: 12px; cursor: pointer; transition: 0.3s; font-weight: 600; }
-        .crop-btn-apply { padding: 12px 25px; background: var(--gold-liquid); border: none; color: #000; font-weight: bold; border-radius: 12px; cursor: pointer; transition: 0.3s; }
+        .crop-btn-cancel { padding: 14px 28px; background: transparent; border: 1px solid var(--text-secondary); color: var(--text-secondary); border-radius: 16px; cursor: pointer; transition: 0.3s; font-weight: 600; }
+        .crop-btn-cancel:hover { background: rgba(255,255,255,0.1); color: #fff; border-color: #fff; }
+        .crop-btn-apply { padding: 14px 28px; background: var(--gold-liquid); background-size: 200% auto; border: none; color: #000; font-weight: bold; border-radius: 16px; cursor: pointer; transition: 0.3s; box-shadow: 0 10px 20px rgba(212,175,55,0.3); }
+        .crop-btn-apply:hover { animation: shimmerLiquid 2.5s linear infinite; box-shadow: 0 15px 30px rgba(212,175,55,0.5); transform: translateY(-2px); }
 
-        /* Face ID Custom Elements */
-        .face-ring { position: relative; width: 220px; aspect-ratio: 3/4; border-radius: 100px; padding: 6px; background: linear-gradient(135deg, rgba(212,175,55,0.4), rgba(212,175,55,0.05)); box-shadow: 0 15px 35px rgba(0,0,0,0.3), inset 0 0 20px rgba(212,175,55,0.2); overflow: hidden; margin: 0 auto 20px auto; }
-        .face-video { width: 100%; height: 100%; object-fit: cover; border-radius: 94px; transform: scaleX(-1); background-color: #030504; }
-        .face-scanner { position: absolute; top: 0; left: 0; width: 100%; height: 30%; background: linear-gradient(to bottom, transparent, rgba(212,175,55,0.3), rgba(212,175,55,0.8)); border-bottom: 2px solid #d4af37; border-radius: 94px 94px 0 0; animation: elegantSweep 2.5s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate; display: none; pointer-events: none; }
-        @keyframes elegantSweep { 0% { transform: translateY(-100%); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(350%); opacity: 0; } }
+        /* Leica Retina Scanner Custom Elements */
+        .retina-container { position: relative; width: 320px; height: 320px; display: flex; justify-content: center; align-items: center; margin-bottom: 50px; }
+        .focus-ring { position: absolute; inset: 0; border: 1px solid var(--glass-edge); border-radius: 50%; box-shadow: inset 0 0 40px var(--glass-bg), 0 20px 60px rgba(0,0,0,0.3); z-index: 1; transition: border-color 0.8s ease, box-shadow 0.8s ease; }
+        [data-theme="light"] .focus-ring { box-shadow: inset 0 0 40px var(--glass-bg), 0 20px 60px rgba(0,0,0,0.05); }
+        .bracket { position: absolute; width: 40px; height: 40px; border: 2px solid transparent; z-index: 20; transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.5s; }
+        .bracket-tl { top: 25px; left: 25px; border-top-color: #d4af37; border-left-color: #d4af37; }
+        .bracket-tr { top: 25px; right: 25px; border-top-color: #d4af37; border-right-color: #d4af37; }
+        .bracket-bl { bottom: 25px; left: 25px; border-bottom-color: #d4af37; border-left-color: #d4af37; }
+        .bracket-br { bottom: 25px; right: 25px; border-bottom-color: #d4af37; border-right-color: #d4af37; }
+        .scanning .bracket-tl { transform: translate(-10px, -10px); } .scanning .bracket-tr { transform: translate(10px, -10px); }
+        .scanning .bracket-bl { transform: translate(-10px, 10px); } .scanning .bracket-br { transform: translate(10px, 10px); }
         
+        .camera-frame { position: absolute; width: 250px; height: 250px; border-radius: 50%; overflow: hidden; z-index: 10; background: #050505; }
+        .camera-frame::after { content: ''; position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(circle at 50% 50%, transparent 60%, rgba(0,0,0,0.8) 100%); pointer-events: none; }
+        .camera-feed { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); filter: contrast(1.1) saturate(1.1) grayscale(0.1); }
+        .lens-dust { position: absolute; inset: 0; z-index: 15; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E"); pointer-events: none; mix-blend-mode: color-dodge; }
+        .scan-line { position: absolute; top: 0; left: 0; width: 100%; height: 1px; background: #d4af37; opacity: 0; z-index: 16; box-shadow: 0 0 20px 2px #d4af37; pointer-events: none; }
+        
+        .liveness-indicator { display: flex; align-items: center; gap: 25px; margin-bottom: 35px; }
+        .live-node { width: 5px; height: 5px; border-radius: 50%; background: var(--glass-edge); transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+        .live-node.active { background: #d4af37; box-shadow: 0 0 15px #d4af37; transform: scale(2); }
+        .live-node.done { background: var(--text-primary); }
+
+        .status-display { text-align: center; min-width: 320px; padding: 20px; background: var(--glass-bg); backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-edge); border-radius: 20px; box-shadow: var(--glass-shadow); }
+        .status-title { font-family: 'Inter', sans-serif; font-size: 0.65rem; color: var(--text-secondary); letter-spacing: 4px; text-transform: uppercase; margin-bottom: 15px; }
+        .status-value { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 500; color: var(--text-primary); letter-spacing: 1px; min-height: 35px; }
+
         @media (max-width: 768px) {
             .main-container { padding: 100px 15px 40px 15px; }
             .form-grid { grid-template-columns: 1fr; gap: 30px; }
@@ -186,6 +209,7 @@
         }
     </style>
     
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api/dist/face-api.min.js"></script>
 </head>
 <body data-theme="dark">
@@ -364,20 +388,34 @@
         </div>
     </div>
 
-    <div class="face-modal" id="faceModal">
-        <div class="face-content">
-            <h3 style="color:#d4af37; font-family:'Playfair Display', serif; font-size:1.8rem; margin-bottom:10px;">Verifikasi Kehidupan</h3>
-            <p style="color:var(--text-secondary); font-size:0.85rem; margin-bottom:25px; line-height: 1.5;">Posisikan wajah Anda pada bingkai.<br>Buktikan Anda manusia nyata dengan <strong style="color:#00ff88;">Tersenyum</strong>.</p>
-
-            <div class="face-ring">
-                <video id="faceVideo" class="face-video" autoplay playsinline muted></video>
-                <div class="face-scanner" id="faceScanner"></div>
-            </div>
-
-            <div style="margin-top:20px; font-size:0.8rem; color:#d4af37; letter-spacing:2px; font-weight:bold; height: 20px;" id="faceStatus">MEMUAT SISTEM KECERDASAN BUATAN...</div>
+    <div class="auth-vault" id="faceModal">
+        <div class="retina-container" id="retinaContainer">
+            <div class="focus-ring" id="focusRing"></div>
+            <!-- Leica Brackets -->
+            <div class="bracket bracket-tl"></div>
+            <div class="bracket bracket-tr"></div>
+            <div class="bracket bracket-bl"></div>
+            <div class="bracket bracket-br"></div>
             
-            <button type="button" class="crop-btn-cancel" style="margin-top: 25px; font-size: 0.75rem;" onclick="closeFaceScanner()">BATALKAN INISIASI</button>
+            <div class="camera-frame">
+                <video id="faceVideo" class="camera-feed" autoplay playsinline muted></video>
+                <div class="lens-dust"></div>
+                <div class="scan-line" id="scanLine"></div>
+            </div>
         </div>
+
+        <div class="liveness-indicator">
+            <div class="live-node" id="step1"></div>
+            <div class="live-node" id="step2"></div>
+            <div class="live-node" id="step3"></div>
+        </div>
+
+        <div class="status-display" id="statusBadge">
+            <div class="status-title">Protokol Keamanan VVIP</div>
+            <div class="status-value" id="faceStatus">Memuat Kalibrasi...</div>
+        </div>
+
+        <button type="button" class="crop-btn-cancel" style="margin-top: 40px; font-size: 0.75rem;" onclick="closeFaceScanner()">BATALKAN INISIASI</button>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
@@ -450,59 +488,88 @@
         });
 
         // =========================================================================
-        // LOGIKA LIVENESS DETECTION (FACE-API.JS)
+        // LOGIKA LIVENESS DETECTION (FACE-API.JS) DENGAN LEICA UI
         // =========================================================================
         let isFaceModelLoaded = false;
         let faceStreamRef = null;
         let faceCheckInterval = null;
+        let scanAnim = null;
+        
         const faceModal = document.getElementById('faceModal');
         const faceVideo = document.getElementById('faceVideo');
         const faceStatus = document.getElementById('faceStatus');
-        const faceScannerUI = document.getElementById('faceScanner');
+        const retinaContainer = document.getElementById('retinaContainer');
+        const scanLine = document.getElementById('scanLine');
+        const s1 = document.getElementById('step1');
+        const s2 = document.getElementById('step2');
+        const s3 = document.getElementById('step3');
+
+        const updateTextFade = (text, color) => {
+            gsap.to(faceStatus, {
+                opacity: 0, y: -10, duration: 0.3,
+                onComplete: () => {
+                    faceStatus.innerText = text;
+                    if(color) faceStatus.style.color = color;
+                    gsap.fromTo(faceStatus, { y: 10 }, { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" });
+                }
+            });
+        };
+
+        const updateHUD = (text, color, isScanning, step) => {
+            if(faceStatus.innerText !== text) { updateTextFade(text, color); }
+            
+            if (isScanning && !scanAnim) {
+                retinaContainer.classList.add('scanning');
+                gsap.set(scanLine, { opacity: 1 });
+                scanAnim = gsap.to(scanLine, { top: "100%", duration: 2, repeat: -1, yoyo: true, ease: "sine.inOut" });
+            } else if (!isScanning && scanAnim) {
+                retinaContainer.classList.remove('scanning');
+                scanAnim.kill(); scanAnim = null;
+                gsap.to(scanLine, { opacity: 0, duration: 0.3 });
+            }
+
+            s1.className = 'live-node'; s2.className = 'live-node'; s3.className = 'live-node';
+            if (step === 1) { s1.classList.add('active'); }
+            else if (step === 2) { s1.classList.add('done'); s2.classList.add('active'); }
+            else if (step === 3) { s1.classList.add('done'); s2.classList.add('done'); s3.classList.add('active'); }
+            else if (step === 4) { s1.classList.add('done'); s2.classList.add('done'); s3.classList.add('done'); }
+        };
 
         async function startFaceScanner() {
-            // Buka Modal
             faceModal.style.display = 'flex';
-            faceStatus.innerText = "MEMUAT SISTEM KECERDASAN BUATAN...";
-            faceStatus.style.color = "#d4af37";
+            gsap.fromTo(faceModal, { opacity: 0 }, { opacity: 1, duration: 0.8 });
+            
+            updateHUD("MEMUAT KECERDASAN BUATAN...", "#d4af37", false, 0);
 
-            // 1. Muat Model AI dari Folder Lokal (Hanya 1x muat)
             if (!isFaceModelLoaded) {
                 try {
-                    // Mengambil URL asli dari browser (apakah itu localhost atau ngrok)
-const MODEL_URL = window.location.origin + '/assets/models';
+                    const MODEL_URL = window.location.origin + '/assets/models';
                     await Promise.all([
                         faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
                         faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
                         faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL),
-                        faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL) // Butuh untuk deteksi senyum
+                        faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL)
                     ]);
                     isFaceModelLoaded = true;
                 } catch (err) {
                     console.error(err);
-                    faceStatus.innerText = "ERROR GAGAL MEMUAT MODEL AI. CEK FOLDER MODELS.";
-                    faceStatus.style.color = "#ff3366";
+                    updateHUD("ERROR GAGAL MEMUAT MODEL AI", "#ff3366", false, 0);
                     return;
                 }
             }
 
-            // 2. Nyalakan Kamera Depan
-            faceStatus.innerText = "MENGAKSES KAMERA DEPAM...";
+            updateHUD("MENGAKSES OPTIK KAMERA...", "#d4af37", false, 1);
             try {
                 faceStreamRef = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
                 faceVideo.srcObject = faceStreamRef;
             } catch (err) {
-                faceStatus.innerText = "AKSES KAMERA DITOLAK ATAU TIDAK DITEMUKAN";
-                faceStatus.style.color = "#ff3366";
+                updateHUD("AKSES KAMERA DITOLAK", "#ff3366", false, 0);
                 return;
             }
 
-            // 3. Mulai Deteksi Saat Video Menyala
             faceVideo.onplay = () => {
-                faceStatus.innerText = "TUNGGU... MEMBACA STRUKTUR WAJAH";
-                faceScannerUI.style.display = 'block'; // Nyalakan animasi garis turun naik
+                updateHUD("MEMBACA STRUKTUR WAJAH...", "#d4af37", true, 1);
 
-                // Cek wajah setiap 400 mili-detik
                 faceCheckInterval = setInterval(async () => {
                     const detection = await faceapi.detectSingleFace(faceVideo, new faceapi.TinyFaceDetectorOptions())
                                                    .withFaceLandmarks()
@@ -510,47 +577,40 @@ const MODEL_URL = window.location.origin + '/assets/models';
                                                    .withFaceDescriptor();
                     
                     if (detection) {
-                        // Wajah ditemukan!
-                        faceStatus.innerText = "TERDETEKSI. SILAKAN TERSENYUM UNTUK VERIFIKASI";
-                        faceStatus.style.color = "#d4af37";
-
-                        // Cek Ekspresi Senyum (Tingkat kebahagiaan di atas 80%)
                         if (detection.expressions.happy > 0.8) {
-                            clearInterval(faceCheckInterval); // Hentikan pengecekan
+                            clearInterval(faceCheckInterval);
                             
-                            faceStatus.innerText = "VERIFIKASI LIVENESS SUKSES! MENGUNCI DATA...";
-                            faceStatus.style.color = "#00ff88";
-                            faceScannerUI.style.display = 'none';
+                            updateHUD("VERIFIKASI SUKSES! MENGUNCI DATA...", "#00ff88", false, 4);
                             
-                            // Ambil 128 Deret Angka Identitas Wajah
                             const descriptorArray = Array.from(detection.descriptor);
-                            // Simpan ke input tersembunyi sebagai JSON String
                             document.getElementById('faceDataInput').value = JSON.stringify(descriptorArray);
 
-                            // Matikan Kamera
                             if(faceStreamRef) faceStreamRef.getTracks().forEach(track => track.stop());
 
-                            // Otomatis Submit Form ke Backend CI4 setelah jeda 1.5 detik
                             setTimeout(() => {
-                                faceModal.style.display = 'none';
-                                document.getElementById('btnSubmitForm').innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Menyimpan Berkas...';
-                                registerForm.submit(); // Eksekusi pengiriman form secara paksa
+                                gsap.to(faceModal, { opacity: 0, duration: 0.5, onComplete: () => {
+                                    faceModal.style.display = 'none';
+                                    document.getElementById('btnSubmitForm').innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Menyimpan Berkas...';
+                                    registerForm.submit();
+                                }});
                             }, 1500);
+                        } else {
+                            updateHUD("TERDETEKSI. TERSENYUM UNTUK VERIFIKASI", "#d4af37", true, 2);
                         }
                     } else {
-                        faceStatus.innerText = "WAJAH TIDAK TERLIHAT. POSISIKAN DI TENGAH.";
-                        faceStatus.style.color = "#ff3366";
+                        updateHUD("WAJAH TIDAK TERLIHAT. POSISIKAN DI TENGAH.", "#ff3366", false, 1);
                     }
                 }, 400);
             };
         }
 
-        // Fungsi Batal Pemindaian
         function closeFaceScanner() {
             if (faceCheckInterval) clearInterval(faceCheckInterval);
             if (faceStreamRef) faceStreamRef.getTracks().forEach(track => track.stop());
-            faceModal.style.display = 'none';
-            faceScannerUI.style.display = 'none';
+            gsap.to(faceModal, { opacity: 0, duration: 0.5, onComplete: () => {
+                faceModal.style.display = 'none';
+                if(scanAnim) { scanAnim.kill(); scanAnim = null; }
+            }});
         }
 
 

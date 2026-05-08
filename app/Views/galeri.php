@@ -66,18 +66,18 @@ Arsip Visual 5D | The Syndicate Yearbook
     
     /* ========================================================
        SISTEM KETEBALAN BUKU (3D SPINE & PAPER EDGES)
-       Setiap halaman menyumbang 2.5px ketebalan.
+       Setiap halaman menyumbang 1.5px ketebalan (Realistic 5D).
        ======================================================== */
     /* Sisi Kanan (Tumpukan Kertas Warna Emas) */
     .sheet::before {
-        content: ''; position: absolute; right: 0; top: 1%; bottom: 1%; width: 2.5px;
+        content: ''; position: absolute; right: 0; top: 1%; bottom: 1%; width: 1.5px;
         background: linear-gradient(to bottom, #b49129, #f3e5ab, #b49129);
         transform-origin: right center; transform: rotateY(90deg); z-index: 10;
     }
     
     /* Sisi Kiri (Tulang Buku) */
     .sheet::after {
-        content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2.5px;
+        content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 1.5px;
         background: #080808; border-left: 1px solid rgba(255,255,255,0.05);
         transform-origin: left center; transform: rotateY(-90deg); z-index: 10;
     }
@@ -130,6 +130,22 @@ Arsip Visual 5D | The Syndicate Yearbook
     .signature-text { font-family: 'Alex Brush', cursive; font-size: 80px; fill: transparent; stroke: #d4af37; stroke-width: 1.5; stroke-dasharray: 800; stroke-dashoffset: 800; }
     @keyframes drawSignatureAnim { 0% { stroke-dashoffset: 800; fill: transparent; stroke: #d4af37; } 70% { stroke-dashoffset: 0; fill: transparent; stroke: #d4af37; } 100% { stroke-dashoffset: 0; fill: rgba(212,175,55,1); stroke: transparent; } }
 
+    /* ================= 9. VVIP UPGRADES ================= */
+    .cover-material::after {
+        content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 20;
+        background: linear-gradient(115deg, transparent 20%, rgba(255,255,255,0.4) 40%, rgba(212,175,55,0.6) 50%, transparent 60%);
+        background-size: 300% 300%; mix-blend-mode: color-dodge; opacity: 0.8;
+        background-position: calc(var(--mx, 50%) * 1.5) calc(var(--my, 50%) * 1.5);
+    }
+    .light-sweep { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to right, transparent 0%, rgba(255,255,255,0.5) 50%, transparent 100%); transform: translateX(-100%); mix-blend-mode: overlay; z-index: 15; opacity: 0; }
+    .face.back .light-sweep { background: linear-gradient(to left, transparent 0%, rgba(255,255,255,0.5) 50%, transparent 100%); transform: translateX(100%); }
+    .glitch-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 9999; opacity: 0; background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="1.5" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100" height="100" filter="url(%23n)" opacity="0.5"/></svg>'); mix-blend-mode: difference; }
+    .gallery-stage.glitch-active .dimension-core { animation: shakeCore 0.4s cubic-bezier(.36,.07,.19,.97) both; filter: drop-shadow(8px 0 0 rgba(255,0,0,0.8)) drop-shadow(-8px 0 0 rgba(0,255,255,0.8)); }
+    @keyframes shakeCore { 10%, 90% { transform: translate3d(-4px, 0, 0); } 20%, 80% { transform: translate3d(6px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-10px, 0, 0); } 40%, 60% { transform: translate3d(10px, 0, 0); } }
+    .indicator-wrapper { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 140px; }
+    .progress-bar-container { width: 100%; height: 2px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; }
+    .progress-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #d4af37, #f3e5ab, #d4af37); transition: width 0.8s cubic-bezier(0.25, 1, 0.5, 1); box-shadow: 0 0 10px rgba(212,175,55,0.8); }
+
     /* PORTRAIT LOCK */
     .portrait-lock { display: none; position: fixed; inset: 0; z-index: 99999; background: #030504; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; }
     .portrait-lock i { font-size: clamp(3rem, 10vw, 5rem); color: #d4af37; margin-bottom: 20px; animation: tiltPhone 2s infinite; }
@@ -159,6 +175,7 @@ Arsip Visual 5D | The Syndicate Yearbook
 </div>
 
 <div class="gallery-stage" id="galleryStage">
+    <div class="glitch-overlay" id="glitchOverlay"></div>
     <div class="ethereal-text" id="etherealText" title="Double Click for Epilogue">THE SYNDICATE</div>
     <canvas id="dustCanvas"></canvas>
     <div class="ambient-light" id="ambientLight"></div>
@@ -193,12 +210,16 @@ Arsip Visual 5D | The Syndicate Yearbook
         <button class="btn-icon hover-trigger" id="btnIndex" title="Constellation Grid"><i class="fa-solid fa-border-all"></i></button>
         
         <button class="btn-nav hover-trigger" id="btnPrev"><i class="fa-solid fa-arrow-left"></i></button>
-        <div class="page-indicator" id="pageIndicator">COVER DEPAN</div>
+        <div class="indicator-wrapper">
+            <div class="page-indicator" id="pageIndicator">COVER DEPAN</div>
+            <div class="progress-bar-container"><div class="progress-bar-fill" id="progressFill"></div></div>
+        </div>
         <button class="btn-nav hover-trigger" id="btnNext"><i class="fa-solid fa-arrow-right"></i></button>
         
         <button class="btn-icon hover-trigger" id="btnCloseBook" title="Tutup Buku"><i class="fa-solid fa-book"></i></button>
         <button class="btn-icon hover-trigger" id="btnPin" title="Simpan Halaman Ini"><i class="fa-regular fa-bookmark"></i></button>
         <button class="btn-icon hover-trigger" id="btnGoToPin" title="Teleportasi ke Memori" style="display: none;"><i class="fa-solid fa-map-location-dot"></i></button>
+        <button class="btn-icon hover-trigger" id="btnFullscreen" title="Immersive Mode"><i class="fa-solid fa-expand"></i></button>
     </div>
 </div>
 <?= $this->endSection() ?>
@@ -299,12 +320,13 @@ Arsip Visual 5D | The Syndicate Yearbook
         // =========================================================
         // IDLE MODE (MUSEUM SCREENSAVER)
         // =========================================================
-        let idleTimer; let isIdle = false;
+        let idleTimer; let isIdle = false; let parallaxActive = true;
         const resetIdleTimer = () => {
             if (isIdle) {
                 isIdle = false; stage.classList.remove('idle-mode');
                 gsap.killTweensOf(dimCore, "rotationY");
                 gsap.to(dimCore, { rotationY: (activeDim === 'putra' ? 0 : -180), duration: 1, ease: "power2.out" });
+                parallaxActive = false; setTimeout(() => { parallaxActive = true; }, 1000);
             }
             clearTimeout(idleTimer);
             idleTimer = setTimeout(() => {
@@ -366,7 +388,14 @@ Arsip Visual 5D | The Syndicate Yearbook
             constructor(elementId, totalSheetsCount) {
                 this.book = document.getElementById(elementId); this.sheets = this.book.querySelectorAll('.sheet');
                 this.totalSheets = totalSheetsCount; this.currentSheet = 0; this.isAnimating = false; this.isIndexMode = false;
-                this.Z_SPACE = 2.5; // KETEBALAN TIAP HALAMAN (PX)
+                this.Z_SPACE = 1.5; // KETEBALAN REALISTIS (PX)
+                
+                // Inject Light Sweep (VVIP)
+                this.sheets.forEach(sheet => {
+                    const front = sheet.querySelector('.face.front'); const back = sheet.querySelector('.face.back');
+                    if(front) { const l = document.createElement('div'); l.className='light-sweep'; front.appendChild(l); }
+                    if(back) { const l = document.createElement('div'); l.className='light-sweep'; back.appendChild(l); }
+                });
                 
                 this.initDepthAndZ(); this.updateVisibility();
             }
@@ -375,7 +404,15 @@ Arsip Visual 5D | The Syndicate Yearbook
                 if(this.isIndexMode) { this.sheets.forEach(sheet => { sheet.style.display = 'block'; const imgs = sheet.querySelectorAll('img'); imgs.forEach(img => { if(img.hasAttribute('loading')) img.removeAttribute('loading'); }); }); return; }
                 this.sheets.forEach((sheet, index) => {
                     if (Math.abs(index - this.currentSheet) <= 3) sheet.style.display = 'block'; else sheet.style.display = 'none';
-                    if(index >= this.currentSheet && index <= this.currentSheet + 2) { const imgs = sheet.querySelectorAll('img'); imgs.forEach(img => { if(img.hasAttribute('loading')) img.removeAttribute('loading'); }); }
+                    if(index >= this.currentSheet - 2 && index <= this.currentSheet + 3) { 
+                        const imgs = sheet.querySelectorAll('img'); 
+                        imgs.forEach(img => { 
+                            if(img.hasAttribute('loading')) { 
+                                img.removeAttribute('loading'); 
+                                const memImg = new Image(); memImg.src = img.src; // Force memory cache
+                            } 
+                        }); 
+                    }
                 });
             }
 
@@ -383,7 +420,9 @@ Arsip Visual 5D | The Syndicate Yearbook
                 if(this.isIndexMode) return;
                 this.sheets.forEach((sheet, index) => {
                     const targetRotY = index < this.currentSheet ? -180 : 0;
-                    const targetZ = index < this.currentSheet ? -index * this.Z_SPACE : (this.totalSheets - index) * this.Z_SPACE;
+                    let targetZ = 0;
+                    if (index < this.currentSheet) targetZ = -((this.currentSheet - 1) - index) * this.Z_SPACE;
+                    else targetZ = -(index - this.currentSheet) * this.Z_SPACE;
                     gsap.set(sheet, { rotationY: targetRotY, z: targetZ });
                     sheet.style.zIndex = index < this.currentSheet ? index : this.totalSheets - index;
                 });
@@ -394,7 +433,9 @@ Arsip Visual 5D | The Syndicate Yearbook
                 this.sheets.forEach((sheet, index) => {
                     if (index === animatingIdx) return;
                     const targetRotY = index < this.currentSheet ? -180 : 0;
-                    const targetZ = index < this.currentSheet ? -index * this.Z_SPACE : (this.totalSheets - index) * this.Z_SPACE;
+                    let targetZ = 0;
+                    if (index < this.currentSheet) targetZ = -((this.currentSheet - 1) - index) * this.Z_SPACE;
+                    else targetZ = -(index - this.currentSheet) * this.Z_SPACE;
                     gsap.to(sheet, { rotationY: targetRotY, z: targetZ, duration: 0.8, ease: "power2.out" });
                 });
             }
@@ -408,16 +449,22 @@ Arsip Visual 5D | The Syndicate Yearbook
                 else {
                     gsap.to(this.book, { xPercent: 0, duration: 1, ease: "power2.out" });
                     let halKiri = (this.currentSheet - 1) * 2; let halKanan = halKiri + 1; let maxHal = (this.totalSheets - 2) * 2;
-                    if(this.currentSheet === 1) indicatorEl.innerText = "HAL 1"; else if(this.currentSheet === this.totalSheets - 1) indicatorEl.innerText = `HAL ${maxHal}`; else indicatorEl.innerText = `HAL ${halKiri} - ${halKanan}`;
+                    if(this.currentSheet === 1) indicatorEl.innerText = "SAMPUL DALAM - HAL 1"; 
+                    else if(this.currentSheet === this.totalSheets - 1) indicatorEl.innerText = `HAL ${maxHal} - SAMPUL DALAM`; 
+                    else indicatorEl.innerText = `HAL ${halKiri} - ${halKanan}`;
                 }
                 btnPrev.disabled = (this.currentSheet === 0); btnNext.disabled = (this.currentSheet === this.totalSheets);
                 updatePinUI();
                 
                 if (this.currentSheet === 0) btnWhisper.classList.add('is-visible');
                 else { btnWhisper.classList.remove('is-visible'); whisperAudio.pause(); whisperAudio.currentTime = 0; btnWhisper.innerHTML = '<i class="fa-solid fa-microphone-lines"></i>'; if(isMusicPlaying) gsap.to(bgMusic, { volume: 0.5, duration: 1 }); }
+
+                // Update Progress Bar
+                const progress = (this.currentSheet / this.totalSheets) * 100;
+                const pFill = document.getElementById('progressFill');
+                if(pFill) pFill.style.width = `${progress}%`;
             }
 
-            // ARC PHYSICS SAAT MEMBALIK KE DEPAN
             flipNext(indicatorEl, btnPrev, btnNext) {
                 if (this.isAnimating || this.currentSheet >= this.totalSheets || this.isIndexMode) return;
                 this.isAnimating = true; playPaperFlip();
@@ -425,14 +472,17 @@ Arsip Visual 5D | The Syndicate Yearbook
                 const animatingIdx = this.currentSheet;
                 const sheet = this.sheets[animatingIdx];
                 sheet.classList.add('flipped'); 
+                sheet.style.zIndex = 999; // Anti-glitch Z
                 this.currentSheet++;
                 
-                const targetZ = -animatingIdx * this.Z_SPACE;
+                // VVIP Light sweep animation
+                const sweepFront = sheet.querySelector('.face.front .light-sweep');
+                if(sweepFront) { sweepFront.style.opacity = '1'; gsap.fromTo(sweepFront, {xPercent: -100}, {xPercent: 100, duration: 1, ease: "sine.inOut", onComplete: () => sweepFront.style.opacity='0'}); }
                 
                 gsap.to(sheet, {
                     keyframes: [
                         { rotationY: -90, z: 150, scale: 1.05, duration: 0.4, ease: "sine.in" },
-                        { rotationY: -180, z: targetZ, scale: 1, duration: 0.6, ease: "power2.out" }
+                        { rotationY: -180, z: 0, scale: 1, duration: 0.6, ease: "power2.out" }
                     ],
                     onComplete: () => {
                         this.updateZIndexOnly();
@@ -445,7 +495,6 @@ Arsip Visual 5D | The Syndicate Yearbook
                 this.updateDepthOnly(animatingIdx);
             }
 
-            // ARC PHYSICS SAAT MEMBALIK KE BELAKANG
             flipPrev(indicatorEl, btnPrev, btnNext) {
                 if (this.isAnimating || this.currentSheet <= 0 || this.isIndexMode) return;
                 this.isAnimating = true; playPaperFlip(); 
@@ -454,13 +503,16 @@ Arsip Visual 5D | The Syndicate Yearbook
                 const animatingIdx = this.currentSheet;
                 const sheet = this.sheets[animatingIdx];
                 sheet.classList.remove('flipped'); 
+                sheet.style.zIndex = 999; // Anti-glitch Z
                 
-                const targetZ = (this.totalSheets - animatingIdx) * this.Z_SPACE;
+                // VVIP Light sweep animation
+                const sweepBack = sheet.querySelector('.face.back .light-sweep');
+                if(sweepBack) { sweepBack.style.opacity = '1'; gsap.fromTo(sweepBack, {xPercent: 100}, {xPercent: -100, duration: 1, ease: "sine.inOut", onComplete: () => sweepBack.style.opacity='0'}); }
                 
                 gsap.to(sheet, {
                     keyframes: [
                         { rotationY: -90, z: 150, scale: 1.05, duration: 0.4, ease: "sine.in" },
-                        { rotationY: 0, z: targetZ, scale: 1, duration: 0.6, ease: "power2.out" }
+                        { rotationY: 0, z: 0, scale: 1, duration: 0.6, ease: "power2.out" }
                     ],
                     onComplete: () => {
                         this.updateZIndexOnly();
@@ -477,7 +529,7 @@ Arsip Visual 5D | The Syndicate Yearbook
                 if (this.isAnimating || this.isIndexMode || this.currentSheet === 0) return;
                 this.isAnimating = true; playPaperFlip(); this.sheets.forEach(sheet => sheet.style.display = 'block'); this.currentSheet = 0;
                 this.sheets.forEach((sheet, index) => {
-                    sheet.classList.remove('flipped'); const targetZ = (this.totalSheets - index) * this.Z_SPACE;
+                    sheet.classList.remove('flipped'); const targetZ = -index * this.Z_SPACE;
                     gsap.to(sheet, { rotationY: 0, z: targetZ, duration: 1.2, ease: "power3.inOut" });
                 });
                 this.centerBook(indicatorEl, btnPrev, btnNext); setTimeout(() => { this.updateZIndexOnly(); this.updateVisibility(); this.isAnimating = false; }, 1300);
@@ -497,7 +549,8 @@ Arsip Visual 5D | The Syndicate Yearbook
                 } else {
                     this.book.classList.remove('index-mode'); gsap.to(dimCore, { z: 0, duration: 1.5, ease: "power3.inOut" });
                     this.sheets.forEach((sheet, index) => {
-                        const targetRotY = index < this.currentSheet ? -180 : 0; const targetZ = index < this.currentSheet ? -index * this.Z_SPACE : (this.totalSheets - index) * this.Z_SPACE;
+                        const targetRotY = index < this.currentSheet ? -180 : 0; 
+                        let targetZ = 0; if (index < this.currentSheet) targetZ = -((this.currentSheet - 1) - index) * this.Z_SPACE; else targetZ = -(index - this.currentSheet) * this.Z_SPACE;
                         if(index < this.currentSheet) sheet.classList.add('flipped'); else sheet.classList.remove('flipped');
                         gsap.to(sheet, { x: 0, y: 0, z: targetZ, rotationX: 0, rotationY: targetRotY, rotationZ: 0, scale: 1, duration: 1.2, ease: "power3.inOut" });
                     });
@@ -587,21 +640,55 @@ Arsip Visual 5D | The Syndicate Yearbook
         });
 
         const ethereal = document.getElementById('etherealText');
-        ethereal.addEventListener('dblclick', () => {
-            if(!isEpilogueMode) {
-                isEpilogueMode = true; stage.classList.add('epilogue-mode');
-                gsap.to(ethereal, { opacity: 0, scale: 0.9, duration: 1, onComplete: () => { ethereal.innerText = "KENANGAN ABADI"; gsap.to(ethereal, { opacity: 1, scale: 1, duration: 2, ease: "power2.out" }); }});
-                if(isMusicPlaying) gsap.to(bgMusic, { volume: 1, duration: 2 }); hapticBoom();
-            } else {
-                isEpilogueMode = false; stage.classList.remove('epilogue-mode');
-                gsap.to(ethereal, { opacity: 0, scale: 1.1, duration: 1, onComplete: () => { ethereal.innerText = "THE SYNDICATE"; gsap.to(ethereal, { opacity: 1, scale: 1, duration: 2, ease: "power2.out" }); }});
-                if(isMusicPlaying) gsap.to(bgMusic, { volume: 0.5, duration: 2 });
+        let lastEtherealTap = 0;
+        const toggleEpilogue = (e) => {
+            e.preventDefault();
+            const now = new Date().getTime();
+            if(now - lastEtherealTap < 400 && now - lastEtherealTap > 0) {
+                if(!isEpilogueMode) {
+                    isEpilogueMode = true; stage.classList.add('epilogue-mode');
+                    gsap.to(ethereal, { opacity: 0, scale: 0.9, duration: 1, onComplete: () => { ethereal.innerText = "KENANGAN ABADI"; gsap.to(ethereal, { opacity: 1, scale: 1, duration: 2, ease: "power2.out" }); }});
+                    if(isMusicPlaying) gsap.to(bgMusic, { volume: 1, duration: 2 }); hapticBoom();
+                } else {
+                    isEpilogueMode = false; stage.classList.remove('epilogue-mode');
+                    gsap.to(ethereal, { opacity: 0, scale: 1.1, duration: 1, onComplete: () => { ethereal.innerText = "THE SYNDICATE"; gsap.to(ethereal, { opacity: 1, scale: 1, duration: 2, ease: "power2.out" }); }});
+                    if(isMusicPlaying) gsap.to(bgMusic, { volume: 0.5, duration: 2 });
+                }
             }
-        });
+            lastEtherealTap = now;
+        };
+        ethereal.addEventListener('click', toggleEpilogue);
+        ethereal.addEventListener('touchstart', toggleEpilogue, {passive: false});
 
         // =========================================================
         // INIT & OTHER BUTTONS
         // =========================================================
+        
+        // VVIP KEYBOARD & SCROLL WHEEL NAVIGATION
+        window.addEventListener('keydown', (e) => {
+            if(isShifting || isAutoPlaying || isSwiping || isIdle) return;
+            let activeEngine = (activeDim === 'putra') ? bookPutra : bookPutri;
+            if(activeEngine.isIndexMode) return;
+            if (e.key === 'ArrowRight') activeEngine.flipNext(indicator, btnPrev, btnNext);
+            if (e.key === 'ArrowLeft') activeEngine.flipPrev(indicator, btnPrev, btnNext);
+        });
+
+        let scrollTimeout = null;
+        window.addEventListener('wheel', (e) => {
+            if(isShifting || isAutoPlaying || isSwiping || isIdle) return;
+            let activeEngine = (activeDim === 'putra') ? bookPutra : bookPutri;
+            if(activeEngine.isIndexMode) return;
+            if(scrollTimeout) return; 
+            
+            if (e.deltaY > 50) {
+                activeEngine.flipNext(indicator, btnPrev, btnNext);
+                scrollTimeout = setTimeout(() => { scrollTimeout = null; }, 800);
+            } else if (e.deltaY < -50) {
+                activeEngine.flipPrev(indicator, btnPrev, btnNext);
+                scrollTimeout = setTimeout(() => { scrollTimeout = null; }, 800);
+            }
+        }, {passive: true});
+
         bookPutra.centerBook(indicator, btnPrev, btnNext);
 
         const btnIndex = document.getElementById('btnIndex');
@@ -624,6 +711,16 @@ Arsip Visual 5D | The Syndicate Yearbook
             let currentEngine = (activeDim === 'putra') ? bookPutra : bookPutri;
             if(currentEngine.isIndexMode) btnIndex.click(); 
             isShifting = true; warpSpeed = true; playDimensionShift();
+            
+            // VVIP Cinematic Glitch & Flash
+            const glitch = document.getElementById('glitchOverlay');
+            gsap.to(glitch, { opacity: 0.3, duration: 0.1, yoyo: true, repeat: 5 });
+            stage.classList.add('glitch-active');
+            setTimeout(() => { stage.classList.remove('glitch-active'); }, 500);
+            
+            const flash = document.createElement('div'); flash.style.cssText = 'position:fixed;inset:0;background:#fff;z-index:999999;opacity:0;pointer-events:none;'; document.body.appendChild(flash);
+            gsap.to(flash, { opacity: 1, duration: 0.2, onComplete: () => gsap.to(flash, { opacity: 0, duration: 0.8, onComplete: () => flash.remove() }) });
+
             if(activeDim === 'putra') {
                 stage.classList.add('dimensi-putri'); btnShift.innerHTML = '<i class="fa-solid fa-rotate"></i> SHIFT TO ALPHA (PUTRA)';
                 gsap.to(dimCore, { rotationX: 0, rotationY: -180, duration: 2, ease: "power3.inOut" });
@@ -666,7 +763,15 @@ Arsip Visual 5D | The Syndicate Yearbook
         } else {
             window.addEventListener('mousemove', (e) => {
                 const x = (e.clientX / window.innerWidth) * 100; const y = (e.clientY / window.innerHeight) * 100; document.documentElement.style.setProperty('--mx', `${x}%`); document.documentElement.style.setProperty('--my', `${y}%`);
-                if(!isShifting && !isIdle) { let activeEngine = (activeDim === 'putra') ? bookPutra : bookPutri; if(activeEngine.isIndexMode) return; const tiltX = (window.innerHeight / 2 - e.clientY) / 60; const tiltY = (e.clientX - window.innerWidth / 2) / 60; const baseY = activeDim === 'putra' ? 0 : -180; gsap.to(dimCore, { rotationX: tiltX, rotationY: baseY + tiltY, duration: 0.8, ease: "power2.out" }); }
+                if(!isShifting && !isIdle && parallaxActive) { let activeEngine = (activeDim === 'putra') ? bookPutra : bookPutri; if(activeEngine.isIndexMode) return; const tiltX = (window.innerHeight / 2 - e.clientY) / 60; const tiltY = (e.clientX - window.innerWidth / 2) / 60; const baseY = activeDim === 'putra' ? 0 : -180; gsap.to(dimCore, { rotationX: tiltX, rotationY: baseY + tiltY, duration: 0.8, ease: "power2.out" }); }
+            });
+        }
+        
+        const btnFullscreen = document.getElementById('btnFullscreen');
+        if(btnFullscreen) {
+            btnFullscreen.addEventListener('click', () => {
+                if (!document.fullscreenElement) { document.documentElement.requestFullscreen().catch(e=>console.log(e)); btnFullscreen.innerHTML = '<i class="fa-solid fa-compress"></i>'; } 
+                else { document.exitFullscreen(); btnFullscreen.innerHTML = '<i class="fa-solid fa-expand"></i>'; }
             });
         }
     });

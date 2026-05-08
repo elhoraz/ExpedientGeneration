@@ -168,6 +168,7 @@
         .main-wrapper { 
             position: absolute; top: 0; left: 115px; /* Disesuaikan dengan lebar sidebar baru */
             right: 0; bottom: 0; z-index: 10; overflow-y: auto; overflow-x: hidden; scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
             transition: left 0.8s var(--awwwards-ease);
         }
         body.sidebar-closed .main-wrapper { left: 0; }
