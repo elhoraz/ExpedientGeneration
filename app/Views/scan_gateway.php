@@ -16,17 +16,17 @@
 </head>
 <body>
     <div class="modal">
-        <h2>Pilih Protokol Akses</h2>
+        <h2>Pilih Metode Akses</h2>
         
         <a href="<?= base_url('ar_hologram/' . $user['id']) ?>" class="btn">
-            [1] Inisialisasi AR Hologram
+            [1] Lihat AR Hologram
         </a>
         
         <a href="<?= base_url('download_vcard/' . $user['id']) ?>" class="btn" style="border-color:#555; color:#aaa;">
-            [2] Ekstrak Data Kontak
+            [2] Unduh Data Kontak
         </a>
 
-        <div class="id-target">TARGET: EXP-<?= sprintf('%03d', $user['id']) ?></div>
+        <div class="id-target">ID: EXP-<?= sprintf('%03d', $user['id']) ?></div>
     </div>
 </body>
 </html>

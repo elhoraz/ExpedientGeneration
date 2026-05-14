@@ -220,12 +220,30 @@ The Syndicate - Ruang Eksekutif 42nd Expedient
                             </a>
                         <?php endif; ?>
                     </div>
+
+                    <?php if($biz['user_id'] == session()->get('user_id')): ?>
+                    <div class="bc-footer" style="border-top: none; background: rgba(0,0,0,0.5);">
+                        <a href="<?= base_url('syndicate/edit/' . $biz['id']) ?>" class="bc-btn" style="color: #00ff88; border-right: 1px solid rgba(255,255,255,0.05);">
+                            <i class="fa-solid fa-pen-to-square"></i> Ubah
+                        </a>
+                        <form action="<?= base_url('syndicate/delete/' . $biz['id']) ?>" method="POST" style="flex: 1; display: flex;" onsubmit="return confirm('Apakah Anda yakin ingin menghapus arsip bisnis ini?');">
+                            <?= csrf_field() ?>
+                            <button type="submit" class="bc-btn" style="color: #ff3366; width: 100%; border: none; background: transparent;">
+                                <i class="fa-solid fa-trash"></i> Hapus
+                            </button>
+                        </form>
+                    </div>
+                    <?php endif; ?>
                 </div>
 
             <?php endforeach; ?>
 
         <?php endif; ?>
 
+    </div>
+    
+    <div style="margin-top: 40px; display: flex; justify-content: center;" class="pagination-wrapper">
+        <?= $pager->links() ?>
     </div>
 </div>
 <?= $this->endSection() ?>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Satelit Taktis - Expedient</title>
+    <title>Peta Alumni - Expedient</title>
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
@@ -80,7 +80,7 @@
 </head>
 <body>
 
-    <div id="loadingOverlay">MENYAMBUNGKAN KE SATELIT GOOGLE...</div>
+    <div id="loadingOverlay">Memuat Peta Satelit...</div>
 
     <a href="<?= base_url('radar') ?>" class="btn-back">
         <i class="fa-solid fa-arrow-left"></i> Kembali ke Globe
@@ -102,7 +102,7 @@
             // =======================================================
             L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
                 maxZoom: 22, 
-                attribution: 'Expedient Tactical'
+                attribution: 'Expedient Heritage'
             }).addTo(map);
 
             map.whenReady(() => {

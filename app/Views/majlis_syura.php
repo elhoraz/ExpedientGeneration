@@ -262,6 +262,40 @@ Majlis Syura Eksklusif - VVIP Audio Room
         z-index: 50;
     }
 
+    /* MAJLIS PANEL (MOSI & VOTING) */
+    .majlis-panel {
+        position: fixed; top: 0; right: -450px; width: 450px; height: 100vh;
+        background: rgba(10, 15, 12, 0.95); backdrop-filter: blur(20px);
+        border-left: 1px solid rgba(212,175,55,0.3); z-index: 1000;
+        transition: right 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        padding: 40px 30px; display: flex; flex-direction: column; gap: 20px;
+        overflow-y: auto; color: #fff; box-shadow: -20px 0 50px rgba(0,0,0,0.8);
+    }
+    .majlis-panel.open { right: 0; }
+    
+    .panel-title { font-family: 'Playfair Display', serif; color: var(--gold-main); font-size: 1.5rem; letter-spacing: 2px; border-bottom: 1px solid rgba(212,175,55,0.3); padding-bottom: 10px; margin-bottom: 10px; }
+    .majlis-form input, .majlis-form textarea {
+        width: 100%; background: rgba(0,0,0,0.5); border: 1px solid rgba(212,175,55,0.3);
+        color: #fff; padding: 12px; margin-bottom: 15px; border-radius: 5px; font-family: 'Inter', sans-serif;
+    }
+    .btn-submit-majlis { width: 100%; background: var(--gold-main); color: #000; border: none; padding: 12px; font-weight: bold; cursor: pointer; border-radius: 5px; letter-spacing: 2px; text-transform: uppercase; }
+    
+    .topic-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 20px; border-radius: 8px; margin-bottom: 15px; }
+    .topic-title { font-family: 'Playfair Display', serif; color: var(--gold-main); font-size: 1.2rem; margin: 0 0 10px 0; }
+    .topic-desc { font-size: 0.85rem; color: #ccc; line-height: 1.5; margin-bottom: 15px; }
+    .topic-meta { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 15px; display: flex; justify-content: space-between; }
+    
+    .vote-btns { display: flex; gap: 10px; }
+    .btn-vote { flex: 1; padding: 10px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn-vote.agree { background: rgba(0,255,136,0.2); color: #00ff88; border: 1px solid #00ff88; }
+    .btn-vote.agree:hover { background: rgba(0,255,136,0.4); }
+    .btn-vote.disagree { background: rgba(255,51,102,0.2); color: #ff3366; border: 1px solid #ff3366; }
+    .btn-vote.disagree:hover { background: rgba(255,51,102,0.4); }
+    
+    .vote-stats { display: flex; justify-content: space-between; margin-top: 15px; font-size: 0.8rem; font-weight: bold; }
+    .vote-stats .agree-count { color: #00ff88; }
+    .vote-stats .disagree-count { color: #ff3366; }
+
     .ctrl-btn {
         width: 50px;
         height: 50px;
@@ -305,6 +339,7 @@ Majlis Syura Eksklusif - VVIP Audio Room
         .listeners-container { bottom: 130px; max-height: 250px; overflow-y: auto; align-items: flex-start; }
         .control-dock { bottom: 30px; padding: 10px 20px; gap: 15px; }
         .ctrl-btn { width: 45px; height: 45px; font-size: 1rem; }
+        .majlis-panel { width: 100%; right: -100%; }
     }
 </style>
 <?= $this->endSection() ?>
@@ -353,13 +388,64 @@ Majlis Syura Eksklusif - VVIP Audio Room
         <button class="ctrl-btn danger" title="Mute Microphone" id="btnMic">
             <i class="fa-solid fa-microphone-slash"></i>
         </button>
-        <button class="ctrl-btn" title="Bagikan File/Ayat" id="btnShare">
-            <i class="fa-solid fa-book-quran"></i>
+        <button class="ctrl-btn" title="Mosi & Voting" id="btnToggleMajlis">
+            <i class="fa-solid fa-gavel"></i>
         </button>
         <button class="ctrl-btn danger" style="margin-left: 20px;" title="Keluar Majlis" onclick="window.location.href='/fitur'">
             <i class="fa-solid fa-phone-slash"></i>
         </button>
     </div>
+</div>
+
+<!-- PANEL MOSI & VOTING -->
+<div class="majlis-panel" id="majlisPanel">
+    <div class="panel-title">Ajukan Mosi Baru</div>
+    <form action="/majlis/store" method="POST" class="majlis-form">
+        <?= csrf_field() ?>
+        <input type="text" name="title" placeholder="Judul Mosi (Singkat & Jelas)" required>
+        <textarea name="description" rows="3" placeholder="Deskripsi atau landasan masalah..." required></textarea>
+        <button type="submit" class="btn-submit-majlis">Ajukan ke Forum</button>
+    </form>
+
+    <div class="panel-title" style="margin-top:20px;">Daftar Agenda (Voting)</div>
+    <?php if(!empty($topics)): ?>
+        <?php foreach($topics as $t): ?>
+            <div class="topic-card">
+                <h3 class="topic-title"><?= esc($t['title']) ?></h3>
+                <div class="topic-meta">
+                    <span>Oleh: <?= esc($t['nama_panggilan']) ?></span>
+                    <span style="color: <?= $t['status'] === 'Open' ? 'var(--neon-green)' : '#ff3366' ?>"><?= esc($t['status']) ?></span>
+                </div>
+                <div class="topic-desc"><?= esc($t['description']) ?></div>
+                
+                <div class="vote-stats">
+                    <span class="agree-count"><i class="fa-solid fa-check"></i> Setuju: <?= $t['votes_setuju'] ?></span>
+                    <span class="disagree-count"><i class="fa-solid fa-xmark"></i> Tidak: <?= $t['votes_tidak_setuju'] ?></span>
+                </div>
+
+                <?php if($t['status'] === 'Open'): ?>
+                    <?php if($t['has_voted']): ?>
+                        <div style="margin-top:15px; text-align:center; color:var(--gold-main); font-size:0.8rem; font-weight:bold; border:1px dashed var(--gold-main); padding:8px;">Suara Anda telah direkam.</div>
+                    <?php else: ?>
+                        <div class="vote-btns" style="margin-top:15px;">
+                            <form action="/majlis/vote/<?= $t['id'] ?>" method="POST" style="flex:1;">
+                                <?= csrf_field() ?>
+                                <input type="hidden" name="choice" value="Setuju">
+                                <button type="submit" class="btn-vote agree"><i class="fa-solid fa-check"></i> Setuju</button>
+                            </form>
+                            <form action="/majlis/vote/<?= $t['id'] ?>" method="POST" style="flex:1;">
+                                <?= csrf_field() ?>
+                                <input type="hidden" name="choice" value="Tidak Setuju">
+                                <button type="submit" class="btn-vote disagree"><i class="fa-solid fa-xmark"></i> Tolak</button>
+                            </form>
+                        </div>
+                    <?php endif; ?>
+                <?php endif; ?>
+            </div>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <div style="text-align:center; padding:20px; color:#555; font-size:0.8rem;">Belum ada Mosi yang diajukan.</div>
+    <?php endif; ?>
 </div>
 <?= $this->endSection() ?>
 
@@ -449,6 +535,20 @@ document.addEventListener("DOMContentLoaded", () => {
             gsap.to(this, { y: -10, yoyo: true, repeat: 3, duration: 0.2 });
         }
     });
+
+    // Panel Toggle
+    const btnToggleMajlis = document.getElementById('btnToggleMajlis');
+    const majlisPanel = document.getElementById('majlisPanel');
+    
+    btnToggleMajlis.addEventListener('click', () => {
+        majlisPanel.classList.toggle('open');
+        if(navigator.vibrate) navigator.vibrate(20);
+    });
+
+    // Flashdata Success/Error Handling
+    <?php if(session()->getFlashdata('success') || session()->getFlashdata('error')): ?>
+        majlisPanel.classList.add('open');
+    <?php endif; ?>
 
 });
 </script>

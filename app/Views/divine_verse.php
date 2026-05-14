@@ -92,40 +92,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script>
     document.addEventListener("DOMContentLoaded", () => {
-        const verses = [
-            { ar: "فَإِنَّ مَعَ الْعُسْرِ يُسْرًا", lt: "Fa inna ma'al 'usri yusraa", mn: "Maka sesungguhnya bersama kesulitan ada kemudahan.", src: "QS. Al-Insyirah: 5" },
-            { ar: "إِنَّ اللَّهَ مَعَ الصَّابِرِينَ", lt: "Innallaha ma'as-shaabirin", mn: "Sesungguhnya Allah bersama orang-orang yang sabar.", src: "QS. Al-Baqarah: 153" },
-            { ar: "وَتَوَكَّلْ عَلَى اللَّهِ ۚ وَكَفَىٰ بِاللَّهِ وَكِيلًا", lt: "Wa tawakkal 'alallah, wa kafaa billahi wakeelaa", mn: "Dan bertawakallah kepada Allah. Dan cukuplah Allah sebagai pelindung.", src: "QS. Al-Ahzab: 3" },
-            { ar: "وَمَن يَتَّقِ اللَّهَ يَجْعَل لَّهُ مَخْرَجًا", lt: "Wa man yattaqillaha yaj'al lahu makhrajaa", mn: "Barangsiapa bertakwa kepada Allah, niscaya Dia akan membukakan jalan keluar baginya.", src: "QS. At-Talaq: 2" },
-            { ar: "رَبِّ اشْرَحْ لِي صَدْرِي", lt: "Rabbisy-rahli shadri", mn: "Ya Tuhanku, lapangkanlah dadaku.", src: "QS. Taha: 25" },
-            { ar: "وَلَسَوْفَ يُعْطِيكَ رَبُّكَ فَتَرْضَىٰ", lt: "Wa lasaufa yu'tiika rabbuka fatardaa", mn: "Dan kelak Tuhanmu pasti memberikan karunia-Nya kepadamu, sehingga engkau menjadi puas.", src: "QS. Ad-Duha: 5" },
-            { ar: "إِنَّ اللَّهَ لَا يُضِيعُ أَجْرَ الْمُحْسِنِينَ", lt: "Innallaha laa yudii'u ajral muhsiniin", mn: "Sesungguhnya Allah tidak menyia-nyiakan pahala orang yang berbuat baik.", src: "QS. At-Taubah: 120" },
-            { ar: "وَاللَّهُ خَيْرُ الرَّازِقِينَ", lt: "Wallahu khairur-raaziqiin", mn: "Dan Allah adalah sebaik-baik pemberi rezeki.", src: "QS. Al-Jumu'ah: 11" },
-            { ar: "لَا تَحْزَنْ إِنَّ اللَّهَ مَعَنَا", lt: "Laa tahzan innallaha ma'anaa", mn: "Janganlah engkau bersedih, sesungguhnya Allah bersama kita.", src: "QS. At-Taubah: 40" },
-            { ar: "وَنَحْنُ أَقْرَبُ إِلَيْهِ مِنْ حَبْلِ الْوَرِيدِ", lt: "Wa nahnu aqrabu ilaihi min hablil wariid", mn: "Dan Kami lebih dekat kepadanya daripada urat lehernya sendiri.", src: "QS. Qaf: 16" },
-            { ar: "ادْعُونِي أَسْتَجِبْ لَكُمْ", lt: "Ud'uunii astajib lakum", mn: "Berdoalah kepada-Ku, niscaya akan Aku perkenankan bagimu.", src: "QS. Ghafir: 60" },
-            { ar: "إِنَّ اللَّهَ يُحِبُّ الْمُتَوَكِّلِينَ", lt: "Innallaha yuhibbul mutawakkiliin", mn: "Sesungguhnya Allah menyukai orang-orang yang bertawakal.", src: "QS. Ali Imran: 159" },
-            { ar: "فَاذْكُرُونِي أَذْكُرْكُمْ", lt: "Fadzkuruunii adzkurkum", mn: "Maka ingatlah kepada-Ku, niscaya Aku akan mengingat kalian.", src: "QS. Al-Baqarah: 152" },
-            { ar: "لَا يُكَلِّفُ اللَّهُ نَفْسًا إِلَّا وُسْعَهَا", lt: "Laa yukallifullaahu nafsan illaa wus'ahaa", mn: "Allah tidak membebani seseorang melainkan sesuai kesanggupannya.", src: "QS. Al-Baqarah: 286" },
-            { ar: "وَعَسَىٰ أَن تَكْرَهُوا شَيْئًا وَهُوَ خَيْرٌ لَّكُمْ", lt: "Wa 'asaa an takrahuu syai'an wa huwa khairul lakum", mn: "Boleh jadi kamu membenci sesuatu padahal ia amat baik bagimu.", src: "QS. Al-Baqarah: 216" },
-            { ar: "إِنَّ مَعَ الْعُسْرِ يُسْرًا", lt: "Inna ma'al 'usri yusraa", mn: "Sesungguhnya bersama kesulitan pasti ada kemudahan.", src: "QS. Al-Insyirah: 6" },
-            { ar: "وَاصْبِرْ فَإِنَّ اللَّهَ لَا يُضِيعُ أَجْرَ الْمُحْسِنِينَ", lt: "Washbir fa innallaha laa yudii'u ajral muhsiniin", mn: "Dan bersabarlah, sesungguhnya Allah tidak menyia-nyiakan pahala orang berbuat baik.", src: "QS. Hud: 115" },
-            { ar: "رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً", lt: "Rabbanaa aatinaa fid-dunya hasanah wa fil aakhirati hasanah", mn: "Ya Tuhan kami, berilah kami kebaikan di dunia dan kebaikan di akhirat.", src: "QS. Al-Baqarah: 201" },
-            { ar: "وَلَا تَيْأَسُوا مِن رَّوْحِ اللَّهِ", lt: "Wa laa tai'asuu mir rauhillah", mn: "Dan jangan kamu berputus asa dari rahmat Allah.", src: "QS. Yusuf: 87" },
-            { ar: "إِنَّ اللَّهَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ", lt: "Innallaha 'alaa kulli syai'in qadiir", mn: "Sesungguhnya Allah Maha Kuasa atas segala sesuatu.", src: "QS. Al-Baqarah: 20" },
-            { ar: "رَبِّ زِدْنِي عِلْمًا", lt: "Rabbi zidnii 'ilmaa", mn: "Ya Tuhanku, tambahkanlah ilmu kepadaku.", src: "QS. Taha: 114" },
-            { ar: "وَاللَّهُ يُحِبُّ الصَّابِرِينَ", lt: "Wallahu yuhibbus-shaabiriin", mn: "Dan Allah menyukai orang-orang yang sabar.", src: "QS. Ali Imran: 146" },
-            { ar: "حَسْبُنَا اللَّهُ وَنِعْمَ الْوَكِيلُ", lt: "Hasbunallahu wa ni'mal wakiil", mn: "Cukuplah Allah menjadi penolong kami dan Allah adalah sebaik-baik pelindung.", src: "QS. Ali Imran: 173" },
-            { ar: "وَمَن يَتَوَكَّلْ عَلَى اللَّهِ فَهُوَ حَسْبُهُ", lt: "Wa man yatawakkal 'alallahi fahuwa hasbuhu", mn: "Dan barangsiapa bertawakal kepada Allah, niscaya Allah akan mencukupkan keperluannya.", src: "QS. At-Talaq: 3" },
-            { ar: "وَهُوَ مَعَكُمْ أَيْنَ مَا كُنتُمْ", lt: "Wa huwa ma'akum ayna maa kuntum", mn: "Dan Dia bersama kamu di mana saja kamu berada.", src: "QS. Al-Hadid: 4" },
-            { ar: "قُلْ هُوَ اللَّهُ أَحَدٌ", lt: "Qul huwallahu ahad", mn: "Katakanlah: Dialah Allah, Yang Maha Esa.", src: "QS. Al-Ikhlas: 1" },
-            { ar: "وَرَحْمَتِي وَسِعَتْ كُلَّ شَيْءٍ", lt: "Wa rahmatii wasi'at kulla syai'in", mn: "Dan rahmat-Ku meliputi segala sesuatu.", src: "QS. Al-A'raf: 156" },
-            { ar: "أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ", lt: "Alaa bidzikrillahi tathma'innul quluub", mn: "Ingatlah, hanya dengan mengingat Allah hati menjadi tenteram.", src: "QS. Ar-Ra'd: 28" },
-            { ar: "وَاللَّهُ يَهْدِي مَن يَشَاءُ إِلَىٰ صِرَاطٍ مُّسْتَقِيمٍ", lt: "Wallahu yahdii man yasyaa'u ilaa siraatim mustaqiim", mn: "Dan Allah memberi petunjuk kepada siapa yang Dia kehendaki ke jalan yang lurus.", src: "QS. Al-Baqarah: 213" },
-            { ar: "فَاصْبِرْ إِنَّ وَعْدَ اللَّهِ حَقٌّ", lt: "Fashbir inna wa'dallahi haqq", mn: "Maka bersabarlah, sesungguhnya janji Allah itu benar.", src: "QS. Ghafir: 77" },
-            { ar: "وَإِلَىٰ رَبِّكَ فَارْغَب", lt: "Wa ilaa rabbika farghab", mn: "Dan hanya kepada Tuhanmu-lah hendaknya kamu berharap.", src: "QS. Al-Insyirah: 8" },
-            { ar: "يَا أَيُّهَا الَّذِينَ آمَنُوا اسْتَعِينُوا بِالصَّبْرِ وَالصَّلَاةِ", lt: "Yaa ayyuhalladziina aamanusta'iinuu bish-shabri wash-shalaah", mn: "Wahai orang-orang yang beriman, mohonlah pertolongan dengan sabar dan shalat.", src: "QS. Al-Baqarah: 153" },
-        ];
+        const verses = <?= json_encode($verses) ?>;
+
 
         // Particles
         const pf = document.getElementById('particleField');

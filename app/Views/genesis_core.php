@@ -184,7 +184,10 @@
         
         <div class="hud-overlay" id="hudOverlay">
             <div class="hud-text">Usap layar untuk mendisrupsi partikel<br>Biarkan untuk membentuk identitas</div>
-            <button class="btn-singularity" id="btnSingularity">Initiate Singularity</button>
+            <form action="/genesis/log" method="POST">
+                <?= csrf_field() ?>
+                <button type="button" class="btn-singularity" id="btnSingularity">Initiate Singularity</button>
+            </form>
         </div>
 
         <div class="revelation-box" id="revelationBox">
@@ -433,6 +436,11 @@
                             
                             // Hentikan partikel
                             ctx.clearRect(0,0, canvas.width, canvas.height);
+
+                            // Submit form logging ke backend
+                            setTimeout(() => {
+                                btnSingularity.closest('form').submit();
+                            }, 3000);
                         }
                     });
                 }

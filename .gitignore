@@ -124,3 +124,10 @@ _modules/*
 
 /results/
 /phpunit*.xml
+
+#-------------------------
+# Project Temp / Debug Files
+#-------------------------
+tree_output.txt
+refactor_sovereign.php
+scripts/

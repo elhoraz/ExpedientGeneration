@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Gerbang Akses - Expedient Generation</title>
     
+    <meta name="description" content="Portal login eksklusif Expedient Generation - Museum Galeri Digital VVIP.">
+    <meta name="theme-color" content="#030504">
+    <meta property="og:title" content="Gerbang Akses - Expedient Generation">
+    <meta property="og:description" content="Akses portal eksklusif peninggalan dan jejak langkah Expedient.">
+    <meta property="og:image" content="/images/logo-utuh.png">
+    <meta property="og:type" content="website">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/images/logo-utuh.png">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
@@ -71,8 +80,8 @@
         }
 
         /* Ambient Orbs */
-        .ambient-field { position: absolute; inset: -20%; z-index: 0; pointer-events: none; filter: blur(50px); transition: transform 0.5s ease-out; }
-        .core-orb { position: absolute; border-radius: 50%; opacity: 0.8; mix-blend-mode: screen; transition: transform 0.6s ease-out; }
+        .ambient-field { position: absolute; inset: -20%; z-index: 0; pointer-events: none; filter: blur(50px); transition: transform 0.5s ease-out; will-change: transform; }
+        .core-orb { position: absolute; border-radius: 50%; opacity: 0.8; mix-blend-mode: screen; transition: transform 0.6s ease-out; will-change: transform; }
         [data-theme="light"] .core-orb { mix-blend-mode: multiply; opacity: 0.6; }
         
         .orb-1 { width: 50vmax; height: 50vmax; background: var(--glow-1); top: -10%; left: 0; animation: breathe 15s alternate infinite ease-in-out; }
@@ -80,6 +89,16 @@
         .orb-3 { width: 40vmax; height: 40vmax; background: var(--glow-3); top: 30%; left: 30%; animation: breathe 25s alternate infinite ease-in-out; }
 
         @keyframes breathe { 0% { transform: scale(1); } 100% { transform: scale(1.3) translate(5vw, -5vh); } }
+
+        /* MOBILE PERFORMANCE FIX */
+        @media (max-width: 768px) {
+            .ambient-field { filter: blur(20px); inset: -10%; }
+            .core-orb { animation-duration: 30s !important; }
+            .orb-1 { width: 35vmax; height: 35vmax; }
+            .orb-2 { width: 40vmax; height: 40vmax; }
+            .orb-3 { width: 25vmax; height: 25vmax; }
+            .auth-prism { backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+        }
 
         #particles-js { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
 
@@ -260,6 +279,21 @@
         .toast-success { border-bottom: 3px solid #00ff88; } .toast-success i { color: #00ff88; }
         .toast-error { border-bottom: 3px solid #ff3366; } .toast-error i { color: #ff3366; }
 
+        /* ================= 9. PWA INSTALL MODAL & WIDGET ================= */
+        .install-app-btn { right: auto; left: 4vw; border-color: rgba(212,175,55,0.3); }
+        .install-app-btn:hover { border-color: #d4af37; }
+        
+        .install-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 99999; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        [data-theme="light"] .install-modal { background: rgba(255,255,255,0.7); }
+        .install-modal.active { opacity: 1; pointer-events: auto; }
+        .install-content { background: var(--glass-surface); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); padding: 30px; border-radius: 20px; max-width: 400px; width: 90%; transform: translateY(50px); transition: 0.5s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: var(--glass-shadow); }
+        .install-modal.active .install-content { transform: translateY(0); }
+        .install-title { color: #d4af37; font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 25px; text-transform: uppercase; text-align: center; border-bottom: 1px solid rgba(212,175,55,0.3); padding-bottom: 15px; }
+        .install-step { display: flex; gap: 15px; margin-bottom: 20px; align-items: flex-start; text-align: left; }
+        .step-icon { width: 40px; height: 40px; border-radius: 50%; background: rgba(212,175,55,0.1); border: 1px solid rgba(212,175,55,0.4); display: flex; justify-content: center; align-items: center; color: #d4af37; font-size: 1.2rem; flex-shrink: 0; }
+        .step-text h4 { color: var(--text-main); font-size: 0.95rem; margin-bottom: 5px; font-family: 'Playfair Display', serif; }
+        .step-text p { color: var(--text-muted); font-size: 0.75rem; line-height: 1.5; }
+
         @media (max-width: 600px) {
             .quantum-toast.show { right: 20px; left: 20px; }
             .widget-text { display: none; }
@@ -279,6 +313,12 @@
     <button class="toggle-widget" id="btnTheme" title="Ganti Mode">
         <div class="icon-orb"><i class="fa-solid fa-moon" id="toggleIcon"></i></div>
         <span class="widget-text" id="themeText">Malam</span>
+    </button>
+
+    <!-- Tombol Install Melayang (Top Left) -->
+    <button class="toggle-widget install-app-btn" onclick="openInstallModal()" title="Panduan Install">
+        <div class="icon-orb" style="color:#d4af37; background: rgba(212,175,55,0.1);"><i class="fa-solid fa-download"></i></div>
+        <span class="widget-text" style="color:#d4af37;">Install App</span>
     </button>
 
     <?php if(session()->getFlashdata('success')): ?>
@@ -318,7 +358,8 @@
                 <h1 class="title-holo">Portal Utama</h1>
             </div>
 
-            <form action="/auth/login" method="POST">
+            <form action="<?= base_url('auth/login') ?>" method="POST">
+                <?= csrf_field() ?>
                 
                 <div class="input-group">
                     <input type="email" name="email" id="email" class="input-control" required placeholder=" ">
@@ -333,6 +374,12 @@
                     <i class="fa-solid fa-eye icon-eye" id="togglePw"></i>
                 </div>
                 
+                <div style="text-align:right;margin-top:-10px;margin-bottom:5px;transform:translateZ(25px);">
+                    <a href="<?= base_url('auth/forgot-password') ?>" style="color:var(--text-muted);font-size:clamp(0.7rem,1.3vh,0.8rem);text-decoration:none;transition:0.3s;border-bottom:1px solid transparent;" onmouseover="this.style.color='#d4af37';this.style.borderColor='#d4af37'" onmouseout="this.style.color='var(--text-muted)';this.style.borderColor='transparent'">
+                        <i class="fa-solid fa-key" style="font-size:0.65rem;margin-right:4px;"></i>Lupa Kata Sandi?
+                    </a>
+                </div>
+
                 <div class="btn-rack">
                     <div class="magnetic-wrap">
                         <button type="submit" class="btn-prime magnetic-btn" id="btnPrime">
@@ -351,13 +398,50 @@
             </form>
 
             <div class="register-link">
-                Identitas belum terdaftar? <a href="/auth/register">Ajukan Registrasi</a>
+                Identitas belum terdaftar? <a href="<?= base_url('auth/register') ?>">Ajukan Registrasi</a>
             </div>
 
         </div>
     </div>
 
+    <!-- Modal Panduan Instalasi -->
+    <div class="install-modal" id="installModal">
+        <div class="install-content">
+            <h2 class="install-title">Instalasi VVIP App</h2>
+            
+            <div class="install-step">
+                <div class="step-icon"><i class="fa-brands fa-android"></i></div>
+                <div class="step-text">
+                    <h4>Android (Chrome)</h4>
+                    <p>Ketuk ikon <b>Titik Tiga</b> di pojok kanan atas browser, lalu pilih <b>"Tambahkan ke Layar Utama"</b> (Add to Home screen).</p>
+                </div>
+            </div>
+
+            <div class="install-step">
+                <div class="step-icon"><i class="fa-brands fa-apple"></i></div>
+                <div class="step-text">
+                    <h4>iOS / iPhone (Safari)</h4>
+                    <p>Ketuk ikon <b>Bagikan/Share</b> (kotak dengan panah) di bawah layar, geser ke bawah, lalu pilih <b>"Tambah ke Layar Utama"</b>.</p>
+                </div>
+            </div>
+
+            <div class="install-step">
+                <div class="step-icon"><i class="fa-solid fa-desktop"></i></div>
+                <div class="step-text">
+                    <h4>PC / Laptop</h4>
+                    <p>Perhatikan sisi kanan kolom URL/Link di atas, klik ikon <b>Install</b> (layar dengan tanda panah bawah).</p>
+                </div>
+            </div>
+
+            <button type="button" class="btn-prime magnetic-btn" style="margin-top:20px; width:100%; border-radius:10px; font-size:0.8rem;" onclick="closeInstallModal()">SAYA MENGERTI</button>
+        </div>
+    </div>
+
     <script>
+        // Modal Install Logic
+        function openInstallModal() { document.getElementById('installModal').classList.add('active'); if (navigator.vibrate) navigator.vibrate(20); }
+        function closeInstallModal() { document.getElementById('installModal').classList.remove('active'); }
+
         // 1. EXPLODING LOGO LOGIC
         const logoContainer = document.getElementById('logoContainer');
         
@@ -453,9 +537,11 @@
                 ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
             }
         }
+        const isMobileDevice = window.innerWidth <= 768;
+        const PARTICLE_COUNT = isMobileDevice ? 20 : 70;
         function initParticles() {
             particlesArray = [];
-            for (let i = 0; i < 70; i++) {
+            for (let i = 0; i < PARTICLE_COUNT; i++) {
                 particlesArray.push(new Particle(Math.random() * innerWidth, Math.random() * innerHeight, (Math.random() * 2) + 0.5, (Math.random() * 0.5) + 0.2));
             }
         }
@@ -493,20 +579,22 @@
         const isMobile = window.innerWidth <= 768;
 
         if (isMobile) {
-            // A. Smooth Gyroscope Parallax 2.0 (Fitur Mobile Eksklusif 2)
+            // A. Smooth Gyroscope Parallax 2.0 (Throttled for Performance)
             let currentX = 0, currentY = 0, targetX = 0, targetY = 0;
+            let gyroActive = false;
             if (window.DeviceOrientationEvent) {
                 window.addEventListener('deviceorientation', (e) => {
-                    targetY = Math.max(-5, Math.min(5, e.gamma / 90 * 5));
-                    targetX = Math.max(-5, Math.min(5, (e.beta - 45) / 90 * -5));
+                    if (e.gamma === null) return;
+                    targetY = Math.max(-3, Math.min(3, e.gamma / 90 * 3));
+                    targetX = Math.max(-3, Math.min(3, (e.beta - 45) / 90 * -3));
+                    if (!gyroActive) { gyroActive = true; smoothGyro(); }
                 });
                 function smoothGyro() {
-                    currentX += (targetX - currentX) * 0.1;
-                    currentY += (targetY - currentY) * 0.1;
+                    currentX += (targetX - currentX) * 0.08;
+                    currentY += (targetY - currentY) * 0.08;
                     prism.style.transform = `perspective(2000px) rotateX(${currentX}deg) rotateY(${currentY}deg)`;
                     requestAnimationFrame(smoothGyro);
                 }
-                smoothGyro();
             }
 
             // B. Swipe-to-Reveal Ambient (Fitur Mobile Eksklusif 3)
@@ -576,7 +664,7 @@
                 const originalText = btn.innerHTML;
                 btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Proses...';
                 
-                const res = await fetch('/biometric/login-options');
+                const res = await fetch('/api/biometric/login-options');
                 const opt = await res.json();
                 if (opt.error) { alert(opt.error); btn.innerHTML = originalText; return; }
 
@@ -592,7 +680,7 @@
                     }
                 };
                 
-                const verifyRes = await fetch('/biometric/login-verify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(assertionData) });
+                const verifyRes = await fetch('/api/biometric/login-verify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(assertionData) });
                 const result = await verifyRes.json();
                 
                 if (result.status === 'success') { window.location.href = result.redirect; } 

@@ -176,6 +176,34 @@ Ruang Kontemplasi - The Sanctuary
         text-transform: uppercase;
     }
 
+    /* JOURNAL PANEL */
+    .journal-panel {
+        position: fixed; top: 0; right: -450px; width: 400px; height: 100vh;
+        background: rgba(10, 15, 12, 0.95); backdrop-filter: blur(20px);
+        border-left: 1px solid rgba(212,175,55,0.3); z-index: 1000;
+        transition: right 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        padding: 40px 30px; display: flex; flex-direction: column; gap: 20px;
+        overflow-y: auto; color: #fff; box-shadow: -20px 0 50px rgba(0,0,0,0.8);
+        font-family: 'Inter', sans-serif;
+    }
+    .journal-panel.open { right: 0; }
+    
+    .panel-title { font-family: 'Playfair Display', serif; color: var(--gold-main); font-size: 1.5rem; letter-spacing: 2px; border-bottom: 1px solid rgba(212,175,55,0.3); padding-bottom: 10px; margin-bottom: 10px; }
+    .journal-form input, .journal-form select, .journal-form textarea {
+        width: 100%; background: rgba(0,0,0,0.5); border: 1px solid rgba(212,175,55,0.3);
+        color: #fff; padding: 12px; margin-bottom: 15px; border-radius: 5px; font-family: 'Inter', sans-serif;
+    }
+    .btn-submit-journal { width: 100%; background: var(--gold-main); color: #000; border: none; padding: 12px; font-weight: bold; cursor: pointer; border-radius: 5px; letter-spacing: 2px; text-transform: uppercase; }
+    
+    .journal-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 20px; border-radius: 8px; margin-bottom: 15px; position: relative; }
+    .journal-date { font-size: 0.75rem; color: var(--gold-main); margin-bottom: 10px; font-weight: bold; letter-spacing: 1px; }
+    .journal-content { font-size: 0.9rem; line-height: 1.6; color: #ddd; font-style: italic; }
+    .journal-mood { position: absolute; top: 15px; right: 15px; background: rgba(212,175,55,0.2); color: var(--gold-main); padding: 3px 8px; border-radius: 10px; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1px; }
+    
+    @media (max-width: 768px) {
+        .journal-panel { width: 100%; right: -100%; }
+        .stealth-controls { bottom: 20px; gap: 20px; }
+    }
 </style>
 <?= $this->endSection() ?>
 
@@ -209,6 +237,51 @@ Ruang Kontemplasi - The Sanctuary
             <i class="fa-solid fa-volume-xmark"></i>
             <span>Audio Mati</span>
         </button>
+        <button class="stealth-btn" id="btnToggleJournal">
+            <i class="fa-solid fa-feather-pointed"></i>
+            <span>Jurnal</span>
+        </button>
+    </div>
+
+    <!-- Journal Panel -->
+    <div class="journal-panel" id="journalPanel">
+        <div class="panel-title">Tulis Kontemplasi</div>
+        <form action="/kontemplasi/store" method="POST" class="journal-form">
+            <?= csrf_field() ?>
+            <textarea name="content" rows="4" placeholder="Apa yang Anda renungkan hari ini? Tuliskan isi pikiran Anda dengan jujur..." required></textarea>
+            
+            <div style="display:flex; gap:10px; margin-bottom:15px;">
+                <select name="mood" style="margin-bottom:0; flex:1;">
+                    <option value="Netral">Mood: Netral</option>
+                    <option value="Damai">Mood: Damai</option>
+                    <option value="Gelisah">Mood: Gelisah</option>
+                    <option value="Bersyukur">Mood: Bersyukur</option>
+                    <option value="Terbebani">Mood: Terbebani</option>
+                </select>
+            </div>
+            
+            <label style="display:flex; align-items:center; gap:10px; font-size:0.8rem; color:#888; margin-bottom:15px; cursor:pointer;">
+                <input type="checkbox" name="is_private" value="1" checked style="width:auto; margin:0;"> Kunci sebagai Jurnal Privat
+            </label>
+            
+            <button type="submit" class="btn-submit-journal">Rekam Jejak</button>
+        </form>
+
+        <div class="panel-title" style="margin-top:20px;">Catatan Refleksi Anda</div>
+        <?php if(!empty($journals)): ?>
+            <?php foreach($journals as $j): ?>
+                <div class="journal-card">
+                    <div class="journal-mood"><?= esc($j['mood']) ?></div>
+                    <div class="journal-date"><?= date('d M Y - H:i', strtotime($j['created_at'])) ?></div>
+                    <div class="journal-content">"<?= esc($j['content']) ?>"</div>
+                    <?php if($j['is_private']): ?>
+                        <div style="font-size:0.6rem; color:#888; margin-top:10px;"><i class="fa-solid fa-lock" style="font-size:0.5rem;"></i> Hanya Anda yang dapat melihat ini</div>
+                    <?php endif; ?>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <div style="text-align:center; padding:20px; color:#555; font-size:0.8rem; font-style:italic;">Belum ada jejak refleksi yang direkam.</div>
+        <?php endif; ?>
     </div>
 
     <!-- Ambient Audio (Mockup using HTML5 Audio) -->
@@ -325,5 +398,22 @@ function toggleAudioUI(playing) {
         btn.style.color = '#fff';
     }
 }
+
+// Journal Panel Toggle
+const btnToggleJournal = document.getElementById('btnToggleJournal');
+const journalPanel = document.getElementById('journalPanel');
+btnToggleJournal.addEventListener('click', () => {
+    journalPanel.classList.toggle('open');
+    if(navigator.vibrate) navigator.vibrate(20);
+});
+
+// Flashdata
+<?php if(session()->getFlashdata('success') || session()->getFlashdata('error')): ?>
+    journalPanel.classList.add('open');
+    // Hide start overlay directly to view panel if there's flashdata (post submit)
+    document.getElementById('startOverlay').style.display = 'none';
+    isBreathing = true;
+    breathCycle();
+<?php endif; ?>
 </script>
 <?= $this->endSection() ?>

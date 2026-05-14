@@ -260,6 +260,7 @@
             </div>
 
             <form action="/auth/register" method="POST" id="registerForm" novalidate>
+                <?= csrf_field() ?>
                 <input type="hidden" name="face_data" id="faceDataInput">
                 
                 <div class="form-grid">
@@ -289,8 +290,15 @@
                     </div>
                     
                     <div class="input-group">
-                        <input type="text" name="tempat_tanggal_lahir" class="input-control" required placeholder=" " value="<?= old('tempat_tanggal_lahir') ?>">
-                        <label class="input-label">Tempat & Tanggal Lahir</label>
+                        <input type="text" name="tempat_lahir" class="input-control" required placeholder=" " value="<?= old('tempat_lahir') ?>">
+                        <label class="input-label">Tempat Lahir</label>
+                        <div class="input-neon-line"></div>
+                        <div class="error-hint"></div>
+                    </div>
+
+                    <div class="input-group">
+                        <input type="date" name="tanggal_lahir" class="input-control" required placeholder=" " value="<?= old('tanggal_lahir') ?>" style="color-scheme: dark;">
+                        <label class="input-label" style="top:-20px; font-size:0.75rem; color:var(--text-secondary); letter-spacing:2px; font-weight:700;">Tanggal Lahir</label>
                         <div class="input-neon-line"></div>
                         <div class="error-hint"></div>
                     </div>

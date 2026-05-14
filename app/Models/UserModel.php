@@ -18,11 +18,15 @@ class UserModel extends Model
 
     // Daftar kolom yang diizinkan untuk diisi (Proteksi Mass Assignment)
     protected $allowedFields = [
-    'nama_lengkap', 'nama_panggilan', 'jenis_kelamin', 'tempat_tanggal_lahir', 
+    'nama_lengkap', 'nama_panggilan', 'jenis_kelamin', 'tempat_tanggal_lahir', 'tempat_lahir', 'tanggal_lahir',
     'alamat_lengkap', 'email', 'password_hash', 'no_whatsapp', 'motivasi_hidup', 
     'cita_cita', 'akun_ig', 'akun_tiktok', 'foto_profil', 
     'email_verify_token', 'email_verified_at', 'webauthn_credential_id','lat', // <--- Gerbang Latitude (Garis Lintang)
         'lng', // <--- Gerbang Longitude (Garis Bujur)
-        'face_data' // <--- [BARU] Gerbang Matriks Wajah Face ID
+        'face_data', // <--- [BARU] Gerbang Matriks Wajah Face ID
+        'reset_password_code', 'reset_password_expires', // <--- [BARU] Forgot Password fields
+        'role', // <--- Admin Role
+        'prestise_points', // <--- Gamification Score
+        'birth_month_day' // <--- Optimasi query birthday (format MM-DD)
     ];
 }

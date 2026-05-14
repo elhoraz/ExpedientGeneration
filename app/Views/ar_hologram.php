@@ -36,7 +36,7 @@
 
     <div id="preloader">
         <div class="loader-ring"></div>
-        <span id="loadingText">DECRYPTING AR ENVIRONMENT...</span>
+        <span id="loadingText">Mempersiapkan AR...</span>
     </div>
 
     <video id="webcam" autoplay playsinline></video>
@@ -67,7 +67,7 @@
         // --- DATA SINKRONISASI ---
         const expedientData = {
             nama: "<?= esc($user['nama_lengkap']) ?>",
-            jabatan: "SOVEREIGN ENTITY",
+            jabatan: "ANGGOTA VVIP",
             nomor_id: "EXP-<?= sprintf('%03d', $user['id']) ?>",
             exp: "VALID THRU FOREVER",
             foto_url: "<?= $foto_profil ?>"
@@ -175,14 +175,14 @@
             if (isBump) { ctx.fillStyle = '#000000'; ctx.fillRect(0, 0, canvas.width, canvas.height); } else { drawBrushedMetalMain(ctx, canvas.width, canvas.height); }
             ctx.fillStyle = isBump ? '#111111' : '#000000'; ctx.fillRect(0, 150, 1024, 250); ctx.strokeStyle = isBump ? '#444444' : '#222'; ctx.lineWidth = 5; ctx.strokeRect(0, 150, 1024, 250);
             if (isBump) { ctx.shadowColor = '#ffffff'; ctx.shadowBlur = 1; } 
-            ctx.fillStyle = isBump ? '#ffffff' : GOLD; ctx.textAlign = 'center'; ctx.font = 'bold 45px "Playfair Display", serif'; ctx.fillText('THE REGISTRY DIRECTIVE', 512, 550);
+            ctx.fillStyle = isBump ? '#ffffff' : GOLD; ctx.textAlign = 'center'; ctx.font = 'bold 45px "Playfair Display", serif'; ctx.fillText('CATATAN RESMI', 512, 550);
             if (isBump) ctx.shadowBlur = 0;
             ctx.fillStyle = isBump ? '#ffffff' : GOLD; ctx.fillRect(400, 580, 224, 2);
             ctx.fillStyle = isBump ? '#aaaaaa' : '#8b9ba8'; ctx.font = '300 28px "Inter", sans-serif';
             const lines = ["Properti VVIP Eksklusif Expedient Generation.", "Kartu ini menyimpan data terenkripsi untuk", "akses tanpa batas ke dalam ekosistem The Vault.", "Penyalahgunaan akan dikenakan sanksi dewan."];
             lines.forEach((line, i) => ctx.fillText(line, 512, 680 + (i * 45)));
             ctx.strokeStyle = isBump ? '#ffffff' : GOLD; ctx.lineWidth = 8; ctx.strokeRect(342, 1030, 340, 340); ctx.fillStyle = isBump ? '#ffffff' : GOLD; ctx.fillRect(320, 1010, 40, 10); ctx.fillRect(320, 1010, 10, 40); 
-            ctx.fillStyle = isBump ? '#aaaaaa' : '#444'; ctx.font = '400 20px monospace'; ctx.fillText('SCAN FOR OMNIPRESENCE VERIFICATION', 512, 1420); 
+            ctx.fillStyle = isBump ? '#aaaaaa' : '#444'; ctx.font = '400 20px monospace'; ctx.fillText('SCAN UNTUK VERIFIKASI', 512, 1420); 
             
             return kalibrasiUV(new THREE.CanvasTexture(canvas), isBump, false); // isKTA = false
         }
@@ -211,7 +211,7 @@
             if (isBump) { ctx.fillStyle = '#000000'; ctx.fillRect(0,0,1024,640); } else { drawBrushedMetalMain(ctx, 1024, 640); }
             ctx.fillStyle = isBump ? '#111111' : '#000000'; ctx.fillRect(0, 100, 1024, 120);
             if (isBump) { ctx.shadowColor = '#ffffff'; ctx.shadowBlur = 1; }
-            ctx.fillStyle = isBump ? '#ffffff' : '#d4af37'; ctx.font = 'bold 30px "Playfair Display", serif'; ctx.textAlign = 'left'; ctx.fillText('THE VAULT AUTHORIZATION', 80, 320);
+            ctx.fillStyle = isBump ? '#ffffff' : '#d4af37'; ctx.font = 'bold 30px "Playfair Display", serif'; ctx.textAlign = 'left'; ctx.fillText('OTORISASI KARTU', 80, 320);
             if (isBump) ctx.shadowBlur = 0;
             ctx.fillStyle = isBump ? '#aaaaaa' : '#666'; ctx.font = '22px "Inter", sans-serif'; ctx.fillText('If found, return immediately to the Expedient Council.', 80, 380); ctx.fillText('Unauthorized use will be prosecuted.', 80, 420);
             

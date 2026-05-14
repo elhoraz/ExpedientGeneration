@@ -269,11 +269,30 @@
         </div>
 
         <div class="riddle-box">
-            <div class="riddle-title">The Initiation</div>
+            <div class="riddle-title">Tahap Refleksi <?= isset($progress) ? $progress['current_level'] : 1 ?></div>
             <div class="riddle-text">
-                "Identitas Sejati tersembunyi dalam struktur. <br>
-                Cari **Empat** Penjuru, Genggam **Dua** Pilar, Hadapi Titik **Akhir** (X)."
+                <?= isset($puzzle) ? $puzzle['question'] : "Identitas Sejati tersembunyi dalam struktur." ?>
             </div>
+            
+            <?php if(isset($progress) && $progress['is_completed']): ?>
+                <div style="margin-top: 20px; color: #00ff88; font-weight: bold; letter-spacing: 2px;">
+                    SIMPUL TELAH TERPECAHKAN.
+                </div>
+            <?php else: ?>
+                <form action="/enigma/verify" method="POST" style="margin-top: 25px; display: flex; flex-direction: column; align-items: center; gap: 15px;">
+                    <?= csrf_field() ?>
+                    <input type="text" name="answer" placeholder="Tuliskan pemahaman Anda..." required 
+                        style="width: 100%; max-width: 300px; padding: 12px; background: rgba(0,0,0,0.5); border: 1px solid var(--enigma-gold); color: #fff; font-family: 'Courier New', monospace; text-align: center; border-radius: 8px;">
+                    <button type="submit" class="btn-return" style="opacity: 1; transform: none; display: inline-block; padding: 10px 25px; margin-top: 0;">Konfirmasi Kebijaksanaan</button>
+                </form>
+            <?php endif; ?>
+            
+            <?php if(session()->getFlashdata('error')): ?>
+                <div style="margin-top: 15px; color: #ff3366; font-size: 0.85rem; letter-spacing: 1px;"><?= session()->getFlashdata('error') ?></div>
+            <?php endif; ?>
+            <?php if(session()->getFlashdata('success')): ?>
+                <div style="margin-top: 15px; color: #00ff88; font-size: 0.85rem; letter-spacing: 1px;"><?= session()->getFlashdata('success') ?></div>
+            <?php endif; ?>
         </div>
 
         <div class="success-overlay" id="successOverlay">
@@ -441,20 +460,7 @@
         }
 
         function checkSolution() {
-            let isCorrect = true;
-            
-            for (let i = 0; i < 3; i++) {
-                let topIndex = getTopIndex(ringRotations[i]);
-                currentIndices[i] = topIndex;
-                
-                if (topIndex !== targetIndices[i]) {
-                    isCorrect = false;
-                }
-            }
-
-            if(isCorrect && !isUnlocked) {
-                triggerUnlock();
-            }
+            // Evaluasi di backend, ring putar hanya interaksi visual haptic
         }
 
         function triggerUnlock() {

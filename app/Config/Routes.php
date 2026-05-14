@@ -9,10 +9,8 @@ use CodeIgniter\Router\RouteCollection;
 // ==========================================================
 // 1. RUTE DEFAULT
 // ==========================================================
-// Jika buka domain utama, langsung paksa ke halaman login
-$routes->get('/', function() {
-    return redirect()->to('/login');
-});
+// Landing page publik — redirect ke beranda jika sudah login
+$routes->get('/', 'LandingController::index');
 
 // ==========================================================
 // 2. RUTE OTENTIKASI (LOGIN, REGISTER, VERIFIKASI)
@@ -30,30 +28,51 @@ $routes->post('/auth/register', 'AuthController::register');    // Memproses dat
 $routes->get('/auth/verify/(:segment)', 'AuthController::verifyEmail/$1'); 
 $routes->get('/logout', 'AuthController::logout');
 
+// Forgot Password (Reset Kata Sandi)
+$routes->get('/auth/forgot-password', 'AuthController::forgotPasswordView');
+$routes->post('/auth/forgot-password/send', 'AuthController::sendResetCode');
+$routes->post('/auth/forgot-password/verify', 'AuthController::verifyResetCode');
+$routes->post('/auth/forgot-password/reset', 'AuthController::resetPassword');
+
 // ==========================================================
 // 3. RUTE DASHBOARD / BERANDA
 // ==========================================================
-// Filter 'auth' memastikan tidak ada yang bisa buka /beranda kalau belum login
-$routes->get('/beranda', 'BerandaController::index', ['filter' => 'auth']);
-$routes->get('/direktori', 'DirektoriController::index', ['filter' => 'auth']);
-$routes->get('/galeri', 'GaleriController::index', ['filter' => 'auth']);
+// Halaman PUBLIK (bisa diakses tanpa login)
+$routes->get('/beranda', 'BerandaController::index');
+$routes->get('/galeri', 'GaleriController::index');
+$routes->get('/direktori', 'DirektoriController::index');
+
+// Interaksi ANGGOTA (tetap butuh login)
+$routes->post('/beranda/simpan_pesan', 'BerandaController::simpan_pesan', ['filter' => 'auth']);
 $routes->get('/fitur', 'FiturController::index', ['filter' => 'auth']);
 $routes->get('/oracle', 'OracleController::index', ['filter' => 'auth']);
+$routes->post('/oracle/store', 'OracleController::store', ['filter' => 'auth']);
+$routes->post('/oracle/unlock/(:num)', 'OracleController::unlock/$1', ['filter' => 'auth']);
 $routes->get('/enigma', 'EnigmaController::index', ['filter' => 'auth']);
+$routes->post('/enigma/verify', 'EnigmaController::verify', ['filter' => 'auth']);
 $routes->get('/genesis', 'GenesisController::index', ['filter' => 'auth']);
+$routes->post('/genesis/log', 'GenesisController::log', ['filter' => 'auth']);
 $routes->get('/celestial', 'CelestialController::index', ['filter' => 'auth']);
 $routes->get('/majlis', 'MajlisController::index', ['filter' => 'auth']);
+$routes->post('/majlis/store', 'MajlisController::store', ['filter' => 'auth']);
+$routes->post('/majlis/vote/(:num)', 'MajlisController::vote/$1', ['filter' => 'auth']);
 $routes->get('/tarbiyah', 'TarbiyahController::index', ['filter' => 'auth']);
+$routes->post('/tarbiyah/request', 'TarbiyahController::request', ['filter' => 'auth']);
 $routes->get('/baitul-maal', 'BaitulMaalController::index', ['filter' => 'auth']);
+$routes->post('/baitul-maal/store', 'BaitulMaalController::store', ['filter' => 'auth']);
 $routes->get('/wasiat', 'WasiatController::index', ['filter' => 'auth']);
+$routes->post('/wasiat/store', 'WasiatController::store', ['filter' => 'auth']);
+$routes->post('/wasiat/unlock/(:num)', 'WasiatController::unlock/$1', ['filter' => 'auth']);
 $routes->get('/multazam', 'MultazamController::index', ['filter' => 'auth']);
+$routes->post('/multazam/store', 'MultazamController::store', ['filter' => 'auth']);
 $routes->get('/kontemplasi', 'KontemplasiController::index', ['filter' => 'auth']);
+$routes->post('/kontemplasi/store', 'KontemplasiController::store', ['filter' => 'auth']);
 // ================= FASILITAS: GLOBAL RADAR =================
 // Menampilkan halaman Peta 3D
 $routes->get('/radar', 'RadarController::index', ['filter' => 'auth']);
 $routes->get('/radar/flat', 'RadarController::flatMap', ['filter' => 'auth']);
 // Endpoint API (AJAX) untuk menerima dan menyimpan koordinat GPS dari HP User
-$routes->post('/radar/update-location', 'RadarController::updateLocation', ['filter' => 'auth']);
+$routes->post('/radar/update-location', 'Api\LocationApi::update', ['filter' => 'auth']);
 // ================= FASILITAS: THE SYNDICATE =================
 // Menampilkan galeri kartu VIP
 $routes->get('/syndicate', 'SyndicateController::index', ['filter' => 'auth']);
@@ -63,43 +82,73 @@ $routes->get('/syndicate/create', 'SyndicateController::create', ['filter' => 'a
 
 // Endpoint POST untuk menyimpan data formulir ke database
 $routes->post('/syndicate/store', 'SyndicateController::store', ['filter' => 'auth']);
+
+// CRUD Syndicate: Edit, Update, Delete
+$routes->get('/syndicate/edit/(:num)', 'SyndicateController::edit/$1', ['filter' => 'auth']);
+$routes->post('/syndicate/update/(:num)', 'SyndicateController::update/$1', ['filter' => 'auth']);
+$routes->post('/syndicate/delete/(:num)', 'SyndicateController::delete/$1', ['filter' => 'auth']);
 // ================= FASILITAS: COMMAND CENTER (PROFIL) =================
 // Menampilkan halaman profil dan pengaturan biometrik agen
 $routes->get('/profil', 'ProfileController::index', ['filter' => 'auth']);
 $routes->post('/profil/update', 'ProfileController::updateProfile', ['filter' => 'auth']);
 // ==========================================================
-// 4. RUTE BIOMETRIK (SUDAH DISELARASKAN DENGAN CONTROLLER)
+// 4. RUTE BIOMETRIK (DISELARASKAN DENGAN Api\BiometricApi)
 // ==========================================================
 // Proses Login Biometrik (Dari halaman depan)
-$routes->get('/biometric/login-options', 'BiometricController::getLoginOptions');
-$routes->post('/biometric/login-verify', 'BiometricController::loginVerify');
+$routes->get('/biometric/login-options', 'Api\BiometricApi::loginOptions');
+$routes->post('/biometric/login-verify', 'Api\BiometricApi::loginVerify');
 
 // Proses Mendaftarkan Biometrik Baru (Dari dalam dashboard/settings)
-$routes->get('/biometric/register-options', 'BiometricController::getRegisterOptions');
-$routes->post('/biometric/register-verify', 'BiometricController::registerVerify');
+$routes->get('/biometric/register-options', 'Api\BiometricApi::registerOptions', ['filter' => 'auth']);
+$routes->post('/biometric/register-verify', 'Api\BiometricApi::registerVerify', ['filter' => 'auth']);
 // ====================================================================
 // JALUR EKSKLUSIF: THE SOVEREIGN VAULT
 // ====================================================================
 
+// Sovereign ID Card 5D (Butuh login)
+$routes->get('/sovereign', 'SovereignController::index', ['filter' => 'auth']);
 
+// Gateway saat KTA di-scan (Publik — bisa diakses tanpa login)
+$routes->get('scan/(:num)', 'VaultController::scan_gateway/$1');
 
+// Opsi 1: Hologram AR (Publik)
+$routes->get('ar_hologram/(:num)', 'VaultController::ar_hologram/$1');
 
-// 3. Panggung Mahakarya: Sovereign ID Card 5D
-$routes->get('/sovereign', 'SovereignController::index');
+// Opsi 2: Download vCard Eksekutif (Publik)
+$routes->get('download_vcard/(:num)', 'VaultController::download_vcard/$1');
 
+// Halaman Profil Kaca 3D / Dossier Publik
+$routes->get('profil/(:num)', 'VaultController::profil/$1');
 
-// 1. Halaman Registrasi (Form Input Data)
-$routes->get('register', 'Vault::register');
-$routes->post('register/simpan', 'Vault::simpan_register');
+// ====================================================================
+// P3: NOTIFICATION & CHAT
+// ====================================================================
+$routes->get('/notifications/unread', 'NotificationController::getUnread', ['filter' => 'auth']);
+$routes->post('/notifications/read/(:num)', 'NotificationController::markAsRead/$1', ['filter' => 'auth']);
 
-// 2. Gateway saat KTA di-scan (Muncul Pop-up 2 Opsi)
-$routes->get('scan/(:num)', 'Vault::scan_gateway/$1');
+$routes->get('/chat', 'ChatController::index', ['filter' => 'auth']);
+$routes->get('/chat/lounge', 'ChatController::lounge', ['filter' => 'auth']);
+$routes->get('/chat/personal/(:num)', 'ChatController::personal/$1', ['filter' => 'auth']);
+$routes->get('/chat/unread', 'ChatController::getUnreadCount', ['filter' => 'auth']);
+$routes->post('/chat/read/(:num)', 'ChatController::markAsRead/$1', ['filter' => 'auth']);
+$routes->post('/chat/send', 'ChatController::send', ['filter' => 'auth']);
 
-// 3. Opsi 1: Hologram AR
-$routes->get('ar_hologram/(:num)', 'Vault::ar_hologram/$1');
+$routes->get('/nexus', 'NexusController::index', ['filter' => 'auth']);
+$routes->get('/nexus/calculate', 'NexusController::calculateMatches', ['filter' => 'auth']);
 
-// 4. Opsi 2: Download vCard Eksekutif
-$routes->get('download_vcard/(:num)', 'Vault::download_vcard/$1');
+$routes->get('/birthday', 'BirthdayController::index', ['filter' => 'auth']);
+$routes->get('/birthday/(:num)', 'BirthdayController::show/$1', ['filter' => 'auth']);
 
-// 5. Halaman Profil Kaca 3D (Tujuan Akhir)
-$routes->get('profil/(:num)', 'Vault::profil/$1');
+// ====================================================================
+// P4: ADMIN & OFFLINE
+// ====================================================================
+$routes->get('/offline', function() { return view('offline'); });
+$routes->get('/admin/dashboard', 'AdminController::index', ['filter' => 'admin']);
+
+// Admin: CRUD Pengumuman
+$routes->get('/admin/announcements', 'Admin\AnnouncementController::index', ['filter' => 'admin']);
+$routes->get('/admin/announcements/create', 'Admin\AnnouncementController::create', ['filter' => 'admin']);
+$routes->post('/admin/announcements/store', 'Admin\AnnouncementController::store', ['filter' => 'admin']);
+$routes->get('/admin/announcements/edit/(:num)', 'Admin\AnnouncementController::edit/$1', ['filter' => 'admin']);
+$routes->post('/admin/announcements/update/(:num)', 'Admin\AnnouncementController::update/$1', ['filter' => 'admin']);
+$routes->post('/admin/announcements/delete/(:num)', 'Admin\AnnouncementController::delete/$1', ['filter' => 'admin']);

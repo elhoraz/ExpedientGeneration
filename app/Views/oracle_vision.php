@@ -257,7 +257,44 @@
         
         @media (max-width: 768px) {
             .btn-back-vault { top: 20px; left: 20px; padding: 8px 15px; font-size: 10px; }
+            .btn-time-capsule { top: 20px; right: 20px; padding: 8px 15px; font-size: 10px; }
+            .time-capsule-panel { width: 100%; right: -100%; }
+            .time-capsule-panel.open { right: 0; }
+            .vision-container { width: clamp(260px, 85vw, 400px); }
+            .aura-title { font-size: 2rem; }
+            .controls-panel { margin-top: 25px; }
         }
+
+        /* Time Capsule UI */
+        .btn-time-capsule {
+            position: absolute; top: 30px; right: 30px; z-index: 100;
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 20px; background: rgba(212,175,55,0.1);
+            border: 1px solid var(--oracle-gold); border-radius: 8px;
+            color: #d4af37; font-size: 11px; font-weight: 600; 
+            letter-spacing: 3px; cursor: pointer; text-transform: uppercase;
+            backdrop-filter: blur(10px); transition: 0.3s;
+        }
+        .btn-time-capsule:hover { background: var(--oracle-gold); color: #000; }
+
+        .time-capsule-panel {
+            position: absolute; top: 0; right: -450px; width: 400px; height: 100vh;
+            background: rgba(5, 10, 8, 0.85); backdrop-filter: blur(20px);
+            border-left: 1px solid rgba(212,175,55,0.3); z-index: 900;
+            transition: right 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            padding: 40px 30px; display: flex; flex-direction: column; gap: 25px;
+            overflow-y: auto; color: #fff; box-shadow: -20px 0 50px rgba(0,0,0,0.8);
+        }
+        .time-capsule-panel.open { right: 0; }
+        
+        .capsule-title { font-family: 'Playfair Display', serif; color: var(--oracle-gold); font-size: 1.5rem; letter-spacing: 2px; border-bottom: 1px solid rgba(212,175,55,0.3); padding-bottom: 10px; }
+        .capsule-form input, .capsule-form textarea {
+            width: 100%; background: rgba(0,0,0,0.5); border: 1px solid rgba(212,175,55,0.3);
+            color: #fff; padding: 12px; margin-bottom: 15px; border-radius: 5px; font-family: 'Courier New', monospace;
+        }
+        .capsule-btn { width: 100%; background: var(--oracle-gold); color: #000; border: none; padding: 12px; font-weight: bold; cursor: pointer; border-radius: 5px; letter-spacing: 2px; }
+        .capsule-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin-bottom: 15px; }
+        .capsule-card.unlocked { border-color: var(--oracle-gold); }
     </style>
 </head>
 <body>
@@ -265,6 +302,63 @@
     <a href="/fitur" class="btn-back-vault">
         <i class="fa-solid fa-chevron-left"></i> Exit Vision
     </a>
+
+    <button class="btn-time-capsule" id="btnToggleCapsule">
+        <i class="fa-solid fa-hourglass-half"></i> Pesan Masa Depan
+    </button>
+
+    <div class="time-capsule-panel" id="capsulePanel">
+        <div class="capsule-title">Tulis Pesan Masa Depan</div>
+        <form action="/oracle/store" method="POST" class="capsule-form">
+            <?= csrf_field() ?>
+            <textarea name="vision_text" rows="4" placeholder="Tuliskan visi atau pesan rahasia untuk diri Anda di masa depan..." required></textarea>
+            <label style="font-size:0.8rem; color:#888; margin-bottom:5px; display:block;">Tanggal Dibuka:</label>
+            <input type="date" name="unlock_date" required min="<?= date('Y-m-d', strtotime('+1 day')) ?>">
+            <button type="submit" class="capsule-btn">SEGEL PESAN</button>
+        </form>
+
+        <div class="capsule-title" style="margin-top: 20px;">Arsip Pesan Anda</div>
+        <?php if(!empty($visions)): ?>
+            <?php foreach($visions as $v): ?>
+                <div class="capsule-card <?= $v['is_unlocked'] ? 'unlocked' : '' ?>">
+                    <div style="font-size:0.8rem; color:var(--oracle-gold); margin-bottom:10px;">
+                        <i class="fa-solid fa-lock<?= $v['is_unlocked'] ? '-open' : '' ?>"></i> 
+                        Terjadwal: <?= date('d M Y', strtotime($v['unlock_date'])) ?>
+                    </div>
+                    
+                    <?php if($v['is_unlocked']): ?>
+                        <div style="font-family:'Courier New', monospace; font-size:0.9rem; color:#fff; white-space:pre-wrap;"><?= esc($v['vision_text']) ?></div>
+                    <?php else: ?>
+                        <?php if(strtotime($v['unlock_date']) <= strtotime(date('Y-m-d'))): ?>
+                            <form action="/oracle/unlock/<?= $v['id'] ?>" method="POST">
+                                <?= csrf_field() ?>
+                                <button type="submit" style="background:transparent; border:1px solid #d4af37; color:#d4af37; padding:5px 10px; cursor:pointer; font-size:0.8rem; border-radius:3px;">BUKA SEGEL</button>
+                            </form>
+                        <?php else: ?>
+                            <div style="font-size:0.8rem; color:#888;">Segel Waktu Aktif. Menunggu takdir.</div>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <div style="font-size:0.8rem; color:#777; font-style:italic;">Belum ada pesan yang tersegel.</div>
+        <?php endif; ?>
+    </div>
+
+    <!-- Modal Vision Terbuka -->
+    <?php if(session()->getFlashdata('unlocked_vision')): ?>
+    <div id="unsealModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; justify-content:center; align-items:center; flex-direction:column; padding:20px; backdrop-filter:blur(5px);">
+        <div class="capsule-card" style="border-color:var(--oracle-gold); max-width:600px; width:100%; background:var(--oracle-dark);" id="unsealBox">
+            <h2 style="color:var(--oracle-gold); font-family:'Playfair Display'; margin-bottom:20px; text-shadow:0 0 15px rgba(212,175,55,0.5); text-transform:uppercase;"><i class="fa-solid fa-envelope-open-text"></i> PESAN MASA DEPAN TERBUKA</h2>
+            <div style="font-family:'Courier New', monospace; font-size:1rem; line-height:1.6; color:#fff; word-break:break-word; background:rgba(0,0,0,0.5); padding:20px; border-radius:5px; border:1px dashed rgba(212,175,55,0.3);">
+                <?= nl2br(esc(session()->getFlashdata('unlocked_vision'))) ?>
+            </div>
+            <div style="margin-top:30px; text-align:right;">
+                <button onclick="closeUnsealModal()" style="background:transparent; color:var(--oracle-gold); border:1px solid var(--oracle-gold); padding:10px 25px; font-weight:bold; cursor:pointer; font-family:'Courier New'; letter-spacing:2px; transition:0.3s;" onmouseover="this.style.background='rgba(212,175,55,0.1)'" onmouseout="this.style.background='transparent'">TUTUP DOKUMEN</button>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
 
     <div class="oracle-wrapper">
         <div class="vision-container" id="visionContainer">
@@ -286,7 +380,7 @@
 
         <div class="controls-panel">
             <button class="btn-initiate hover-trigger" id="btnScan" disabled>
-                <i class="fa-solid fa-eye"></i> Inisiasi Visi
+                <i class="fa-solid fa-eye"></i> Mulai Pemindaian
             </button>
             <button class="btn-reset hover-trigger" id="btnReset">Pindai Ulang</button>
         </div>
@@ -453,6 +547,35 @@
             btnReset.style.display = 'none';
             btnScan.style.display = 'inline-block';
         });
+
+        // Time Capsule Panel Toggle
+        const btnToggleCapsule = document.getElementById('btnToggleCapsule');
+        const capsulePanel = document.getElementById('capsulePanel');
+        btnToggleCapsule.addEventListener('click', () => {
+            capsulePanel.classList.toggle('open');
+            if(navigator.vibrate) navigator.vibrate(20);
+        });
+
+        // Flashdata handling
+        <?php if(session()->getFlashdata('success') || session()->getFlashdata('error')): ?>
+            capsulePanel.classList.add('open');
+            <?php if(session()->getFlashdata('unlocked_vision')): ?>
+                // Tampilkan custom modal dengan GSAP animation
+                setTimeout(() => {
+                    const modal = document.getElementById('unsealModal');
+                    if (modal) {
+                        modal.style.display = 'flex';
+                        gsap.from("#unsealBox", { scale:0.8, opacity:0, duration:0.5, ease:"back.out(1.7)" });
+                    }
+                }, 500);
+
+                window.closeUnsealModal = function() {
+                    gsap.to("#unsealBox", { scale:0.8, opacity:0, duration:0.3, onComplete:() => {
+                        document.getElementById('unsealModal').style.display = 'none';
+                    }});
+                };
+            <?php endif; ?>
+        <?php endif; ?>
     });
     </script>
 </body>

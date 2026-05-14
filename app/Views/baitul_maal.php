@@ -236,11 +236,35 @@ Baitul Maal - Constellation of Giving
         font-weight: bold;
     }
 
+    /* PANEL TRANSAKSI */
+    .transactions-panel {
+        position: fixed; top: 0; right: -450px; width: 400px; height: 100vh;
+        background: rgba(10, 15, 12, 0.95); backdrop-filter: blur(20px);
+        border-left: 1px solid rgba(212,175,55,0.3); z-index: 1000;
+        transition: right 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        padding: 40px 30px; display: flex; flex-direction: column; gap: 20px;
+        overflow-y: auto; color: #fff; box-shadow: -20px 0 50px rgba(0,0,0,0.8);
+    }
+    .transactions-panel.open { right: 0; }
+    
+    .panel-title { font-family: 'Playfair Display', serif; color: var(--gold-main); font-size: 1.5rem; letter-spacing: 2px; border-bottom: 1px solid rgba(212,175,55,0.3); padding-bottom: 10px; margin-bottom: 10px; }
+    .maal-form input, .maal-form select, .maal-form textarea {
+        width: 100%; background: rgba(0,0,0,0.5); border: 1px solid rgba(212,175,55,0.3);
+        color: #fff; padding: 12px; margin-bottom: 15px; border-radius: 5px; font-family: 'Inter', sans-serif;
+    }
+    .btn-submit-maal { width: 100%; background: var(--gold-main); color: #000; border: none; padding: 12px; font-weight: bold; cursor: pointer; border-radius: 5px; letter-spacing: 2px; text-transform: uppercase; }
+    
+    .tx-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin-bottom: 10px; display: flex; align-items: center; gap: 15px; }
+    .tx-type-icon { width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; }
+    .tx-in { background: rgba(0,255,136,0.1); color: #00ff88; }
+    .tx-out { background: rgba(255,51,102,0.1); color: #ff3366; }
+
     @media (max-width: 768px) {
         .maal-header { flex-direction: column-reverse; gap: 20px; align-items: center; }
         .page-title { text-align: center; }
         .well-container { width: 280px; height: 280px; }
         .total-amount { font-size: 2rem; }
+        .transactions-panel { width: 100%; right: -100%; }
     }
 </style>
 <?= $this->endSection() ?>
@@ -259,14 +283,14 @@ Baitul Maal - Constellation of Giving
     <div class="well-container" id="goldenWell">
         <div class="well-outer-ring"></div>
         <div class="well-inner-ring" id="wellInner">
-            <h2 class="total-amount" id="totalAmount">Rp 84.5M</h2>
-            <div class="amount-label">Total Sedekah Jariyah</div>
+            <h2 class="total-amount" id="totalAmount">Rp <?= number_format($saldo_akhir ?? 0, 0, ',', '.') ?></h2>
+            <div class="amount-label">Total Saldo Kas</div>
         </div>
     </div>
 
     <!-- Action Button -->
-    <button class="btn-donate" id="btnKhidmah">
-        <i class="fa-solid fa-hand-holding-dollar"></i> Tunaikan Khidmah
+    <button class="btn-donate" id="btnTogglePanel">
+        <i class="fa-solid fa-hand-holding-dollar"></i> Catat Transaksi
     </button>
 
     <!-- Specific Campaigns -->
@@ -295,7 +319,42 @@ Baitul Maal - Constellation of Giving
             <div class="progress-stats"><span>Terkumpul: 90%</span><span>Target: Rp 100 Jt</span></div>
         </div>
     </div>
+</div>
 
+<!-- Panel Transaksi (Slide) -->
+<div class="transactions-panel" id="txPanel">
+    <div class="panel-title">Pencatatan Ledger</div>
+    <form action="/baitul-maal/store" method="POST" class="maal-form">
+        <?= csrf_field() ?>
+        <select name="type" required>
+            <option value="Pemasukan">Pemasukan (Khidmah/Infaq)</option>
+            <option value="Pengeluaran">Pengeluaran (Operasional)</option>
+        </select>
+        <input type="text" name="amount" placeholder="Nominal (Misal: 500000)" required>
+        <textarea name="description" rows="2" placeholder="Keterangan transaksi..." required></textarea>
+        <label style="display:flex; align-items:center; gap:10px; font-size:0.8rem; color:#888; margin-bottom:15px; cursor:pointer;">
+            <input type="checkbox" name="anonim" value="1" style="width:auto; margin:0;"> Hamba Allah (Anonim)
+        </label>
+        <button type="submit" class="btn-submit-maal">Simpan Transaksi</button>
+    </form>
+
+    <div class="panel-title" style="margin-top:20px;">Riwayat Transaksi</div>
+    <?php if(!empty($transactions)): ?>
+        <?php foreach($transactions as $tx): ?>
+            <div class="tx-card">
+                <div class="tx-type-icon <?= $tx['transaction_type'] == 'Pemasukan' ? 'tx-in' : 'tx-out' ?>">
+                    <i class="fa-solid <?= $tx['transaction_type'] == 'Pemasukan' ? 'fa-arrow-down' : 'fa-arrow-up' ?>"></i>
+                </div>
+                <div style="flex:1;">
+                    <div style="font-weight:bold; font-size:1.1rem;">Rp <?= number_format($tx['amount'], 0, ',', '.') ?></div>
+                    <div style="font-size:0.8rem; color:var(--gold-main);"><?= $tx['user_id'] ? esc($tx['nama_panggilan']) : 'Hamba Allah' ?></div>
+                    <div style="font-size:0.75rem; color:#888; margin-top:3px;"><?= esc($tx['description']) ?></div>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <div style="text-align:center; padding:20px; color:#555; font-size:0.8rem;">Belum ada catatan transaksi.</div>
+    <?php endif; ?>
 </div>
 <?= $this->endSection() ?>
 
@@ -309,71 +368,19 @@ document.addEventListener("DOMContentLoaded", () => {
     gsap.from(".btn-donate", { y: 30, opacity: 0, duration: 1, delay: 0.5, ease: "power2.out" });
     gsap.from(".campaign-card", { y: 50, opacity: 0, duration: 0.8, stagger: 0.2, delay: 0.8, ease: "power2.out" });
 
-    // Interaction logic
-    const btn = document.getElementById('btnKhidmah');
-    const wellInner = document.getElementById('wellInner');
-    const totalEl = document.getElementById('totalAmount');
+    // Toggle Panel
+    const btnToggle = document.getElementById('btnTogglePanel');
+    const txPanel = document.getElementById('txPanel');
     
-    // Parse initial amount (simplistic logic for visual demo)
-    let currentTotal = 84.5;
-
-    btn.addEventListener('click', (e) => {
-        // 1. Button press effect
-        gsap.to(btn, { scale: 0.95, duration: 0.1, yoyo: true, repeat: 1 });
-
-        // 2. Create particle (Coin of Light)
-        const particle = document.createElement('div');
-        particle.classList.add('particle');
-        document.body.appendChild(particle);
-
-        // Get coordinates
-        const btnRect = btn.getBoundingClientRect();
-        const wellRect = wellInner.getBoundingClientRect();
-
-        // Start from button center
-        const startX = btnRect.left + btnRect.width / 2;
-        const startY = btnRect.top + btnRect.height / 2;
-
-        // End at well center
-        const endX = wellRect.left + wellRect.width / 2;
-        const endY = wellRect.top + wellRect.height / 2;
-
-        gsap.set(particle, { x: startX, y: startY });
-
-        // Arc animation using bezier-like motion via separate X/Y eases
-        gsap.to(particle, {
-            duration: 0.8,
-            x: endX,
-            ease: "power1.inOut"
-        });
-        
-        gsap.to(particle, {
-            duration: 0.8,
-            y: endY,
-            ease: "back.in(1.5)",
-            onComplete: () => {
-                particle.remove();
-                
-                // 3. Well Glows Up
-                wellInner.classList.add('glow');
-                setTimeout(() => wellInner.classList.remove('glow'), 500);
-
-                // 4. Increase counter
-                currentTotal += 0.1; // Add 100 million for visual demo
-                
-                // Counter animation
-                gsap.to(totalEl, { 
-                    scale: 1.2, 
-                    color: "#fff", 
-                    textShadow: "0 0 40px #fff",
-                    duration: 0.2, 
-                    yoyo: true, 
-                    repeat: 1 
-                });
-                totalEl.innerText = "Rp " + currentTotal.toFixed(1) + "M";
-            }
-        });
+    btnToggle.addEventListener('click', () => {
+        txPanel.classList.toggle('open');
+        if(navigator.vibrate) navigator.vibrate(20);
     });
+
+    // Auto-open panel on flashdata success/error (handled by template for toast, but we can open panel too)
+    <?php if(session()->getFlashdata('success') || session()->getFlashdata('error')): ?>
+        txPanel.classList.add('open');
+    <?php endif; ?>
 });
 </script>
 <?= $this->endSection() ?>

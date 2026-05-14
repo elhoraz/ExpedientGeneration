@@ -10,10 +10,7 @@ class FiturController extends BaseController
     {
         $session = session();
 
-        // 1. AUTENTIKASI LAPIS 1
-        if (!$session->get('logged_in')) {
-            return redirect()->to('/login')->with('error', 'Akses Ditolak. Silakan login terlebih dahulu.');
-        }
+
 
         // 2. Ambil data user
         $userModel = new UserModel();

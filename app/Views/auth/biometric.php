@@ -119,7 +119,7 @@
 
     <div class="granted-overlay" id="grantedOverlay">
         <div class="granted-text">ACCESS GRANTED</div>
-        <div class="granted-sub">MENGAKSES RUANG KENDALI PRIBADI...</div>
+        <div class="granted-sub">MEMUAT PROFIL ANDA...</div>
     </div>
 
     <script>

@@ -281,71 +281,45 @@ Tarbiyah Nexus - Mentorship & B2B Halal Ecosystem
 
     <!-- MENTORSHIP TAB -->
     <div class="nexus-grid" id="mentorship-tab">
-        <!-- Card 1 -->
+        <?php foreach ($mentors as $mentor): ?>
         <div class="nexus-card">
-            <div class="card-badge">Mentor Senior</div>
-            <div class="card-avatar" style="background-image: url('https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=200&auto=format&fit=crop');"></div>
-            <h3 class="card-title">Dr. Muhammad Ilham</h3>
-            <div class="card-subtitle">CEO & Founder, Zenith Corp</div>
-            <p class="card-desc">Siap membimbing 3 orang untuk program intensif kepemimpinan korporat islami dan manajemen risiko.</p>
-            <button class="btn-wax" onclick="sendRequest(this)">
-                <div class="wax-seal"><i class="fa-solid fa-feather-pointed"></i></div>
-                <span>Ajukan Bimbingan</span>
-            </button>
+            <div class="card-badge"><?= $mentor['role'] ?></div>
+            <div class="card-avatar" style="background-image: url('<?= $mentor['avatar_url'] ?>');"></div>
+            <h3 class="card-title"><?= $mentor['name'] ?></h3>
+            <div class="card-subtitle"><?= $mentor['role'] ?></div>
+            <p class="card-desc"><?= $mentor['description'] ?></p>
+            <form action="/tarbiyah/request" method="POST" class="request-form">
+                <?= csrf_field() ?>
+                <input type="hidden" name="target_id" value="<?= $mentor['id'] ?>">
+                <input type="hidden" name="type" value="Mentorship">
+                <button type="button" class="btn-wax" onclick="sendRequest(this)">
+                    <div class="wax-seal"><i class="fa-solid fa-feather-pointed"></i></div>
+                    <span>Ajukan Bimbingan</span>
+                </button>
+            </form>
         </div>
-
-        <!-- Card 2 -->
-        <div class="nexus-card">
-            <div class="card-badge">Mentor Eksekutif</div>
-            <div class="card-avatar" style="background-image: url('https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=200&auto=format&fit=crop');"></div>
-            <h3 class="card-title">Aisyah Rahman, M.Sc</h3>
-            <div class="card-subtitle">Direktur FinTech Syariah</div>
-            <p class="card-desc">Fokus pada strategi startup, legalitas syariah, dan ekspansi pasar digital. Slot tersisa 1 orang.</p>
-            <button class="btn-wax" onclick="sendRequest(this)">
-                <div class="wax-seal"><i class="fa-solid fa-feather-pointed"></i></div>
-                <span>Ajukan Bimbingan</span>
-            </button>
-        </div>
-
-        <!-- Card 3 -->
-        <div class="nexus-card">
-            <div class="card-badge">Mentor Spiritual</div>
-            <div class="card-avatar" style="background-image: url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop');"></div>
-            <h3 class="card-title">Ustadz Hasan Al-Banna</h3>
-            <div class="card-subtitle">Dewan Syuro Eksekutif</div>
-            <p class="card-desc">Tarbiyah intensif via Majlis eksklusif mengenai Adab Muamalah dan menjaga keseimbangan dunia-akhirat.</p>
-            <button class="btn-wax" onclick="sendRequest(this)">
-                <div class="wax-seal"><i class="fa-solid fa-feather-pointed"></i></div>
-                <span>Ajukan Bimbingan</span>
-            </button>
-        </div>
+        <?php endforeach; ?>
     </div>
 
     <!-- B2B TAB (Hidden by default) -->
     <div class="nexus-grid" id="b2b-tab" style="display: none;">
-        <!-- Card 1 -->
+        <?php foreach ($tenders as $tender): ?>
         <div class="nexus-card">
-            <div class="card-badge b2b">Tender Terbuka</div>
-            <h3 class="card-title">Sistem ERP Syariah</h3>
-            <div class="card-subtitle">PT. Sovereign Teknologi Investama</div>
-            <p class="card-desc">Mencari vendor internal angkatan untuk pengembangan Modul Keuangan Syariah dengan nilai kontrak klasifikasi [A].</p>
-            <button class="btn-wax" onclick="sendRequest(this)">
-                <div class="wax-seal"><i class="fa-solid fa-handshake"></i></div>
-                <span>Ajukan Proposal</span>
-            </button>
+            <div class="card-badge b2b">Tender [<?= $tender['classification'] ?>]</div>
+            <h3 class="card-title"><?= $tender['title'] ?></h3>
+            <div class="card-subtitle"><?= $tender['company'] ?></div>
+            <p class="card-desc"><?= $tender['description'] ?></p>
+            <form action="/tarbiyah/request" method="POST" class="request-form">
+                <?= csrf_field() ?>
+                <input type="hidden" name="target_id" value="<?= $tender['id'] ?>">
+                <input type="hidden" name="type" value="Tender">
+                <button type="button" class="btn-wax" onclick="sendRequest(this)">
+                    <div class="wax-seal"><i class="fa-solid fa-handshake"></i></div>
+                    <span>Ajukan Proposal</span>
+                </button>
+            </form>
         </div>
-
-        <!-- Card 2 -->
-        <div class="nexus-card">
-            <div class="card-badge b2b">Peluang Investasi</div>
-            <h3 class="card-title">Ekspansi Jaringan Klinik</h3>
-            <div class="card-subtitle">Sifa Medika Group</div>
-            <p class="card-desc">Dibuka porsi saham eksklusif (Mudarabah) untuk pembangunan 3 klinik cabang di Jawa Barat. Khusus anggota terverifikasi.</p>
-            <button class="btn-wax" onclick="sendRequest(this)">
-                <div class="wax-seal"><i class="fa-solid fa-handshake"></i></div>
-                <span>Pelajari Dokumen</span>
-            </button>
-        </div>
+        <?php endforeach; ?>
     </div>
 
 </div>
@@ -406,6 +380,11 @@ function sendRequest(btn) {
         btn.style.borderColor = "var(--gold-main)";
         btn.style.background = "rgba(212,175,55,0.1)";
         btn.querySelector('.wax-seal').innerHTML = '<i class="fa-solid fa-check"></i>';
+
+        // Submit form
+        setTimeout(() => {
+            btn.closest('form').submit();
+        }, 1000);
     }, 1500);
 }
 </script>

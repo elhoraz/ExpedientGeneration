@@ -35,6 +35,9 @@ class Filters extends BaseFilters
         'pagecache'     => PageCache::class,
         'performance'   => PerformanceMetrics::class,
         'auth'          => \App\Filters\AuthFilter::class,
+        'throttle'      => \App\Filters\ThrottleApiFilter::class,
+        'admin'         => \App\Filters\AdminFilter::class,
+        'track_visit'   => \App\Filters\VisitorTrackingFilter::class,
     ];
 
     /**
@@ -52,7 +55,7 @@ class Filters extends BaseFilters
      */
     public array $required = [
         'before' => [
-            'forcehttps', // Force Global Secure Requests
+            // 'forcehttps', // Aktifkan di production (uncomment saat deploy)
             'pagecache',  // Web Page Caching
         ],
         'after' => [
@@ -74,7 +77,8 @@ class Filters extends BaseFilters
     public array $globals = [
         'before' => [
             // 'honeypot',
-            // 'csrf',
+            'csrf',
+            'track_visit',
             // 'invalidchars',
         ],
         'after' => [

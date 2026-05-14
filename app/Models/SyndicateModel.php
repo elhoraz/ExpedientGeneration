@@ -26,4 +26,19 @@ class SyndicateModel extends Model
     protected $dateFormat    = 'datetime';
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
+
+    // Soft Deletes — bisnis yang dihapus tidak hilang selamanya
+    protected $useSoftDeletes = true;
+    protected $deletedField   = 'deleted_at';
+
+    /**
+     * Scope: Menggabungkan data user (nama, foto, WA) ke query syndicate.
+     *
+     * @return $this
+     */
+    public function withUser()
+    {
+        return $this->select('syndicate.*, users.nama_panggilan, users.no_whatsapp, users.foto_profil')
+                    ->join('users', 'users.id = syndicate.user_id');
+    }
 }

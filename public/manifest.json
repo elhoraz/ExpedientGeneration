@@ -1,0 +1,22 @@
+{
+  "name": "Expedient Generation",
+  "short_name": "Expedient",
+  "description": "Museum Galeri Digital VVIP & Arsip Direktori Expedient Generation.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#030504",
+  "theme_color": "#030504",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/images/logo-utuh.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/images/logo-utuh.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}

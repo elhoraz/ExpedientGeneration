@@ -3,23 +3,34 @@
 namespace App\Controllers;
 
 use App\Models\UserModel;
+use App\Services\ProfileService;
+use App\Services\GamificationService;
 
 class ProfileController extends BaseController
 {
+    protected ProfileService $profileService;
+
+    public function __construct()
+    {
+        $this->profileService = new ProfileService();
+    }
+
     public function index()
     {
-        if (!session()->get('logged_in')) {
-            return redirect()->to('/login')->with('error', 'Akses ditolak. Silakan login terlebih dahulu.');
-        }
-
         $userModel = new UserModel();
         $user = $userModel->find(session()->get('user_id'));
         
         $faceData = empty($user['face_data']) ? 'null' : $user['face_data'];
 
+        $gamificationService = new GamificationService();
+        $prestisePoints = $user['prestise_points'] ?? 0;
+        
         $data = [
             'user' => $user,
-            'face_data_db' => $faceData
+            'face_data_db' => $faceData,
+            'prestise_points' => $prestisePoints,
+            'gelar_kehormatan' => $gamificationService->getGelar($prestisePoints),
+            'badge_color'      => $gamificationService->getBadgeColor($prestisePoints)
         ];
 
         return view('profil', $data);
@@ -27,14 +38,9 @@ class ProfileController extends BaseController
 
     public function updateProfile()
     {
-        if (!session()->get('logged_in')) {
-            return redirect()->to('/login')->with('error', 'Akses ditolak.');
-        }
-
-        $userModel = new UserModel();
         $userId = session()->get('user_id');
         
-        // Aturan validasi (bisa disesuaikan jika perlu)
+        // Aturan validasi
         $rules = [
             'nama_lengkap'         => 'required|min_length[3]',
             'nama_panggilan'       => 'required|min_length[2]',
@@ -57,20 +63,20 @@ class ProfileController extends BaseController
             'akun_tiktok'    => $this->request->getPost('akun_tiktok'),
         ];
 
-        // Proses Foto Profil Base64 jika ada perubahan
+        // Proses Foto Profil Base64 menggunakan ProfileService
         $fotoBase64 = $this->request->getPost('foto_profil_base64');
         if (!empty($fotoBase64)) {
-            $imageParts = explode(";base64,", $fotoBase64);
-            if (count($imageParts) == 2) {
-                $imageBase64 = base64_decode($imageParts[1]);
-                $namaFileFoto = uniqid('expedient_') . '.jpg';
-                $path = FCPATH . 'uploads/profiles/' . $namaFileFoto;
-                file_put_contents($path, $imageBase64);
-                $dataUpdate['foto_profil'] = $namaFileFoto;
+            try {
+                $filename = $this->profileService->processProfilePhoto($fotoBase64, $userId);
+                if ($filename) {
+                    $dataUpdate['foto_profil'] = $filename;
+                }
+            } catch (\InvalidArgumentException $e) {
+                return redirect()->to('/profil')->with('error', $e->getMessage());
             }
         }
 
-        $userModel->update($userId, $dataUpdate);
+        $this->profileService->updateProfile($userId, $dataUpdate);
 
         // Update session jika nama/email berubah
         session()->set([

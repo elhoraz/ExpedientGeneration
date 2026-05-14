@@ -17,16 +17,8 @@ Amanah & Wasiat - The Legacy Vault
         --neon-green: #00ff88;
     }
 
-    body {
         background-color: var(--bg-dark);
-        background-image: repeating-linear-gradient(
-            0deg,
-            rgba(0, 0, 0, 0.1),
-            rgba(0, 0, 0, 0.1) 1px,
-            transparent 1px,
-            transparent 2px
-        ); /* Scanline effect */
-        font-family: 'Courier New', monospace; /* Monospace for vault feel */
+        font-family: 'Courier New', monospace;
         color: #fff;
         min-height: 100vh;
     }
@@ -254,6 +246,30 @@ Amanah & Wasiat - The Legacy Vault
         color: var(--neon-green);
     }
 
+    /* Mobile Responsiveness */
+    @media (max-width: 768px) {
+        .vault-header {
+            flex-direction: column-reverse;
+            text-align: center;
+            gap: 15px;
+        }
+        .header-titles { text-align: center; }
+        .page-title { font-size: 1.5rem; letter-spacing: 3px; }
+        .lockbox { padding: 20px; }
+        .lockbox-header {
+            flex-direction: column;
+            gap: 10px;
+        }
+        .box-meta { text-align: left; }
+        .secret-content { word-break: break-word; }
+        form[style*="display:flex"] {
+            flex-direction: column !important;
+        }
+        form[style*="display:flex"] input {
+            width: 100% !important;
+        }
+    }
+
 </style>
 <?= $this->endSection() ?>
 
@@ -261,60 +277,73 @@ Amanah & Wasiat - The Legacy Vault
 <div class="vault-wrapper">
     <header class="vault-header">
         <a href="/fitur" class="btn-back">
-            <i class="fa-solid fa-chevron-left"></i> Abort / Kembali
+            <i class="fa-solid fa-chevron-left"></i> Kembali
         </a>
         <div class="header-titles">
             <h1 class="page-title">Amanah & Wasiat</h1>
-            <div class="status-badge"><div class="blink-dot"></div> Restricted Access Area</div>
+            <div class="status-badge"><div class="blink-dot"></div> Ruang Rahasia</div>
         </div>
     </header>
 
     <div class="wasiat-list">
         
-        <!-- Lockbox 1 -->
-        <div class="lockbox" id="box-1">
-            <div class="lockbox-header">
+        <!-- Form Tambah Amanah Baru -->
+        <div class="lockbox" style="border-left-color: var(--gold-main); border-color: rgba(212,175,55,0.3);">
+            <div class="lockbox-header" style="border-bottom:none; margin-bottom:0; padding-bottom:0;">
                 <div>
-                    <div class="box-id">FILE.ID: WST-9002-A</div>
-                    <h2 class="box-title">Wasiat Eksekutif (Bpk. Ridwan)</h2>
-                </div>
-                <div class="box-meta">
-                    <div>ENCRYPTED: SHA-256</div>
-                    <div>SIZE: 2.4 KB</div>
+                    <h2 class="box-title" style="color:var(--gold-main); font-size:1.2rem;">+ Segel Amanah Baru</h2>
                 </div>
             </div>
-            <div class="secret-content">
-                <div class="scramble-text" id="text-1">
-                    #@$*! 0x8F9A2B &^% SDFJH ^&*( LDFK #$ @! KLDF 0x00A1 99SDF *(^ KLJSDF 908 SDF LKJ #$ (*& SDF KLJ 908 SDF LKJ #$ (*& SDF KLJ 908 SDF LKJ #$ (*& SDF KLJ 908 SDF LKJ #$ (*& SDF KLJ 908 SDF LKJ #$ (*& SDF LKJ 908 SDF LKJ #$ (*& SDF KLJ 908 SDF LKJ #$ (*& SDF KLJ 908
+            <form action="/wasiat/store" method="POST" style="margin-top: 15px;">
+                <?= csrf_field() ?>
+                <textarea name="message" rows="3" required placeholder="Tulis pesan rahasia yang akan dienkripsi..." style="width:100%; background:rgba(0,0,0,0.5); border:1px solid rgba(255,255,255,0.1); color:#fff; padding:10px; font-family:'Courier New'; margin-bottom:10px; border-radius:4px;"></textarea>
+                <div style="display:flex; gap:10px;">
+                    <input type="password" name="passphrase" required placeholder="Kunci Akses (Passphrase)" style="flex:1; background:rgba(0,0,0,0.5); border:1px solid rgba(255,255,255,0.1); color:#fff; padding:10px; font-family:'Courier New'; border-radius:4px;">
+                    <button type="submit" class="btn-unlock" style="border-color:var(--gold-main); color:var(--gold-main);"><i class="fa-solid fa-lock"></i> SEGEL</button>
                 </div>
-            </div>
-            <button class="btn-unlock" onclick="initiateUnlock('box-1', 'text-1')">
-                <i class="fa-solid fa-fingerprint"></i> Dekripsi Pesan
-            </button>
+            </form>
         </div>
 
-        <!-- Lockbox 2 -->
-        <div class="lockbox" id="box-2">
-            <div class="lockbox-header">
-                <div>
-                    <div class="box-id">FILE.ID: AMN-404-X</div>
-                    <h2 class="box-title">Amanah Angkatan (Protokol Darurat)</h2>
+        <?php if(!empty($wasiats)): ?>
+            <?php foreach($wasiats as $w): ?>
+                <div class="lockbox" id="box-<?= $w['id'] ?>">
+                    <div class="lockbox-header">
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <img src="<?= base_url('uploads/profiles/' . ($w['foto_profil'] ?: 'default.webp')) ?>" alt="Foto" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 1px solid var(--gold-dark);">
+                            <div>
+                                <div class="box-id">FILE.ID: AMN-<?= str_pad($w['id'], 4, '0', STR_PAD_LEFT) ?></div>
+                                <h2 class="box-title">Amanah dari <?= esc($w['nama_panggilan']) ?></h2>
+                            </div>
+                        </div>
+                        <div class="box-meta">
+                            <div>ENCRYPTED: AES-256-CBC</div>
+                            <div>DATE: <?= date('d M Y', strtotime($w['created_at'])) ?></div>
+                        </div>
+                    </div>
+                    <div class="secret-content">
+                        <div class="scramble-text" style="word-break: break-all; opacity: 0.5;">
+                            <?= esc(substr($w['encrypted_message'], 0, 150)) ?>...
+                        </div>
+                    </div>
+                    
+                    <form action="/wasiat/unlock/<?= $w['id'] ?>" method="POST" style="display:flex; gap:10px; align-items:center;">
+                        <?= csrf_field() ?>
+                        <input type="password" name="passphrase" required placeholder="Masukkan Kunci Akses..." style="background:transparent; border:none; border-bottom:1px dashed var(--danger-red); color:var(--danger-red); padding:5px; font-family:'Courier New'; outline:none; width:200px;">
+                        <button type="submit" class="btn-unlock">
+                            <i class="fa-solid fa-key"></i> Buka Segel
+                        </button>
+                    </form>
                 </div>
-                <div class="box-meta">
-                    <div>ENCRYPTED: AES-512</div>
-                    <div>SIZE: 1.1 KB</div>
-                </div>
-            </div>
-            <div class="secret-content">
-                <div class="scramble-text" id="text-2">
-                    &*( HJGK 0x99B2 &^% MNBV ^&*( YUIO #$ @! QWER 0x01C3 77HJK *(^ ZXCV 102 MNB LKJ #$ (*& POI UYT 456 MNB VCX #$ (*& LKH JGF 789 DSA EWQ #$ (*& POI UYT 456 MNB VCX #$ (*& LKH JGF 789 DSA EWQ #$ (*& POI UYT 456 MNB VCX #$ (*& LKH JGF 789 DSA EWQ
-                </div>
-            </div>
-            <button class="btn-unlock" onclick="initiateUnlock('box-2', 'text-2')">
-                <i class="fa-solid fa-fingerprint"></i> Dekripsi Pesan
-            </button>
-        </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <div style="text-align:center; padding:50px; color:#555; border:1px dashed #333;">Belum ada amanah yang tersegel di ruang ini.</div>
+        <?php endif; ?>
 
+        <?php if(isset($pager)): ?>
+        <div style="display:flex; justify-content:center; gap:10px; margin-top:40px; padding-bottom:40px;">
+            <?= $pager->links('default', 'default_full') ?>
+        </div>
+        <?php endif; ?>
     </div>
 </div>
 
@@ -327,91 +356,48 @@ Amanah & Wasiat - The Legacy Vault
     <div class="scan-text" id="scanText">Meminta Akses Biometrik...</div>
 </div>
 
+<!-- Modal Wasiat Terbuka -->
+<?php if(session()->getFlashdata('unlocked_wasiat')): ?>
+<div id="unsealModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; justify-content:center; align-items:center; flex-direction:column; padding:20px; backdrop-filter:blur(5px);">
+    <div class="lockbox" style="border-color:var(--neon-green); border-left-color:var(--neon-green); max-width:600px; width:100%;" id="unsealBox">
+        <h2 style="color:var(--neon-green); font-family:'Playfair Display'; margin-bottom:20px; text-shadow:0 0 15px rgba(0,255,136,0.5);"><i class="fa-solid fa-envelope-open-text"></i> AMANAH TERBUKA</h2>
+        <div style="font-family:'Inter', sans-serif; font-size:1rem; line-height:1.6; color:#fff; word-break:break-word; background:rgba(0,0,0,0.5); padding:20px; border-radius:5px; border:1px dashed rgba(0,255,136,0.3);">
+            <?= nl2br(esc(session()->getFlashdata('unlocked_wasiat'))) ?>
+        </div>
+        <div style="margin-top:30px; text-align:right;">
+            <button onclick="closeUnsealModal()" style="background:transparent; color:var(--neon-green); border:1px solid var(--neon-green); padding:10px 25px; font-weight:bold; cursor:pointer; font-family:'Courier New'; letter-spacing:2px; transition:0.3s;" onmouseover="this.style.background='rgba(0,255,136,0.1)'" onmouseout="this.style.background='transparent'">TUTUP DOKUMEN</button>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
     // Intro
-    gsap.from(".lockbox", { y: 50, opacity: 0, duration: 0.8, stagger: 0.3, ease: "power2.out" });
-});
+    gsap.from(".lockbox", { y: 50, opacity: 0, duration: 0.8, stagger: 0.1, ease: "power2.out" });
 
-// Decrypted actual texts
-const secretData = {
-    'text-1': "Assalamu'alaikum. Jika pesan ini otomatis terbuka, berarti sistem mendeteksi saya tidak aktif selama 30 hari. Tolong hubungi keluarga saya di nomor 0812-XXXX-XXXX dan cairkan dana darurat Ukhuwah sebesar Rp 15 Juta yang telah saya titipkan di Baitul Maal untuk biaya sekolah anak saya. Terima kasih saudaraku.",
-    'text-2': "PROTOKOL ALPHA. Seluruh kunci server utama telah dipindahkan ke brankas fisik di lokasi B-4. Hanya anggota dengan Clearance Level 5 yang diizinkan mengambilnya. Jangan beritahukan hal ini kepada pihak eksternal."
-};
-
-let currentBoxId = '';
-let currentTextId = '';
-
-function initiateUnlock(boxId, textId) {
-    currentBoxId = boxId;
-    currentTextId = textId;
-    
-    const overlay = document.getElementById('scanOverlay');
-    const scanLine = document.getElementById('scanLine');
-    const fpIcon = document.getElementById('fpIcon');
-    const scanText = document.getElementById('scanText');
-
-    overlay.style.display = 'flex';
-    gsap.fromTo(overlay, {opacity: 0}, {opacity: 1, duration: 0.5});
-
-    scanText.innerText = "MENGOTENTIKASI...";
-    scanText.style.color = "var(--danger-red)";
-    fpIcon.style.color = "rgba(139,0,0,0.5)";
-
-    // Scan Animation
-    gsap.to(scanLine, {
-        top: "100%",
-        opacity: 1,
-        duration: 1.5,
-        yoyo: true,
-        repeat: 1,
-        ease: "linear",
-        onComplete: () => {
-            // Success State
-            scanText.innerText = "AKSES DIBERIKAN";
-            scanText.style.color = "var(--neon-green)";
-            fpIcon.style.color = "var(--neon-green)";
-            
+    // Flashdata Success/Error Handling
+    <?php if(session()->getFlashdata('success')): ?>
+        // The template's toast will show the success message automatically.
+        <?php if(session()->getFlashdata('unlocked_wasiat')): ?>
+            // Tampilkan custom modal dengan GSAP animation
             setTimeout(() => {
-                // Hide Overlay
-                gsap.to(overlay, {opacity: 0, duration: 0.5, onComplete: () => {
-                    overlay.style.display = 'none';
-                    decryptBox(currentBoxId, currentTextId);
+                const modal = document.getElementById('unsealModal');
+                modal.style.display = 'flex';
+                gsap.from("#unsealBox", { scale:0.8, opacity:0, duration:0.5, ease:"back.out(1.7)" });
+            }, 500);
+
+            window.closeUnsealModal = function() {
+                gsap.to("#unsealBox", { scale:0.8, opacity:0, duration:0.3, onComplete:() => {
+                    document.getElementById('unsealModal').style.display = 'none';
                 }});
-            }, 1000);
-        }
-    });
-}
-
-function decryptBox(boxId, textId) {
-    const box = document.getElementById(boxId);
-    const textEl = document.getElementById(textId);
-    const finalString = secretData[textId];
-    
-    box.classList.add('unlocked');
-    
-    // Matrix style decoding effect
-    let iterations = 0;
-    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890@#$%&*";
-    
-    let interval = setInterval(() => {
-        textEl.innerText = finalString.split("").map((letter, index) => {
-            if(index < iterations) {
-                return finalString[index];
-            }
-            return letters[Math.floor(Math.random() * 42)];
-        }).join("");
-        
-        if(iterations >= finalString.length){ 
-            clearInterval(interval);
-        }
-        iterations += 2; // speed
-    }, 20);
-}
-
+            };
+        <?php endif; ?>
+    <?php endif; ?>
+});
 </script>
 <?= $this->endSection() ?>

@@ -12,11 +12,21 @@
     <meta property="og:description" content="Akses portal eksklusif peninggalan dan jejak langkah Expedient.">
     <meta property="og:image" content="<?= base_url('images/logo-utuh.png') ?>">
     <meta property="og:url" content="<?= current_url() ?>">
+    <meta property="og:type" content="website">
+
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/images/logo-utuh.png">
+    
+    <!-- PWA iOS Support -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Expedient">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/design-system.css">
     
     <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
 
@@ -90,6 +100,29 @@
         .load-v10 { perspective: 1500px; } .load-v10 .stellar-orbit { position: absolute; width: 250px; height: 90px; border: 1px solid rgba(212,175,55,0.3); border-radius: 50%; animation: spinX 4s infinite linear; } .load-v10 .stellar-orbit:nth-child(2) { animation: spinY 4s infinite linear; } .load-v10 .stellar-dot { position: absolute; width: 12px; height: 12px; background: #fff; border-radius: 50%; box-shadow: 0 0 20px #fff; top: -6px; left: 50%; transform: translateX(-50%); } :root[data-theme="light"] .load-v10 .stellar-dot { background: #d4af37; box-shadow: 0 0 20px #d4af37; }
 
         /* ================= 5. AWWWARDS LEVEL FLOATING SIDEBAR (DI-UPGRADE) ================= */
+        .loader-hadith {
+            font-family: 'Playfair Display', serif; font-size: clamp(0.9rem, 2vw, 1.2rem);
+            color: var(--text-secondary); max-width: 600px; margin-top: 10px; margin-bottom: 30px;
+            text-align: center; line-height: 1.6; font-style: italic; opacity: 0;
+            animation: fadeUp 1s ease-out 0.5s forwards; padding: 0 20px;
+        }
+        .loader-progress-wrapper {
+            width: 80%; max-width: 300px; padding: 2px;
+            border: 1px solid rgba(212,175,55,0.3); border-radius: 10px;
+            background: rgba(0,0,0,0.5); position: relative; opacity: 0;
+            animation: fadeUp 1s ease-out 1s forwards;
+        }
+        .loader-progress-fill {
+            height: 4px; width: 0%; background: linear-gradient(90deg, #d4af37, #f3e5ab);
+            border-radius: 5px; transition: width 0.1s ease-out;
+            box-shadow: 0 0 10px rgba(212,175,55,0.5);
+        }
+        .loader-progress-percent {
+            position: absolute; top: -25px; right: 0; font-weight: bold;
+            color: #d4af37; font-size: 0.9rem; font-family: 'Inter', sans-serif;
+        }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
         .sidebar { 
             position: fixed; top: 20px; left: 20px; bottom: 20px; width: 75px; /* Dipersempit agar elegan */
             background: linear-gradient(135deg, var(--glass-bg) 0%, rgba(255,255,255,0.01) 100%);
@@ -174,7 +207,7 @@
         body.sidebar-closed .main-wrapper { left: 0; }
 
         /* ================= 6. THE AEGIS NOTIFICATION ================= */
-        .aegis-toast { position: fixed; bottom: 40px; right: -450px; width: 380px; background: var(--glass-bg); backdrop-filter: blur(25px); border: 1px solid var(--glass-border); border-left: 4px solid #d4af37; padding: 25px; display: flex; align-items: center; gap: 20px; box-shadow: 0 30px 60px rgba(0,0,0,0.5); z-index: 99999; transition: transform 0.8s var(--awwwards-ease), opacity 0.8s; opacity: 0; pointer-events: none; overflow: hidden; border-radius: 12px; }
+        .aegis-toast { position: fixed; bottom: 40px; right: -450px; width: 380px; background: var(--glass-bg); backdrop-filter: blur(25px); border: 1px solid var(--glass-border); border-left: 4px solid #d4af37; padding: 25px; display: flex; align-items: center; gap: 20px; box-shadow: 0 30px 60px rgba(0,0,0,0.5); z-index: 99999; transition: transform 0.8s var(--awwwards-ease), opacity 0.8s; opacity: 0; pointer-events: none; overflow: hidden; border-radius: 12px; cursor: pointer; }
         .aegis-toast.show { transform: translateX(-490px); opacity: 1; pointer-events: auto; }
         .aegis-toast::after { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(to right, transparent, rgba(212,175,55,0.15), transparent); transform: skewX(-20deg); }
         .aegis-toast.show::after { animation: shimmerToast 2.5s ease-out forwards 0.5s; }
@@ -185,13 +218,22 @@
         .aegis-title { font-family: 'Courier New', monospace; font-size: 0.7rem; color: var(--text-secondary); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 5px; }
         .aegis-name { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--text-primary); font-weight: 700; line-height: 1.1; }
 
-        /* ================= 7. THEME WIDGET ================= */
+        /* ================= 7. THEME & NOTIF WIDGETS ================= */
         .theme-widget { position: fixed; top: 30px; right: 40px; z-index: 100; background: linear-gradient(135deg, var(--glass-bg) 0%, rgba(255,255,255,0.01) 100%); backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); border-radius: 40px; padding: 6px 16px 6px 6px; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: 0.4s; box-shadow: var(--glass-shadow); color: var(--text-primary); }
         .theme-widget:hover { transform: translateY(-3px) scale(1.05); border-color: #d4af37; }
         .icon-orb { width: 35px; height: 35px; border-radius: 50%; background: var(--bg-main); display: flex; justify-content: center; align-items: center; color: var(--text-primary); box-shadow: inset 0 2px 5px rgba(0,0,0,0.5); transition: 0.4s; }
         :root[data-theme="light"] .icon-orb { box-shadow: inset 0 2px 5px rgba(0,0,0,0.1); }
         .theme-widget:hover .icon-orb { background: var(--text-primary); color: var(--bg-main); }
         .widget-text { font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text-secondary); transition: 0.4s; }
+
+        .notif-widget { position: fixed; top: 30px; right: 170px; z-index: 100; background: linear-gradient(135deg, var(--glass-bg) 0%, rgba(255,255,255,0.01) 100%); backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); border-radius: 40px; padding: 6px; cursor: pointer; display: flex; align-items: center; transition: 0.4s; box-shadow: var(--glass-shadow); color: var(--text-primary); }
+        .notif-widget:hover { transform: translateY(-3px) scale(1.05); border-color: #d4af37; }
+        .notif-widget:hover .icon-orb { background: var(--text-primary); color: var(--bg-main); }
+        .notif-dropdown { display:none; position:fixed; top:80px; right:170px; width:320px; background:var(--glass-bg); backdrop-filter:blur(30px); border:1px solid var(--glass-border); border-radius:12px; box-shadow:0 15px 35px rgba(0,0,0,0.4); z-index:9999; overflow:hidden; transform:translateY(-10px); opacity:0; transition:0.3s cubic-bezier(0.16,1,0.3,1); }
+
+        .chat-widget { position: fixed; top: 30px; right: 245px; z-index: 100; background: linear-gradient(135deg, var(--glass-bg) 0%, rgba(255,255,255,0.01) 100%); backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); border-radius: 40px; padding: 6px; cursor: pointer; display: flex; align-items: center; transition: 0.4s; box-shadow: var(--glass-shadow); color: var(--text-primary); text-decoration: none; }
+        .chat-widget:hover { transform: translateY(-3px) scale(1.05); border-color: #d4af37; }
+        .chat-widget:hover .icon-orb { background: var(--text-primary); color: var(--bg-main); }
 
         /* ================= 8. MOBILE RESPONSIVENESS ================= */
         @media (max-width: 768px) {
@@ -225,6 +267,9 @@
             body.sidebar-closed .menu-toggle { transform: translateX(-50%) translateY(0); opacity: 1; pointer-events: auto; }
 
             .theme-widget { top: 20px; right: 20px; padding: 6px; } .widget-text { display: none; }
+            .notif-widget { top: 20px; right: auto; left: 20px; } /* Kiri atas di mobile */
+            .notif-dropdown { top: 70px; right: auto; left: 20px; }
+            .chat-widget { top: 20px; right: auto; left: 85px; } /* Sebelah notif di mobile */
             .aegis-toast { width: 90%; right: auto; left: 5%; bottom: 110px; border-radius: 12px; border-left: 1px solid var(--glass-border); border-bottom: 4px solid #d4af37; }
             .aegis-toast.show { transform: translateX(0); }
         }
@@ -240,6 +285,17 @@
     <?php 
         $loaders = ['v1', 'v2', 'v3', 'v4', 'v5', 'v6', 'v7', 'v8', 'v9', 'v10'];
         $selectedLoader = $loaders[array_rand($loaders)];
+
+        $hadiths = [
+            "\"Barangsiapa yang menempuh jalan untuk mencari ilmu, maka Allah akan mudahkan baginya jalan menuju surga.\" (HR. Muslim)",
+            "\"Kebijaksanaan adalah barang yang hilang dari orang mukmin, di mana saja ia menemukannya, maka ia lebih berhak atasnya.\" (HR. Tirmidzi)",
+            "\"Bukanlah kekayaan itu dari banyaknya harta, tetapi kekayaan yang sebenarnya adalah kekayaan jiwa.\" (HR. Bukhari)",
+            "\"Sesungguhnya bersama kesulitan ada kemudahan.\" (QS. Al-Insyirah: 6)",
+            "\"Sebaik-baik manusia adalah yang paling bermanfaat bagi manusia lainnya.\" (HR. Ahmad)",
+            "\"Menuntut ilmu adalah kewajiban bagi setiap muslim.\" (HR. Ibnu Majah)",
+            "\"Allah akan meninggikan orang-orang yang beriman di antaramu dan orang-orang yang diberi ilmu pengetahuan beberapa derajat.\" (QS. Al-Mujadilah: 11)"
+        ];
+        $selectedHadith = $hadiths[array_rand($hadiths)];
     ?>
 
     <div id="loadingScreen" class="load-<?= $selectedLoader ?>">
@@ -255,7 +311,13 @@
             <?php endif; ?>
             <img src="/images/logo-utuh.png" class="loader-logo" alt="Loading Expedient">
         </div>
-        <?php if($selectedLoader == 'v3'): ?><div class="gilded-reveal">EXPEDIENT GENERATION</div><?php endif; ?>
+        
+        <div class="loader-hadith"><?= $selectedHadith ?></div>
+
+        <div class="loader-progress-wrapper">
+            <div class="loader-progress-percent" id="globalLoadPercent">0%</div>
+            <div class="loader-progress-fill" id="globalLoadBar"></div>
+        </div>
     </div>
 
     <div class="aurora-container">
@@ -271,6 +333,8 @@
         </div>
     </div>
 
+    <?php $isLoggedIn = session()->get('logged_in'); ?>
+
     <button class="menu-toggle hover-trigger" id="btnMenuOpen" title="Panggil Panel">
         <span class="line"></span>
         <span class="line short"></span>
@@ -283,17 +347,63 @@
         <a href="/beranda" class="nav-item hover-trigger <?= (uri_string() == 'beranda') ? 'active' : '' ?>" data-tooltip="Grand Exhibition" onclick="hapticNav()"><i class="fa-solid fa-landmark"></i></a>
         <a href="/direktori" class="nav-item hover-trigger <?= (uri_string() == 'direktori') ? 'active' : '' ?>" data-tooltip="The Registry" onclick="hapticNav()"><i class="fa-solid fa-address-book"></i></a>
         <a href="/galeri" class="nav-item hover-trigger <?= (uri_string() == 'galeri') ? 'active' : '' ?>" data-tooltip="The Vault" onclick="hapticNav()"><i class="fa-solid fa-film"></i></a>
-        <a href="/radar" class="nav-item hover-trigger <?= (uri_string() == 'radar') ? 'active' : '' ?>" data-tooltip="Omnipresence" onclick="hapticNav()"><i class="fa-solid fa-earth-americas"></i></a>
+        <?php if ($isLoggedIn): ?>
+        <a href="/radar" class="nav-item hover-trigger <?= (uri_string() == 'radar') ? 'active' : '' ?>" data-tooltip="Peta Global" onclick="hapticNav()"><i class="fa-solid fa-earth-americas"></i></a>
         <a href="/syndicate" class="nav-item hover-trigger <?= (uri_string() == 'syndicate') ? 'active' : '' ?>" data-tooltip="The Council" onclick="hapticNav()"><i class="fa-solid fa-chess-knight"></i></a>
-        <a href="/fitur" class="nav-item hover-trigger <?= (uri_string() == 'fitur') ? 'active' : '' ?>" data-tooltip="Fitur Eksekutif" onclick="hapticNav()"><i class="fa-solid fa-gem"></i></a>
+        <?php $fiturPages = ['fitur','oracle','enigma','genesis','celestial','majlis','tarbiyah','baitul-maal','wasiat','multazam','kontemplasi','divine', 'nexus']; ?>
+        <a href="/fitur" class="nav-item hover-trigger <?= in_array(uri_string(), $fiturPages) ? 'active' : '' ?>" data-tooltip="Fitur Eksekutif" onclick="hapticNav()"><i class="fa-solid fa-gem"></i></a>
         <div style="flex-grow: 1;" class="nav-spacer"></div>
-        <a href="/profil" class="nav-item hover-trigger <?= (uri_string() == 'profil') ? 'active' : '' ?>" data-tooltip="Ruang Kendali" onclick="hapticNav()"><i class="fa-solid fa-user-astronaut"></i></a>
+        <a href="/profil" class="nav-item hover-trigger <?= (uri_string() == 'profil') ? 'active' : '' ?>" data-tooltip="Profil Saya" onclick="hapticNav()"><i class="fa-solid fa-user-astronaut"></i></a>
+        <?php else: ?>
+        <div style="flex-grow: 1;" class="nav-spacer"></div>
+        <a href="/login" class="nav-item hover-trigger" data-tooltip="Masuk ke Portal" onclick="hapticNav()"><i class="fa-solid fa-right-to-bracket"></i></a>
+        <?php endif; ?>
     </nav>
+
+    <?php if ($isLoggedIn): ?>
+
+    <!-- ================= NOTIFICATION DROPDOWN ================= -->
+    <div id="notifDropdown" class="notif-dropdown">
+        <div style="padding:15px 20px; border-bottom:1px solid rgba(212,175,55,0.2); font-family:'Playfair Display',serif; color:#d4af37; font-size:1.1rem; font-weight:700;">
+            Pemberitahuan
+        </div>
+        <div id="notifList" style="max-height:300px; overflow-y:auto; padding:10px;">
+            <div style="text-align:center; padding:20px; color:var(--text-secondary); font-size:0.85rem;">Tidak ada pesan baru.</div>
+        </div>
+    </div>
+    <?php endif; ?>
 
     <button class="theme-widget hover-trigger" id="btnTheme" title="Ganti Mode">
         <div class="icon-orb"><i class="fa-solid fa-moon" id="toggleIcon"></i></div>
         <span class="widget-text" id="themeText">Malam</span>
     </button>
+
+    <?php if ($isLoggedIn): ?>
+    <button class="notif-widget hover-trigger" id="btnNotifWidget" title="Pesan Masuk" onclick="hapticNav(); toggleNotif()">
+        <div class="icon-orb"><i class="fa-solid fa-bell"></i></div>
+        <span id="notifBadge" style="display:none; position:absolute; top:2px; right:2px; width:12px; height:12px; background:#d4af37; border-radius:50%; box-shadow:0 0 10px #d4af37;"></span>
+    </button>
+
+    <a href="/chat" class="chat-widget hover-trigger" id="btnChatWidget" title="Executive Chat" onclick="hapticNav()">
+        <div class="icon-orb"><i class="fa-solid fa-comment-dots"></i></div>
+        <span id="chatBadge" style="display:none; position:absolute; top:2px; right:2px; width:12px; height:12px; background:#d4af37; border-radius:50%; box-shadow:0 0 10px #d4af37;"></span>
+    </a>
+    <?php else: ?>
+    <!-- Guest: tombol login & register -->
+    <a href="/login" class="guest-auth-btn hover-trigger" id="guestLoginBtn" title="Masuk ke Portal" style="
+        position: fixed; top: 30px; right: 160px; z-index: 100;
+        background: linear-gradient(135deg, rgba(212,175,55,0.2), rgba(212,175,55,0.05));
+        backdrop-filter: blur(20px); border: 1px solid rgba(212,175,55,0.5);
+        border-radius: 40px; padding: 8px 22px;
+        color: #d4af37; font-size: 0.75rem; font-weight: 700;
+        letter-spacing: 2px; text-transform: uppercase;
+        text-decoration: none; transition: 0.4s;
+        display: flex; align-items: center; gap: 8px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    ">
+        <i class="fa-solid fa-right-to-bracket"></i> Masuk
+    </a>
+    <?php endif; ?>
 
     <main class="main-wrapper">
         <?= $this->renderSection('content') ?>
@@ -306,23 +416,28 @@
         const btnMenuOpen = document.getElementById('btnMenuOpen');
         const btnMenuClose = document.getElementById('btnMenuClose');
         
-        btnMenuOpen.addEventListener('click', () => {
-            document.body.classList.remove('sidebar-closed');
-            hapticNav();
-        });
-        
-        btnMenuClose.addEventListener('click', () => {
-            document.body.classList.add('sidebar-closed');
-            hapticNav();
-        });
-
-        // Auto-close sidebar on mobile after clicking a link
-        if (window.innerWidth <= 768) {
-            document.querySelectorAll('.sidebar .nav-item[href^="/"]').forEach(link => {
-                link.addEventListener('click', () => {
-                    document.body.classList.add('sidebar-closed');
-                });
+        if (btnMenuOpen && btnMenuClose) {
+            btnMenuOpen.addEventListener('click', () => {
+                document.body.classList.remove('sidebar-closed');
+                hapticNav();
             });
+            
+            btnMenuClose.addEventListener('click', () => {
+                document.body.classList.add('sidebar-closed');
+                hapticNav();
+            });
+
+            // Auto-close sidebar on mobile after clicking a link
+            if (window.innerWidth <= 768) {
+                document.querySelectorAll('.sidebar .nav-item[href^="/"]').forEach(link => {
+                    link.addEventListener('click', () => {
+                        document.body.classList.add('sidebar-closed');
+                    });
+                });
+            }
+        } else {
+            // Guest mode: no sidebar, so adjust main-wrapper left position
+            document.body.classList.add('sidebar-closed');
         }
 
         // CURSOR LOGIC
@@ -358,13 +473,31 @@
             document.getElementById('toggleIcon').className = 'fa-solid fa-sun';
         }
 
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                const loader = document.getElementById('loadingScreen');
-                loader.style.opacity = '0';
-                setTimeout(() => loader.style.visibility = 'hidden', 800);
-            }, 1500); 
-        });
+        const isBeranda = window.location.pathname === '/beranda';
+        const globalLoadPercent = document.getElementById('globalLoadPercent');
+        const globalLoadBar = document.getElementById('globalLoadBar');
+        
+        if (!isBeranda) {
+            let fakeProgress = 0;
+            const fakeInterval = setInterval(() => {
+                fakeProgress += Math.floor(Math.random() * 10) + 5;
+                if (fakeProgress > 90) fakeProgress = 90;
+                if (globalLoadPercent) globalLoadPercent.innerText = fakeProgress + '%';
+                if (globalLoadBar) globalLoadBar.style.width = fakeProgress + '%';
+            }, 200);
+
+            window.addEventListener('load', () => {
+                clearInterval(fakeInterval);
+                if (globalLoadPercent) globalLoadPercent.innerText = '100%';
+                if (globalLoadBar) globalLoadBar.style.width = '100%';
+                
+                setTimeout(() => {
+                    const loader = document.getElementById('loadingScreen');
+                    loader.style.opacity = '0';
+                    setTimeout(() => loader.style.visibility = 'hidden', 800);
+                }, 800); 
+            });
+        }
 
         const btnTheme = document.getElementById('btnTheme');
         btnTheme.addEventListener('click', () => {
@@ -427,38 +560,198 @@
             });
         }
 
-        // ================= PUSHER & CI4 FLASHDATA =================
-        const pusher = new Pusher('<?= getenv('PUSHER_APP_KEY') ?: 'app-key' ?>', { 
+        // ================= PUSHER / SOKETI REAL-TIME (HANYA ANGGOTA) =================
+        <?php if ($isLoggedIn): ?>
+        const pusherConfig = { 
             cluster: '<?= getenv('PUSHER_APP_CLUSTER') ?: 'mt1' ?>', 
-            wsHost: '127.0.0.1', 
-            wsPort: 6001, 
-            forceTLS: false, 
-            disableStats: true 
-        });
+            forceTLS: true
+        };
+        <?php if (getenv('PUSHER_HOST')): ?>
+        // Soketi self-hosted mode
+        pusherConfig.wsHost = '<?= getenv('PUSHER_HOST') ?>';
+        pusherConfig.wsPort = <?= getenv('PUSHER_PORT') ?: 6001 ?>;
+        pusherConfig.wssPort = <?= getenv('PUSHER_PORT') ?: 6001 ?>;
+        pusherConfig.forceTLS = <?= getenv('PUSHER_SCHEME') === 'https' ? 'true' : 'false' ?>;
+        pusherConfig.enabledTransports = ['ws', 'wss'];
+        <?php endif; ?>
+        const pusher = new Pusher('<?= getenv('PUSHER_APP_KEY') ?: 'app-key' ?>', pusherConfig);
         const channel = pusher.subscribe('expedient-channel');
+        
+        let aegisLink = '#';
+        document.getElementById('aegisToast').addEventListener('click', () => {
+            if(aegisLink && aegisLink !== '#') {
+                window.location.href = aegisLink;
+            }
+        });
         
         channel.bind('alumni-baru', function(data) {
             const aegisToast = document.getElementById('aegisToast');
             const radarName = document.getElementById('radarName');
-            document.querySelector('.aegis-title').innerText = "Entitas Terdeteksi Masuk";
+            document.querySelector('.aegis-title').innerText = "Kolega Baru Bergabung";
             radarName.innerText = data.nama; 
+            aegisLink = '/direktori';
             aegisToast.classList.add('show');
             if (navigator.vibrate) navigator.vibrate([100, 100, 100]);
             setTimeout(() => aegisToast.classList.remove('show'), 6000);
+            fetchUnreadNotifs(); // Refresh list jika ada
         });
 
+        // CHAT REAL-TIME BADGE
+        channel.bind('new-message', function(data) {
+            // Jika kita tidak sedang di halaman chat tersebut, tambah badge
+            if (window.location.pathname !== '/chat/personal/' + data.sender_id && 
+                window.location.pathname !== '/chat/lounge' &&
+                data.sender_id != <?= session()->get('user_id') ?? 'null' ?>) {
+                
+                if (data.receiver_id == <?= session()->get('user_id') ?? 'null' ?> || data.receiver_id === null) {
+                    fetchUnreadChat();
+                    
+                    // Juga munculkan toast jika pesan personal
+                    if (data.receiver_id !== null) {
+                        const aegisToast = document.getElementById('aegisToast');
+                        const radarName = document.getElementById('radarName');
+                        document.querySelector('.aegis-title').innerText = "Pesan Baru dari " + data.sender_name;
+                        radarName.innerText = data.message.substring(0, 50) + (data.message.length > 50 ? '...' : ''); 
+                        aegisLink = '/chat/personal/' + data.sender_id;
+                        aegisToast.classList.add('show');
+                        if (navigator.vibrate) navigator.vibrate([100, 50]);
+                        setTimeout(() => aegisToast.classList.remove('show'), 6000);
+                    }
+                }
+            }
+        });
+
+        // NOTIFIKASI UMUM EVENT
+        channel.bind('new-notification', function(data) {
+            if (data.user_id == <?= session()->get('user_id') ?? 'null' ?>) {
+                const aegisToast = document.getElementById('aegisToast');
+                const radarName = document.getElementById('radarName');
+                document.querySelector('.aegis-title').innerText = data.title;
+                radarName.innerText = data.message; 
+                aegisLink = data.link || '#';
+                aegisToast.classList.add('show');
+                if (navigator.vibrate) navigator.vibrate([50, 50, 100]);
+                setTimeout(() => aegisToast.classList.remove('show'), 6000);
+                fetchUnreadNotifs();
+            }
+        });
+
+        // NOTIFIKASI UI LOGIC
+        function toggleNotif() {
+            const dropdown = document.getElementById('notifDropdown');
+            if (dropdown.style.display === 'none') {
+                dropdown.style.display = 'block';
+                // Adjust position for mobile
+                if (window.innerWidth <= 768) {
+                    dropdown.style.left = '50%';
+                    dropdown.style.transform = 'translateX(-50%) translateY(10px)';
+                }
+                requestAnimationFrame(() => {
+                    dropdown.style.transform = window.innerWidth <= 768 ? 'translateX(-50%) translateY(0)' : 'translateY(0)';
+                    dropdown.style.opacity = '1';
+                });
+                fetchUnreadNotifs();
+            } else {
+                dropdown.style.transform = window.innerWidth <= 768 ? 'translateX(-50%) translateY(10px)' : 'translateY(10px)';
+                dropdown.style.opacity = '0';
+                setTimeout(() => dropdown.style.display = 'none', 300);
+            }
+        }
+
+        async function fetchUnreadNotifs() {
+            try {
+                const res = await fetch('/notifications/unread');
+                const data = await res.json();
+                if (data.status === 'success') {
+                    const badge = document.getElementById('notifBadge');
+                    const list = document.getElementById('notifList');
+                    
+                    if (data.data.length > 0) {
+                        badge.style.display = 'block';
+                        list.innerHTML = data.data.map(n => `
+                            <div onclick="readNotif(${n.id}, '${n.link || '#'}')" style="padding:12px; border-bottom:1px solid rgba(255,255,255,0.05); cursor:pointer; transition:0.3s;" onmouseover="this.style.background='rgba(212,175,55,0.1)'" onmouseout="this.style.background='transparent'">
+                                <div style="font-size:0.85rem; font-weight:600; color:var(--text-primary); margin-bottom:4px;">${n.title}</div>
+                                <div style="font-size:0.75rem; color:var(--text-secondary); line-height:1.4;">${n.message}</div>
+                            </div>
+                        `).join('');
+                    } else {
+                        badge.style.display = 'none';
+                        list.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-secondary); font-size:0.85rem;">Tidak ada pesan baru.</div>';
+                    }
+                }
+            } catch(e) {}
+        }
+
+        async function fetchUnreadChat() {
+            try {
+                const res = await fetch('/chat/unread');
+                const data = await res.json();
+                if (data.status === 'success') {
+                    const badge = document.getElementById('chatBadge');
+                    if (data.count > 0) {
+                        badge.style.display = 'block';
+                    } else {
+                        badge.style.display = 'none';
+                    }
+                }
+            } catch(e) {}
+        }
+
+        async function readNotif(id, link) {
+            try {
+                const csrfHash = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                const resp = await fetch('/notifications/read/' + id, { 
+                    method: 'POST', 
+                    headers: { 
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': csrfHash
+                    } 
+                });
+                const result = await resp.json().catch(() => ({}));
+                if(result.csrf_hash) {
+                    document.querySelector('meta[name="csrf-token"]').setAttribute('content', result.csrf_hash);
+                }
+                window.location.href = link;
+            } catch(e) {
+                window.location.href = link;
+            }
+        }
+
+        <?php if(session()->get('user_id')): ?>
+        // Initial fetch
+        setTimeout(() => {
+            fetchUnreadNotifs();
+            fetchUnreadChat();
+        }, 2000);
+        <?php endif; ?>
+        <?php endif; // end isLoggedIn Pusher block ?>
+
         // CI4 FLASHDATA CATCHER
-        <?php if (session()->getFlashdata('pesan')) : ?>
+        <?php 
+            $flashMsg = session()->getFlashdata('pesan') ?? session()->getFlashdata('success') ?? session()->getFlashdata('error');
+            if ($flashMsg) : 
+        ?>
             document.addEventListener("DOMContentLoaded", () => {
                 const aegisToastSys = document.getElementById('aegisToast');
                 const radarNameSys = document.getElementById('radarName');
                 document.querySelector('.aegis-title').innerText = "Informasi Sistem";
-                radarNameSys.innerText = "<?= session()->getFlashdata('pesan') ?>";
+                radarNameSys.innerText = "<?= esc($flashMsg, 'js') ?>";
+                aegisLink = '#';
                 aegisToastSys.classList.add('show');
                 if (navigator.vibrate) navigator.vibrate([50, 50, 50]);
                 setTimeout(() => aegisToastSys.classList.remove('show'), 6000);
             });
         <?php endif; ?>
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').then(registration => {
+                    console.log('SW registered: ', registration);
+                }).catch(registrationError => {
+                    console.log('SW registration failed: ', registrationError);
+                });
+            });
+        }
     </script>
     <?= $this->renderSection('scripts') ?>
 </body>

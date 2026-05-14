@@ -10,10 +10,7 @@ class SovereignController extends BaseController
     {
         $session = session();
 
-        // 1. Cek Login Dasar
-        if (!$session->get('logged_in')) {
-            return redirect()->to('/login')->with('error', 'Akses Ditolak.');
-        }
+
 
         // 2. Ambil Data Entitas
         $userModel = new UserModel();

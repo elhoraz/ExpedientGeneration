@@ -372,51 +372,8 @@
     <script>
     document.addEventListener("DOMContentLoaded", () => {
 
-        // === KARTU TAKDIR DATABASE — 42 Kartu untuk 124 Entitas (C(42,3) = 11.480 kombinasi) ===
-        const codex = [
-            { numeral: "I", symbol: "👑", name: "The Crown", meaning: "Kekuasaan dan wibawa menghampiri Anda. Ambil kendali." },
-            { numeral: "II", symbol: "🔥", name: "The Inferno", meaning: "Semangat membara. Transformasi besar sedang terjadi." },
-            { numeral: "III", symbol: "🌊", name: "The Abyss", meaning: "Kedalaman jiwa. Rahasia besar akan terungkap." },
-            { numeral: "IV", symbol: "⚡", name: "The Surge", meaning: "Energi tak terduga. Peluang datang secepat kilat." },
-            { numeral: "V", symbol: "🌙", name: "The Eclipse", meaning: "Perubahan fase. Biarkan yang lama pergi." },
-            { numeral: "VI", symbol: "💎", name: "The Prism", meaning: "Kejelasan pikiran. Keputusan Anda tepat hari ini." },
-            { numeral: "VII", symbol: "🦅", name: "The Ascent", meaning: "Ambisi tinggi. Anda sedang naik ke puncak." },
-            { numeral: "VIII", symbol: "⏳", name: "The Epoch", meaning: "Kesabaran menghasilkan buah. Waktu ada di pihak Anda." },
-            { numeral: "IX", symbol: "🗝️", name: "The Key", meaning: "Jawaban yang Anda cari sudah ada di tangan." },
-            { numeral: "X", symbol: "🌀", name: "The Vortex", meaning: "Perputaran takdir. Terima arusnya, jangan melawan." },
-            { numeral: "XI", symbol: "🛡️", name: "The Bastion", meaning: "Perlindungan kuat. Orang-orang Anda setia." },
-            { numeral: "XII", symbol: "🌟", name: "The Nova", meaning: "Ledakan potensi. Saatnya bersinar terang." },
-            { numeral: "XIII", symbol: "🐍", name: "The Serpent", meaning: "Kebijaksanaan tersembunyi. Perhatikan tanda-tanda." },
-            { numeral: "XIV", symbol: "⚖️", name: "The Balance", meaning: "Harmoni sempurna. Semuanya selaras hari ini." },
-            { numeral: "XV", symbol: "🔮", name: "The Oracle", meaning: "Intuisi paling tajam. Percayai insting Anda." },
-            { numeral: "XVI", symbol: "🏔️", name: "The Summit", meaning: "Anda di ambang pencapaian terbesar. Jangan berhenti." },
-            { numeral: "XVII", symbol: "🌹", name: "The Rose", meaning: "Keindahan dalam duri. Cinta dan pengorbanan berjalan bersama." },
-            { numeral: "XVIII", symbol: "🦁", name: "The Legion", meaning: "Kekuatan kolektif. Pasukan Anda siap bertempur." },
-            { numeral: "XIX", symbol: "🎭", name: "The Masque", meaning: "Ada topeng yang perlu dilepas. Tunjukkan wajah asli." },
-            { numeral: "XX", symbol: "🧭", name: "The Compass", meaning: "Arah sudah jelas. Ikuti kompas internal Anda." },
-            { numeral: "XXI", symbol: "🕊️", name: "The Dove", meaning: "Perdamaian datang setelah badai. Tenangkan hati." },
-            { numeral: "XXII", symbol: "⚔️", name: "The Blade", meaning: "Ketajaman logika. Potong semua yang menghambat." },
-            { numeral: "XXIII", symbol: "🌋", name: "The Eruption", meaning: "Energi yang tertahan meledak. Gunakan dengan bijak." },
-            { numeral: "XXIV", symbol: "🦊", name: "The Fox", meaning: "Kecerdikan adalah senjata utama. Bergerak dengan halus." },
-            { numeral: "XXV", symbol: "🏛️", name: "The Pillar", meaning: "Anda adalah fondasi. Tanpa Anda, segalanya runtuh." },
-            { numeral: "XXVI", symbol: "🌌", name: "The Cosmos", meaning: "Perspektif lebih besar. Lihat gambaran utuh semesta." },
-            { numeral: "XXVII", symbol: "🐺", name: "The Wolf", meaning: "Naluri berburu yang kuat. Percaya pada insting liar." },
-            { numeral: "XXVIII", symbol: "🪶", name: "The Quill", meaning: "Kata-kata Anda punya kuasa. Tulis sejarah Anda sendiri." },
-            { numeral: "XXIX", symbol: "⚓", name: "The Anchor", meaning: "Stabilitas di tengah badai. Anda adalah jangkar tim." },
-            { numeral: "XXX", symbol: "🔔", name: "The Bell", meaning: "Sinyal penting akan datang. Dengarkan baik-baik." },
-            { numeral: "XXXI", symbol: "🌿", name: "The Root", meaning: "Kembali ke akar. Kekuatan terbesar ada di asal usul." },
-            { numeral: "XXXII", symbol: "🎯", name: "The Mark", meaning: "Fokus tanpa kompromi. Bidik sekali, tembak sekali." },
-            { numeral: "XXXIII", symbol: "🕰️", name: "The Hour", meaning: "Momentum sempurna. Jam ini adalah jam Anda." },
-            { numeral: "XXXIV", symbol: "🦋", name: "The Chrysalis", meaning: "Metamorfosis. Versi terbaik Anda sedang dilahirkan." },
-            { numeral: "XXXV", symbol: "🏹", name: "The Arrow", meaning: "Ditarik mundur untuk melesat jauh ke depan." },
-            { numeral: "XXXVI", symbol: "🌅", name: "The Dawn", meaning: "Babak baru dimulai. Tinggalkan kegelapan di belakang." },
-            { numeral: "XXXVII", symbol: "🐉", name: "The Dragon", meaning: "Kekuatan legendaris bangkit dari dalam diri." },
-            { numeral: "XXXVIII", symbol: "💫", name: "The Comet", meaning: "Langka dan bercahaya. Kehadiran Anda tak terlupakan." },
-            { numeral: "XXXIX", symbol: "🔱", name: "The Trident", meaning: "Tiga kekuatan bersatu: pikiran, hati, dan tindakan." },
-            { numeral: "XL", symbol: "🧊", name: "The Glacier", meaning: "Tenang di permukaan, dahsyat di kedalaman." },
-            { numeral: "XLI", symbol: "🌠", name: "The Wish", meaning: "Harapan terdalam akan segera terwujud. Tetap yakin." },
-            { numeral: "XLII", symbol: "♾️", name: "The Infinite", meaning: "Tidak ada batas. Potensi Anda melampaui imajinasi." },
-        ];
+        // === KARTU TAKDIR DATABASE — Mengambil dari PHP Backend ===
+        const codex = <?= json_encode($cards) ?>;
 
         let drawnCards = [];
         let flippedCount = 0;

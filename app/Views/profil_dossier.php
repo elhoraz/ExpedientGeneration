@@ -40,6 +40,9 @@
             </p>
 
             <div class="actions">
+                <a href="/chat/personal/<?= $user['id'] ?>" class="btn-action btn-primary" style="background: rgba(212,175,55,0.1); border-color: #d4af37; color: #d4af37;">
+                    <i class="fa-solid fa-comment-dots"></i> MESSAGE
+                </a>
                 <a href="https://instagram.com/<?= esc($user['akun_ig'] ?? '') ?>" target="_blank" class="btn-action btn-primary">
                     <i class="fa-brands fa-instagram"></i> CONNECT
                 </a>

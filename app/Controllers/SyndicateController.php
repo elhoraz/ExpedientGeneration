@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\SyndicateModel;
+use App\Services\SyndicateService;
 
 class SyndicateController extends BaseController
 {
@@ -17,14 +18,11 @@ class SyndicateController extends BaseController
 
     public function index()
     {
-        // Query untuk menggabungkan (JOIN) data bisnis dengan data USER (Foto Profil)
-        $db = \Config\Database::connect();
-        $builder = $db->table('syndicate');
-        $builder->select('syndicate.*, users.nama_panggilan, users.no_whatsapp, users.foto_profil');
-        $builder->join('users', 'users.id = syndicate.user_id');
-        $builder->orderBy('syndicate.created_at', 'DESC');
-        
-        $data['portofolio'] = $builder->get()->getResultArray();
+        // Gunakan scope withUser() dari model untuk menggabungkan data user
+        $data['portofolio'] = $this->syndicateModel->withUser()
+            ->orderBy('syndicate.created_at', 'DESC')
+            ->paginate(12);
+        $data['pager'] = $this->syndicateModel->pager;
 
         return view('syndicate/index', $data);
     }
@@ -34,11 +32,7 @@ class SyndicateController extends BaseController
      */
     public function create()
     {
-        // Pastikan user sudah login sebelum membuka formulir ini
-        // (Sistem login harus sudah aktif, jika memakai filter 'auth')
-        if (!session()->get('logged_in')) {
-            return redirect()->to('/login')->with('error', 'Otorisasi gagal. Silakan login terlebih dahulu.');
-        }
+
 
         return view('syndicate/create');
     }
@@ -77,30 +71,96 @@ class SyndicateController extends BaseController
             return redirect()->to('/syndicate/create')->withInput()->with('validation_errors', $this->validator->getErrors());
         }
 
-        // 3. PROSES UNGGAH LOGO BISNIS
-        $fileLogo = $this->request->getFile('logo_bisnis');
-        $namaFileLogo = null; // Default null jika tidak ada logo
+        $syndicateService = new SyndicateService();
+        $syndicateService->storeBisnis(
+            $userId, 
+            [
+                'nama_bisnis' => $this->request->getPost('nama_bisnis'),
+                'kategori'    => $this->request->getPost('kategori'),
+                'deskripsi'   => $this->request->getPost('deskripsi'),
+                'link_url'    => $this->request->getPost('link_url'),
+            ], 
+            $this->request->getFile('logo_bisnis')
+        );
 
-        if ($fileLogo->isValid() && !$fileLogo->hasMoved()) {
-            // Beri nama unik (Syndicate_randomstring.jpg)
-            $namaFileLogo = $fileLogo->getRandomName();
-            
-            // Pindahkan ke folder public/uploads/bisnis/
-            // Pastikan folder ini sudah Anda buat manual di server
-            $fileLogo->move(FCPATH . 'uploads/bisnis/', $namaFileLogo);
+        // 5. REDIRECT KEMBALI KE GALERI JARINGAN DENGAN SUKSES
+        return redirect()->to('/syndicate')->with('success', 'Arsip Jaringan Bisnis Anda telah terdaftar di Ledger Pusat. Selamat berkolaborasi!');
+    }
+
+    /**
+     * Menampilkan Formulir Edit VIP
+     */
+    public function edit($id)
+    {
+        $userId = session()->get('user_id');
+        $bisnis = $this->syndicateModel->find($id);
+
+        if (!$bisnis || $bisnis['user_id'] != $userId) {
+            return redirect()->to('/syndicate')->with('error', 'Otorisasi gagal. Anda tidak memiliki akses untuk mengubah data ini.');
         }
 
-        // 4. SIMPAN KE DATABASE Lewat Model
-        $this->syndicateModel->save([
-            'user_id'     => $userId,
+        $data['bisnis'] = $bisnis;
+        return view('syndicate/edit', $data);
+    }
+
+    /**
+     * Memproses Pembaruan Data
+     */
+    public function update($id)
+    {
+        $userId = session()->get('user_id');
+        $bisnis = $this->syndicateModel->find($id);
+
+        if (!$bisnis || $bisnis['user_id'] != $userId) {
+            return redirect()->to('/syndicate')->with('error', 'Otorisasi gagal.');
+        }
+
+        $rules = [
+            'nama_bisnis' => 'required|min_length[3]|max_length[150]',
+            'kategori'    => 'required|in_list[F&B,Teknologi,Jasa,Kreatif,Retail]',
+            'deskripsi'   => 'required|min_length[10]|max_length[200]',
+            'link_url'    => 'permit_empty|valid_url',
+            'logo_bisnis' => 'permit_empty|is_image[logo_bisnis]|mime_in[logo_bisnis,image/jpg,image/jpeg,image/png]|max_size[logo_bisnis,2048]'
+        ];
+
+        if (!$this->validate($rules)) {
+            return redirect()->to("/syndicate/edit/{$id}")->withInput()->with('validation_errors', $this->validator->getErrors());
+        }
+
+        $dataUpdate = [
             'nama_bisnis' => $this->request->getPost('nama_bisnis'),
             'kategori'    => $this->request->getPost('kategori'),
             'deskripsi'   => $this->request->getPost('deskripsi'),
             'link_url'    => $this->request->getPost('link_url'),
-            'logo_bisnis' => $namaFileLogo, // Simpan nama filenya saja
-        ]);
+        ];
 
-        // 5. REDIRECT KEMBALI KE GALERI JARINGAN DENGAN SUKSES
-        return redirect()->to('/syndicate')->with('success', 'Arsip Jaringan Bisnis Anda telah terdaftar di Ledger Pusat. Selamat berkolaborasi!');
+        $syndicateService = new SyndicateService();
+        try {
+            $syndicateService->updateBisnis($id, $userId, $dataUpdate, $this->request->getFile('logo_bisnis'));
+            return redirect()->to('/syndicate')->with('success', 'Data bisnis berhasil diperbarui.');
+        } catch (\Exception $e) {
+            return redirect()->to('/syndicate')->with('error', $e->getMessage());
+        }
+    }
+
+    /**
+     * Memproses Penghapusan Data
+     */
+    public function delete($id)
+    {
+        $userId = session()->get('user_id');
+        $bisnis = $this->syndicateModel->find($id);
+
+        if (!$bisnis || $bisnis['user_id'] != $userId) {
+            return redirect()->to('/syndicate')->with('error', 'Otorisasi gagal.');
+        }
+
+        $syndicateService = new SyndicateService();
+        try {
+            $syndicateService->deleteBisnis($id, $userId);
+            return redirect()->to('/syndicate')->with('success', 'Data bisnis berhasil dihapus.');
+        } catch (\Exception $e) {
+            return redirect()->to('/syndicate')->with('error', $e->getMessage());
+        }
     }
 }
