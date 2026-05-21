@@ -10,20 +10,34 @@ class DirektoriController extends BaseController
     {
         $userModel = new UserModel();
         $isLoggedIn = session()->get('logged_in');
+        $search = $this->request->getGet('q');
 
         if ($isLoggedIn) {
-            // Anggota: data lengkap
-            $data['alumni'] = $userModel->orderBy('nama_lengkap', 'ASC')->paginate(24);
+            $builder = $userModel->orderBy('nama_lengkap', 'ASC');
+            if (!empty($search)) {
+                $builder->groupStart()
+                    ->like('nama_lengkap', $search)
+                    ->orLike('nama_panggilan', $search)
+                    ->orLike('email', $search)
+                ->groupEnd();
+            }
+            $data['alumni'] = $builder->paginate(24);
         } else {
-            // Publik: hanya nama & foto (tanpa data kontak sensitif)
-            $data['alumni'] = $userModel
+            $builder = $userModel
                 ->select('id, nama_lengkap, nama_panggilan, foto_profil')
-                ->orderBy('nama_lengkap', 'ASC')
-                ->paginate(24);
+                ->orderBy('nama_lengkap', 'ASC');
+            if (!empty($search)) {
+                $builder->groupStart()
+                    ->like('nama_lengkap', $search)
+                    ->orLike('nama_panggilan', $search)
+                ->groupEnd();
+            }
+            $data['alumni'] = $builder->paginate(24);
         }
 
         $data['pager'] = $userModel->pager;
         $data['isLoggedIn'] = $isLoggedIn;
+        $data['search'] = $search;
 
         return view('direktori', $data);
     }

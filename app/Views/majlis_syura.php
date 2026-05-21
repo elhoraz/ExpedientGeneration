@@ -440,6 +440,26 @@ Majlis Syura Eksklusif - VVIP Audio Room
                             </form>
                         </div>
                     <?php endif; ?>
+                    
+                    <?php if((int)$t['created_by'] === (int)$user_id || $user_role === 'admin'): ?>
+                        <form action="/majlis/close/<?= $t['id'] ?>" method="POST" style="margin-top:10px;" onsubmit="return confirm('Tutup sesi voting ini? Tindakan tidak dapat dibatalkan.')">
+                            <?= csrf_field() ?>
+                            <button type="submit" style="width:100%; padding:8px; background:rgba(255,51,102,0.15); border:1px solid rgba(255,51,102,0.3); color:#ff3366; border-radius:5px; cursor:pointer; font-size:0.75rem; font-weight:bold; letter-spacing:1px; text-transform:uppercase;">
+                                <i class="fa-solid fa-lock"></i> Tutup Voting
+                            </button>
+                        </form>
+                    <?php endif; ?>
+                <?php else: ?>
+                    <div style="margin-top:15px; text-align:center; padding:12px; border-radius:8px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08);">
+                        <div style="font-size:0.7rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:2px; margin-bottom:8px;">Hasil Akhir</div>
+                        <div style="display:flex; justify-content:center; gap:30px;">
+                            <span style="color:#00ff88; font-size:1.2rem; font-weight:bold;"><i class="fa-solid fa-check"></i> <?= $t['votes_setuju'] ?></span>
+                            <span style="color:#ff3366; font-size:1.2rem; font-weight:bold;"><i class="fa-solid fa-xmark"></i> <?= $t['votes_tidak_setuju'] ?></span>
+                        </div>
+                        <?php $winner = $t['votes_setuju'] >= $t['votes_tidak_setuju'] ? 'DISETUJUI' : 'DITOLAK'; ?>
+                        <?php $winColor = $t['votes_setuju'] >= $t['votes_tidak_setuju'] ? '#00ff88' : '#ff3366'; ?>
+                        <div style="margin-top:8px; font-size:0.75rem; font-weight:bold; color:<?= $winColor ?>; letter-spacing:2px;"><?= $winner ?></div>
+                    </div>
                 <?php endif; ?>
             </div>
         <?php endforeach; ?>

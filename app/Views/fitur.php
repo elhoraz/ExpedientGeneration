@@ -159,6 +159,16 @@ Expedient Vault - Koleksi Fitur Premium
                     <div class="launch-btn" style="color: #d4af37; border-color: #d4af37;">Inisiasi Analitik <i class="fa-solid fa-arrow-right-long"></i></div>
                 </div>
             </a>
+
+            <a href="/event" class="premium-card js-tilt-card">
+                <div class="card-bg" style="background-image: url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=2670&auto=format&fit=crop'); filter: grayscale(50%) brightness(0.3);"></div>
+                <i class="fa-solid fa-calendar-days card-icon"></i>
+                <div class="card-content">
+                    <h3 class="card-title">Agenda & Eksibisi</h3>
+                    <p class="card-desc">Jadwalkan, kelola, dan hadiri pertemuan eksklusif angkatan. Integrasi sistem RSVP pintar untuk entitas Expedient.</p>
+                    <div class="launch-btn">Lihat Jadwal <i class="fa-solid fa-arrow-right-long"></i></div>
+                </div>
+            </a>
         </div>
     </div>
 

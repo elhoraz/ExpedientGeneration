@@ -100,29 +100,6 @@
         .load-v10 { perspective: 1500px; } .load-v10 .stellar-orbit { position: absolute; width: 250px; height: 90px; border: 1px solid rgba(212,175,55,0.3); border-radius: 50%; animation: spinX 4s infinite linear; } .load-v10 .stellar-orbit:nth-child(2) { animation: spinY 4s infinite linear; } .load-v10 .stellar-dot { position: absolute; width: 12px; height: 12px; background: #fff; border-radius: 50%; box-shadow: 0 0 20px #fff; top: -6px; left: 50%; transform: translateX(-50%); } :root[data-theme="light"] .load-v10 .stellar-dot { background: #d4af37; box-shadow: 0 0 20px #d4af37; }
 
         /* ================= 5. AWWWARDS LEVEL FLOATING SIDEBAR (DI-UPGRADE) ================= */
-        .loader-hadith {
-            font-family: 'Playfair Display', serif; font-size: clamp(0.9rem, 2vw, 1.2rem);
-            color: var(--text-secondary); max-width: 600px; margin-top: 10px; margin-bottom: 30px;
-            text-align: center; line-height: 1.6; font-style: italic; opacity: 0;
-            animation: fadeUp 1s ease-out 0.5s forwards; padding: 0 20px;
-        }
-        .loader-progress-wrapper {
-            width: 80%; max-width: 300px; padding: 2px;
-            border: 1px solid rgba(212,175,55,0.3); border-radius: 10px;
-            background: rgba(0,0,0,0.5); position: relative; opacity: 0;
-            animation: fadeUp 1s ease-out 1s forwards;
-        }
-        .loader-progress-fill {
-            height: 4px; width: 0%; background: linear-gradient(90deg, #d4af37, #f3e5ab);
-            border-radius: 5px; transition: width 0.1s ease-out;
-            box-shadow: 0 0 10px rgba(212,175,55,0.5);
-        }
-        .loader-progress-percent {
-            position: absolute; top: -25px; right: 0; font-weight: bold;
-            color: #d4af37; font-size: 0.9rem; font-family: 'Inter', sans-serif;
-        }
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
         .sidebar { 
             position: fixed; top: 20px; left: 20px; bottom: 20px; width: 75px; /* Dipersempit agar elegan */
             background: linear-gradient(135deg, var(--glass-bg) 0%, rgba(255,255,255,0.01) 100%);
@@ -235,6 +212,13 @@
         .chat-widget:hover { transform: translateY(-3px) scale(1.05); border-color: #d4af37; }
         .chat-widget:hover .icon-orb { background: var(--text-primary); color: var(--bg-main); }
 
+        /* Sembunyikan widget atas saat sidebar ditutup */
+        body.sidebar-closed .theme-widget,
+        body.sidebar-closed .notif-widget,
+        body.sidebar-closed .chat-widget {
+            opacity: 0; pointer-events: none; transform: translateY(-20px);
+        }
+
         /* ================= 8. MOBILE RESPONSIVENESS ================= */
         @media (max-width: 768px) {
             .sidebar { 
@@ -285,17 +269,6 @@
     <?php 
         $loaders = ['v1', 'v2', 'v3', 'v4', 'v5', 'v6', 'v7', 'v8', 'v9', 'v10'];
         $selectedLoader = $loaders[array_rand($loaders)];
-
-        $hadiths = [
-            "\"Barangsiapa yang menempuh jalan untuk mencari ilmu, maka Allah akan mudahkan baginya jalan menuju surga.\" (HR. Muslim)",
-            "\"Kebijaksanaan adalah barang yang hilang dari orang mukmin, di mana saja ia menemukannya, maka ia lebih berhak atasnya.\" (HR. Tirmidzi)",
-            "\"Bukanlah kekayaan itu dari banyaknya harta, tetapi kekayaan yang sebenarnya adalah kekayaan jiwa.\" (HR. Bukhari)",
-            "\"Sesungguhnya bersama kesulitan ada kemudahan.\" (QS. Al-Insyirah: 6)",
-            "\"Sebaik-baik manusia adalah yang paling bermanfaat bagi manusia lainnya.\" (HR. Ahmad)",
-            "\"Menuntut ilmu adalah kewajiban bagi setiap muslim.\" (HR. Ibnu Majah)",
-            "\"Allah akan meninggikan orang-orang yang beriman di antaramu dan orang-orang yang diberi ilmu pengetahuan beberapa derajat.\" (QS. Al-Mujadilah: 11)"
-        ];
-        $selectedHadith = $hadiths[array_rand($hadiths)];
     ?>
 
     <div id="loadingScreen" class="load-<?= $selectedLoader ?>">
@@ -311,13 +284,7 @@
             <?php endif; ?>
             <img src="/images/logo-utuh.png" class="loader-logo" alt="Loading Expedient">
         </div>
-        
-        <div class="loader-hadith"><?= $selectedHadith ?></div>
-
-        <div class="loader-progress-wrapper">
-            <div class="loader-progress-percent" id="globalLoadPercent">0%</div>
-            <div class="loader-progress-fill" id="globalLoadBar"></div>
-        </div>
+        <?php if($selectedLoader == 'v3'): ?><div class="gilded-reveal">EXPEDIENT GENERATION</div><?php endif; ?>
     </div>
 
     <div class="aurora-container">
@@ -348,7 +315,7 @@
         <a href="/direktori" class="nav-item hover-trigger <?= (uri_string() == 'direktori') ? 'active' : '' ?>" data-tooltip="The Registry" onclick="hapticNav()"><i class="fa-solid fa-address-book"></i></a>
         <a href="/galeri" class="nav-item hover-trigger <?= (uri_string() == 'galeri') ? 'active' : '' ?>" data-tooltip="The Vault" onclick="hapticNav()"><i class="fa-solid fa-film"></i></a>
         <?php if ($isLoggedIn): ?>
-        <a href="/radar" class="nav-item hover-trigger <?= (uri_string() == 'radar') ? 'active' : '' ?>" data-tooltip="Peta Global" onclick="hapticNav()"><i class="fa-solid fa-earth-americas"></i></a>
+        <a href="/radar" class="nav-item hover-trigger <?= (uri_string() == 'radar' || uri_string() == 'radar/flat') ? 'active' : '' ?>" data-tooltip="Peta Persebaran" onclick="hapticNav()"><i class="fa-solid fa-earth-asia"></i></a>
         <a href="/syndicate" class="nav-item hover-trigger <?= (uri_string() == 'syndicate') ? 'active' : '' ?>" data-tooltip="The Council" onclick="hapticNav()"><i class="fa-solid fa-chess-knight"></i></a>
         <?php $fiturPages = ['fitur','oracle','enigma','genesis','celestial','majlis','tarbiyah','baitul-maal','wasiat','multazam','kontemplasi','divine', 'nexus']; ?>
         <a href="/fitur" class="nav-item hover-trigger <?= in_array(uri_string(), $fiturPages) ? 'active' : '' ?>" data-tooltip="Fitur Eksekutif" onclick="hapticNav()"><i class="fa-solid fa-gem"></i></a>
@@ -473,31 +440,13 @@
             document.getElementById('toggleIcon').className = 'fa-solid fa-sun';
         }
 
-        const isBeranda = window.location.pathname === '/beranda';
-        const globalLoadPercent = document.getElementById('globalLoadPercent');
-        const globalLoadBar = document.getElementById('globalLoadBar');
-        
-        if (!isBeranda) {
-            let fakeProgress = 0;
-            const fakeInterval = setInterval(() => {
-                fakeProgress += Math.floor(Math.random() * 10) + 5;
-                if (fakeProgress > 90) fakeProgress = 90;
-                if (globalLoadPercent) globalLoadPercent.innerText = fakeProgress + '%';
-                if (globalLoadBar) globalLoadBar.style.width = fakeProgress + '%';
-            }, 200);
-
-            window.addEventListener('load', () => {
-                clearInterval(fakeInterval);
-                if (globalLoadPercent) globalLoadPercent.innerText = '100%';
-                if (globalLoadBar) globalLoadBar.style.width = '100%';
-                
-                setTimeout(() => {
-                    const loader = document.getElementById('loadingScreen');
-                    loader.style.opacity = '0';
-                    setTimeout(() => loader.style.visibility = 'hidden', 800);
-                }, 800); 
-            });
-        }
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loader = document.getElementById('loadingScreen');
+                loader.style.opacity = '0';
+                setTimeout(() => loader.style.visibility = 'hidden', 800);
+            }, 1500); 
+        });
 
         const btnTheme = document.getElementById('btnTheme');
         btnTheme.addEventListener('click', () => {
@@ -621,7 +570,7 @@
             }
         });
 
-        // NOTIFIKASI UMUM EVENT
+        // NOTIFIKASI UMUM EVENT (PERSONAL)
         channel.bind('new-notification', function(data) {
             if (data.user_id == <?= session()->get('user_id') ?? 'null' ?>) {
                 const aegisToast = document.getElementById('aegisToast');
@@ -634,6 +583,18 @@
                 setTimeout(() => aegisToast.classList.remove('show'), 6000);
                 fetchUnreadNotifs();
             }
+        });
+
+        // NOTIFIKASI GLOBAL (BROADCAST)
+        channel.bind('broadcast-notification', function(data) {
+            const aegisToast = document.getElementById('aegisToast');
+            const radarName = document.getElementById('radarName');
+            document.querySelector('.aegis-title').innerText = data.title;
+            radarName.innerText = data.message; 
+            aegisLink = data.link || '#';
+            aegisToast.classList.add('show');
+            if (navigator.vibrate) navigator.vibrate([50, 50, 100]);
+            setTimeout(() => aegisToast.classList.remove('show'), 6000);
         });
 
         // NOTIFIKASI UI LOGIC

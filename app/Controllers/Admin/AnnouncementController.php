@@ -63,6 +63,14 @@ class AnnouncementController extends BaseController
             'created_by'   => session()->get('user_id'),
         ]);
 
+        // Broadcast notification
+        $pusher = new \App\Services\PusherService();
+        $pusher->broadcastNotification(
+            'Pengumuman Baru',
+            $this->request->getPost('title'),
+            '/beranda'
+        );
+
         return redirect()->to('/admin/announcements')->with('success', 'Pengumuman berhasil dipublikasikan.');
     }
 

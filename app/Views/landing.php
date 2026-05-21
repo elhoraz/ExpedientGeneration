@@ -161,10 +161,10 @@
 
         /* ====== SCROLL HINT ====== */
         .scroll-hint {
-            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+            position: absolute; bottom: 30px; left: 0; width: 100%;
             display: flex; flex-direction: column; align-items: center; gap: 8px;
             color: var(--text-secondary); font-size: 0.7rem; letter-spacing: 4px; text-transform: uppercase;
-            opacity: 0; animation: fadeUp 1s ease-out 1.5s forwards;
+            opacity: 0; animation: fadeUp 1s ease-out 1.5s forwards; pointer-events: none;
         }
         .scroll-line {
             width: 1px; height: 40px; background: linear-gradient(to bottom, var(--gold), transparent);
@@ -198,19 +198,21 @@
         }
         .feature-card {
             background: var(--glass-bg); backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border); border-radius: 16px;
-            padding: 30px 20px; transition: 0.4s;
+            border: 1px solid var(--glass-border); border-radius: 20px;
+            padding: 40px 30px; text-align: left; transition: 0.5s;
+            position: relative; overflow: hidden; transform-style: preserve-3d;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
-        .feature-card:hover {
-            transform: translateY(-5px); border-color: rgba(212,175,55,0.4);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        .feature-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, rgba(212,175,55,0.1), transparent 50%);
+            pointer-events: none; opacity: 0; transition: 0.5s;
         }
-        .feature-icon { font-size: 1.5rem; color: var(--gold); margin-bottom: 15px; }
-        .feature-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 1rem; font-weight: 700; margin-bottom: 8px;
-        }
-        .feature-desc { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.6; }
+        .feature-card:hover { border-color: rgba(212,175,55,0.4); box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 40px rgba(212,175,55,0.1); }
+        .feature-card:hover::before { opacity: 1; }
+        .feature-icon { font-size: 2rem; color: var(--gold); margin-bottom: 20px; transform: translateZ(30px); filter: drop-shadow(0 5px 15px rgba(212,175,55,0.4)); }
+        .feature-title { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; margin-bottom: 12px; transform: translateZ(20px); }
+        .feature-desc { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; transform: translateZ(10px); }
 
         /* ====== FOOTER ====== */
         .landing-footer {
@@ -396,6 +398,12 @@
             document.documentElement.setAttribute('data-theme', next);
             localStorage.setItem('expedient_theme', next);
             updateThemeIcon();
+        });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+    <script>
+        VanillaTilt.init(document.querySelectorAll(".feature-card"), {
+            max: 15, speed: 400, glare: true, "max-glare": 0.2, perspective: 1000
         });
     </script>
 </body>

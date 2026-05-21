@@ -188,9 +188,50 @@ Profil Eksklusif - Expedient
                     Gunakan biometrik bawaan (Touch ID/Face ID) pada gawai Anda sebagai otentikasi lapis kedua tanpa sandi.
                 </div>
                 
+                <div style="margin-top: 50px; padding-top: 30px; border-top: 1px solid var(--glass-border);">
+                    <div style="font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px;"><i class="fa-solid fa-key" style="margin-right: 8px;"></i>Ubah Kata Sandi</div>
+                    
+                    <form action="/profil/change-password" method="POST">
+                        <?= csrf_field() ?>
+                        <div class="form-group">
+                            <input type="password" name="current_password" class="form-input" id="inp_curpass" placeholder=" " required>
+                            <label class="form-label" for="inp_curpass">Kata Sandi Lama</label>
+                            <div class="liquid-line"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" name="new_password" class="form-input" id="inp_newpass" placeholder=" " required minlength="8">
+                            <label class="form-label" for="inp_newpass">Kata Sandi Baru (min. 8)</label>
+                            <div class="liquid-line"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" name="confirm_password" class="form-input" id="inp_cfmpass" placeholder=" " required>
+                            <label class="form-label" for="inp_cfmpass">Konfirmasi Sandi Baru</label>
+                            <div class="liquid-line"></div>
+                        </div>
+                        <button type="submit" class="btn-submit cursor-bind" style="width: 100%; font-size: 0.8rem; padding: 12px;">
+                            <i class="fa-solid fa-shield-halved" style="margin-right: 8px;"></i> Perbarui Kata Sandi
+                        </button>
+                    </form>
+                </div>
+
                 <div style="margin-top: 50px; padding-top: 30px; border-top: 1px solid var(--glass-border); text-align: center;">
                     <div style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 2px;">Identitas Eksekutif</div>
                     <a href="/sovereign" class="cursor-bind" style="color:var(--gold-premium); text-decoration:none; font-size:0.85rem; display:inline-block; margin-top:15px; font-weight: 600; letter-spacing: 2px;"><i class="fa-solid fa-cube" style="margin-right: 8px;"></i> BUKA SOVEREIGN ID 5D</a>
+                </div>
+
+                <div style="margin-top: 50px; padding-top: 30px; border-top: 1px solid rgba(255, 51, 102, 0.2); text-align: center;">
+                    <div style="font-size: 0.75rem; color: #ff3366; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px;"><i class="fa-solid fa-triangle-exclamation" style="margin-right: 8px;"></i>Zona Berbahaya</div>
+                    <form action="/profil/delete-account" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menonaktifkan akun ini selamanya? Proses ini tidak dapat dibatalkan dengan mudah.');">
+                        <?= csrf_field() ?>
+                        <div class="form-group" style="margin-bottom: 15px;">
+                            <input type="password" name="password_delete" class="form-input" id="inp_delpass" placeholder=" " required style="border-color: rgba(255, 51, 102, 0.3);">
+                            <label class="form-label" for="inp_delpass" style="color: #ff3366;">Konfirmasi Sandi untuk Hapus</label>
+                            <div class="liquid-line" style="background: linear-gradient(90deg, transparent, #ff3366, transparent);"></div>
+                        </div>
+                        <button type="submit" class="btn-submit cursor-bind" style="background: rgba(255, 51, 102, 0.1); color: #ff3366; border: 1px solid #ff3366; width: 100%; font-size: 0.8rem; padding: 12px;">
+                            <i class="fa-solid fa-user-xmark" style="margin-right: 8px;"></i> Nonaktifkan Akun
+                        </button>
+                    </form>
                 </div>
             </div>
 
@@ -205,388 +246,7 @@ Profil Eksklusif - Expedient
 <script defer src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api/dist/face-api.min.js"></script>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-    // === ELEMEN UI ===
-    const videoElement = document.getElementById('cameraFeed');
-    const statusText = document.getElementById('statusText');
-    const authVault = document.getElementById('authVault');
-    const controlPanel = document.getElementById('controlPanel');
-    const focusRing = document.getElementById('focusRing');
-    const scanLine = document.getElementById('scanLine');
-    const retinaContainer = document.getElementById('retinaContainer');
-    
-    // HUD Nodes
-    const s1 = document.getElementById('step1');
-    const s2 = document.getElementById('step2');
-    const s3 = document.getElementById('step3');
-
-    // === STATE ===
-    let streamRef = null;
-    let timeoutRef = null;
-    let isAuthenticating = false;
-    let authCompleted = false;
-    let currentStep = 'matching';
-    let scanAnim = null;
-
-    const dbFaceDataRaw = <?= empty($face_data_db) || $face_data_db === 'null' ? 'null' : $face_data_db ?>;
-    let targetDescriptor = null;
-
-    // === HELPER UI MEWAH ===
-    const updateTextFade = (text, color) => {
-        gsap.to(statusText, {
-            opacity: 0,
-            y: -10,
-            duration: 0.3,
-            onComplete: () => {
-                statusText.innerText = text;
-                if(color) statusText.style.color = color;
-                gsap.fromTo(statusText, { y: 10 }, { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" });
-            }
-        });
-    };
-
-    const updateHUD = (text, color, isScanning, step) => {
-        updateTextFade(text, color);
-        
-        if (isScanning && !scanAnim) {
-            retinaContainer.classList.add('scanning');
-            gsap.set(scanLine, { opacity: 1 });
-            scanAnim = gsap.to(scanLine, {
-                top: "100%",
-                duration: 2,
-                repeat: -1,
-                yoyo: true,
-                ease: "sine.inOut"
-            });
-        } else if (!isScanning && scanAnim) {
-            retinaContainer.classList.remove('scanning');
-            scanAnim.kill();
-            scanAnim = null;
-            gsap.to(scanLine, { opacity: 0, duration: 0.3 });
-        }
-
-        if (color) {
-            focusRing.style.borderColor = color;
-            focusRing.style.boxShadow = `inset 0 0 40px var(--glass-bg), 0 0 50px ${color}30`;
-        }
-
-        if(step === 1) { s1.className = 'live-node active'; s2.className = 'live-node'; s3.className = 'live-node'; }
-        if(step === 2) { s1.className = 'live-node done'; s2.className = 'live-node active'; s3.className = 'live-node'; }
-        if(step === 3) { s1.className = 'live-node done'; s2.className = 'live-node done'; s3.className = 'live-node active'; }
-        if(step === 'done') { s1.className = 'live-node done'; s2.className = 'live-node done'; s3.className = 'live-node done'; }
-    };
-
-    // Fungsi gagal total tanpa tombol bypass
-    const triggerFatalError = (msg) => {
-        authCompleted = true;
-        updateHUD(msg, "var(--danger-elegant)", false, 0);
-        setTimeout(() => {
-            statusText.innerHTML = `<span style="font-size:0.9rem; color:var(--text-secondary);">Sistem keamanan mendeteksi anomali. Akses profil terkunci. Harap kembali ke Beranda.</span><br><br><a href="/beranda" class="action-btn" style="display:inline-flex; width:auto; justify-content:center; border-color:var(--text-primary); color:var(--text-primary); margin: 0 auto;">Kembali</a>`;
-        }, 1500);
-    };
-
-    window.unlockControlPanel = () => {
-        authCompleted = true;
-        if (streamRef) streamRef.getTracks().forEach(track => track.stop());
-        if (timeoutRef) clearTimeout(timeoutRef);
-
-        gsap.to(authVault, {
-            opacity: 0, scale: 1.1, filter: "blur(20px)", duration: 1.5, ease: "power3.inOut",
-            onComplete: () => {
-                authVault.style.display = "none";
-                controlPanel.style.display = "flex";
-                
-                // Animasi Stagger GSAP Mewah untuk Form
-                const tl = gsap.timeline();
-                tl.to(controlPanel, { opacity: 1, duration: 0.5 })
-                  .from(".stagger-item", { 
-                      y: 40, 
-                      opacity: 0, 
-                      duration: 1, 
-                      stagger: 0.15, 
-                      ease: "power4.out" 
-                  });
-            }
-        });
-    };
-
-    const startFaceVerification = async () => {
-        if (dbFaceDataRaw === null) {
-            triggerFatalError("Profil Biometrik Kosong");
-            return;
-        }
-
-        targetDescriptor = new Float32Array(dbFaceDataRaw);
-        updateHUD("Menyiapkan Sistem Cerdas...", "var(--gold-premium)", false, 0);
-
-        try {
-            const MODEL_URL = window.location.origin + '/assets/models';
-            await Promise.all([
-                faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
-                faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
-                faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL),
-                faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL)
-            ]);
-        } catch (err) {
-            return triggerFatalError("Gagal Menginisialisasi Modul");
-        }
-
-        updateHUD("Sinkronisasi Lensa...", "var(--gold-premium)", false, 0);
-
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
-            videoElement.srcObject = stream;
-            streamRef = stream;
-        } catch (err) {
-            return triggerFatalError("Kamera Diblokir oleh Perangkat");
-        }
-
-        videoElement.onplay = () => {
-            updateHUD("Menganalisis profil kedalaman...", "var(--gold-premium)", true, 1);
-            
-            const detectorOptions = new faceapi.TinyFaceDetectorOptions({ inputSize: 160, scoreThreshold: 0.5 });
-            
-            const runDetection = async () => {
-                if (authCompleted) return;
-                if (isAuthenticating) {
-                    timeoutRef = setTimeout(runDetection, 600);
-                    return;
-                }
-
-                try {
-                    const detection = await faceapi.detectSingleFace(videoElement, detectorOptions)
-                                                   .withFaceLandmarks().withFaceDescriptor().withFaceExpressions();
-                    
-                    if (!detection) {
-                        updateHUD("Mohon tatap tepat ke tengah lensa", "var(--gold-premium)", true, currentStep === 'matching'? 1 : (currentStep==='smiling'? 2:3));
-                    } else {
-                        if (currentStep === 'matching') {
-                            const distance = faceapi.euclideanDistance(targetDescriptor, detection.descriptor);
-                            if (distance < 0.5) {
-                                currentStep = 'smiling';
-                                isAuthenticating = true;
-                                updateHUD("Identitas dikonfirmasi. Tunjukkan senyum Anda...", "var(--text-primary)", true, 2);
-                                setTimeout(() => { isAuthenticating = false; }, 1200); 
-                            } else {
-                                updateHUD("Akses Ditolak: Wajah Tidak Dikenali", "var(--danger-elegant)", true, 1);
-                            }
-                        } 
-                        else if (currentStep === 'smiling') {
-                            if (detection.expressions.happy > 0.85) {
-                                currentStep = 'turning';
-                                isAuthenticating = true;
-                                updateHUD("Sempurna. Tolehkan kepala Anda sedikit...", "var(--text-primary)", true, 3);
-                                setTimeout(() => { isAuthenticating = false; }, 1500); 
-                            } else {
-                                updateHUD("Menunggu verifikasi ekspresi...", "var(--text-primary)", true, 2);
-                            }
-                        } 
-                        else if (currentStep === 'turning') {
-                            const landmarks = detection.landmarks;
-                            const nose = landmarks.getNose()[0];
-                            const leftEye = landmarks.getLeftEye()[0];
-                            const rightEye = landmarks.getRightEye()[0];
-                            
-                            const distLeft = Math.abs(nose.x - leftEye.x);
-                            const distRight = Math.abs(nose.x - rightEye.x);
-                            
-                            if (distRight !== 0) {
-                                const ratio = distLeft / distRight;
-                                if (ratio < 0.35 || ratio > 2.5) {
-                                    authCompleted = true;
-                                    updateHUD("Akses VVIP Diberikan", "var(--success-elegant)", false, 'done');
-                                    setTimeout(unlockControlPanel, 1200);
-                                    return; 
-                                } else {
-                                    updateHUD("Terus tolehkan perlahan...", "var(--text-primary)", true, 3);
-                                }
-                            }
-                        }
-                    }
-                } catch(e) {
-                    console.error("Face API Error:", e);
-                }
-
-                if (!authCompleted) timeoutRef = setTimeout(runDetection, 600);
-            };
-
-            runDetection();
-        };
-    };
-
-    // === MAGNETIC HOVER ENGINE (INTERAKTIVITAS) ===
-    const magBtnWrap = document.getElementById('magBtnWrap');
-    const magBtn = document.getElementById('magBtn');
-    const magAvatar = document.getElementById('magAvatar');
-
-    const applyMagnetic = (wrap, el, strength) => {
-        wrap.addEventListener('mousemove', (e) => {
-            const rect = wrap.getBoundingClientRect();
-            const x = (e.clientX - rect.left) - (rect.width / 2);
-            const y = (e.clientY - rect.top) - (rect.height / 2);
-            gsap.to(el, { x: x * strength, y: y * strength, duration: 0.4, ease: "power2.out" });
-        });
-        wrap.addEventListener('mouseleave', () => {
-            gsap.to(el, { x: 0, y: 0, duration: 0.8, ease: "elastic.out(1, 0.3)" });
-        });
-    };
-
-    if(window.matchMedia("(pointer: fine)").matches) {
-        applyMagnetic(magBtnWrap, magBtn, 0.4);
-        applyMagnetic(magAvatar, magAvatar.querySelector('img'), 0.2);
-
-        // PARALLAX KARTU
-        const tiltContainer = document.querySelector('.tilt-container');
-        const cards = document.querySelectorAll('.parallax-card');
-        
-        tiltContainer.addEventListener('mousemove', (e) => {
-            const rect = tiltContainer.getBoundingClientRect();
-            const x = (e.clientX - rect.left) / rect.width;
-            const y = (e.clientY - rect.top) / rect.height;
-            const tiltX = (0.5 - y) * 10; // Max 10 deg
-            const tiltY = (x - 0.5) * 10;
-            
-            cards.forEach(card => {
-                gsap.to(card, {
-                    rotateX: tiltX,
-                    rotateY: tiltY,
-                    duration: 0.5,
-                    ease: "power2.out"
-                });
-            });
-        });
-        
-        tiltContainer.addEventListener('mouseleave', () => {
-            cards.forEach(card => {
-                gsap.to(card, { rotateX: 0, rotateY: 0, duration: 1, ease: "elastic.out(1, 0.5)" });
-            });
-        });
-    }
-
-    // === FITUR UPLOAD FOTO PROFIL ===
-    const fileInput = document.getElementById('inputFileImg');
-    const previewImg = document.getElementById('avatarPreview');
-    const base64Input = document.getElementById('fotoBase64Value');
-
-    fileInput.addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if(!file) return;
-
-        const reader = new FileReader();
-        reader.onload = function(event) {
-            const img = new Image();
-            img.onload = function() {
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                const MAX_WIDTH = 500;
-                const MAX_HEIGHT = 500;
-                let width = img.width;
-                let height = img.height;
-
-                if (width > height) {
-                    if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
-                } else {
-                    if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
-                }
-
-                canvas.width = width; canvas.height = height;
-                ctx.drawImage(img, 0, 0, width, height);
-
-                const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
-                
-                // Animasi ganti foto
-                gsap.to(previewImg, { scale: 0.8, opacity: 0, duration: 0.3, onComplete: () => {
-                    previewImg.src = dataUrl;
-                    base64Input.value = dataUrl;
-                    gsap.to(previewImg, { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.5)" });
-                }});
-            }
-            img.src = event.target.result;
-        }
-        reader.readAsDataURL(file);
-    });
-
-    startFaceVerification();
-});
-
-// ================= LOGIKA WEBAUTHN / PASSKEY =================
-function base64urlToBuffer(base64url) {
-    if (!base64url) return new ArrayBuffer(0);
-    const padding = '='.repeat((4 - base64url.length % 4) % 4);
-    const base64 = (base64url + padding).replace(/\-/g, '+').replace(/_/g, '/');
-    const rawData = window.atob(base64);
-    const outputArray = new Uint8Array(rawData.length);
-    for (let i = 0; i < rawData.length; ++i) { outputArray[i] = rawData.charCodeAt(i); }
-    return outputArray.buffer;
-}
-
-function bufferToBase64url(buffer) {
-    const bytes = new Uint8Array(buffer);
-    let binary = '';
-    for (let i = 0; i < bytes.byteLength; i++) { binary += String.fromCharCode(bytes[i]); }
-    return window.btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
-}
-
-async function startBiometricEnrollment() {
-    const statusEl = document.getElementById('bioStatus');
-    const optionsBox = document.getElementById('bioOptionsBox');
-    
-    if (navigator.vibrate) navigator.vibrate(50);
-
-    try {
-        gsap.to(optionsBox, { opacity: 0, height: 0, duration: 0.4, onComplete: () => optionsBox.style.display = 'none' });
-        statusEl.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Menyiapkan protokol kriptografi...';
-        statusEl.style.color = "var(--gold-premium)";
-
-        const res = await fetch('/api/biometric/register-options');
-        const opt = await res.json();
-        if (opt.error) throw new Error(opt.error);
-
-        const pkConfig = opt.publicKey ? opt.publicKey : opt;
-        if (!pkConfig.challenge) throw new Error("Tantangan Kriptografi gagal dimuat.");
-
-        pkConfig.challenge = base64urlToBuffer(pkConfig.challenge);
-        pkConfig.user.id = base64urlToBuffer(pkConfig.user.id);
-        if (pkConfig.excludeCredentials) {
-            pkConfig.excludeCredentials.forEach(cred => { cred.id = base64urlToBuffer(cred.id); });
-        }
-
-        statusEl.innerText = "Silakan autentikasi menggunakan Touch ID / Face ID / PIN pada perangkat ini...";
-
-        const credential = await navigator.credentials.create({ publicKey: pkConfig });
-        statusEl.innerText = "Menyegel kunci keamanan...";
-
-        const attestationData = {
-            id: credential.id,
-            rawId: bufferToBase64url(credential.rawId),
-            type: credential.type,
-            response: { clientDataJSON: bufferToBase64url(credential.response.clientDataJSON) }
-        };
-
-        const verifyRes = await fetch('/api/biometric/register-verify', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(attestationData)
-        });
-
-        const result = await verifyRes.json();
-
-        if (result.status === 'success') {
-            statusEl.innerHTML = '<i class="fa-solid fa-check"></i> Perangkat Berhasil Disahkan';
-            statusEl.style.color = "var(--success-elegant)";
-            if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
-            setTimeout(() => window.location.reload(), 2000); 
-        } else {
-            throw new Error(result.error || 'Gagal menyegel kredensial.');
-        }
-
-    } catch (err) {
-        console.error(err);
-        optionsBox.style.display = 'block';
-        gsap.to(optionsBox, { opacity: 1, height: 'auto', duration: 0.4 });
-        statusEl.innerText = "Sertifikasi Dibatalkan: " + err.message;
-        statusEl.style.color = "var(--danger-elegant)";
-    }
-}
+    window.dbFaceDataRaw = <?= empty($face_data_db) || $face_data_db === 'null' ? 'null' : $face_data_db ?>;
 </script>
+<script src="/assets/js/profil.js"></script>
 <?= $this->endSection() ?>

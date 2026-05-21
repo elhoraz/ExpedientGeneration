@@ -53,6 +53,11 @@ class AuthService
             throw new \Exception('Email belum diverifikasi.');
         }
 
+        // Cek apakah akun sudah dinonaktifkan oleh admin
+        if (isset($user['is_active']) && $user['is_active'] == 0) {
+            throw new \Exception('Akun Anda telah dinonaktifkan.');
+        }
+
         ActivityLogger::log('LOGIN_SUCCESS', "Login berhasil: {$email}", $user['id']);
         return $user;
     }

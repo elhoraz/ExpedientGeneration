@@ -13,6 +13,7 @@ class OracleController extends BaseController
 
         // Ambil semua visi masa depan milik user ini
         $data['visions'] = $oracleModel->where('user_id', $userId)->orderBy('unlock_date', 'ASC')->findAll();
+        $data['user_id'] = $userId;
 
         return view('oracle_vision', $data);
     }

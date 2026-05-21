@@ -40,6 +40,13 @@ class BerandaController extends BaseController
             $gamificationService->addPrestise(session()->get('user_id'), 'GUESTBOOK_ENTRY', 10);
         }
 
+        $pusher = new \App\Services\PusherService();
+        $pusher->broadcastNotification(
+            'Buku Tamu Baru',
+            $nama . ' baru saja meninggalkan pesan di Buku Tamu.',
+            '/beranda'
+        );
+
         return redirect()->to('/beranda')->with('pesan', 'Transmisi pesan Anda telah diukir di pameran ini.');
     }
 }

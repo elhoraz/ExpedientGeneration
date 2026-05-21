@@ -12,7 +12,7 @@ class ChatModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['sender_id', 'receiver_id', 'message', 'is_read'];
+    protected $allowedFields    = ['sender_id', 'receiver_id', 'message', 'image_path', 'is_read', 'is_deleted'];
 
     // Dates
     protected $useTimestamps = true;
@@ -24,6 +24,7 @@ class ChatModel extends Model
     {
         $this->select('chat_messages.*, users.nama_lengkap as sender_name, users.foto_profil as sender_avatar');
         $this->join('users', 'users.id = chat_messages.sender_id');
+        $this->where('chat_messages.is_deleted', 0);
         return $this;
     }
 

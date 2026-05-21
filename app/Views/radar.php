@@ -1,254 +1,291 @@
 <?= $this->extend('layout/template') ?>
-
-<?= $this->section('title') ?>
-Global Radar - 42nd Expedient
-<?= $this->endSection() ?>
+<?= $this->section('title') ?>Jaringan Silaturahmi<?= $this->endSection() ?>
 
 <?= $this->section('styles') ?>
-<link rel="stylesheet" href="/css/radar.css">
+<style>
+/* ===== GLOBE ===== */
+#globeViz { position:fixed; inset:0; width:100vw; height:100vh; z-index:2; cursor:grab; }
+#globeViz:active { cursor:grabbing; }
+.main-wrapper { overflow:hidden !important; }
+
+/* ===== CINEMATIC LOADING ===== */
+#radarLoading { position:fixed; inset:0; z-index:9999; background:#030504; display:flex; flex-direction:column; justify-content:center; align-items:center; transition:opacity 1.5s ease; }
+#radarLoading .rl-ring { width:80px; height:80px; border:2px solid rgba(212,175,55,0.15); border-top-color:#d4af37; border-radius:50%; animation:rlSpin 1s linear infinite; margin-bottom:30px; }
+@keyframes rlSpin { to { transform:rotate(360deg); } }
+#radarLoading .rl-txt { font-family:'Playfair Display',serif; font-size:1.4rem; color:#d4af37; letter-spacing:6px; text-transform:uppercase; animation:rlFade 2s ease-in-out infinite; }
+@keyframes rlFade { 0%,100%{opacity:.4} 50%{opacity:1} }
+#radarLoading .rl-sub { font-size:.72rem; color:var(--text-secondary); letter-spacing:3px; margin-top:10px; }
+[data-theme="light"] #radarLoading { background:#f0f5f3; }
+
+/* ===== STAR FIELD ===== */
+#starField { position:fixed; inset:0; z-index:1; pointer-events:none; }
+[data-theme="light"] #starField { display:none; }
+
+/* ===== HUD ===== */
+.radar-hud { position:fixed; top:30px; left:150px; z-index:50; pointer-events:none; }
+.hud-title { font-family:'Playfair Display',serif; font-size:2rem; font-weight:900; color:var(--text-primary); text-shadow:0 6px 20px rgba(0,0,0,.9); }
+.hud-subtitle { font-size:.72rem; color:#d4af37; letter-spacing:3px; text-transform:uppercase; margin-top:4px; font-weight:600; }
+.stats-panel { margin-top:14px; display:flex; gap:12px; flex-wrap:wrap; }
+.stat-box { background:var(--glass-bg); backdrop-filter:var(--glass-blur); border:1px solid var(--glass-border); border-left:3px solid #d4af37; padding:8px 16px; border-radius:10px; box-shadow:var(--glass-shadow); }
+.stat-num { font-family:'Playfair Display',serif; font-size:1.6rem; color:#d4af37; font-weight:700; line-height:1; }
+.stat-label { font-size:.6rem; color:var(--text-secondary); text-transform:uppercase; letter-spacing:2px; margin-top:3px; }
+.status-dot { display:inline-block; width:7px; height:7px; border-radius:50%; background:#d4af37; margin-left:6px; vertical-align:middle; box-shadow:0 0 10px rgba(212,175,55,.8); animation:sdPulse 2s infinite; }
+@keyframes sdPulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+/* ===== SEARCH BAR ===== */
+.search-pill { position:fixed; top:30px; left:50%; transform:translateX(-50%); z-index:60; display:flex; align-items:center; gap:10px; background:var(--glass-bg); backdrop-filter:var(--glass-blur); border:1px solid var(--glass-border); border-radius:50px; padding:8px 20px; box-shadow:var(--glass-shadow); width:320px; max-width:80vw; transition:border-color .3s; }
+.search-pill:focus-within { border-color:rgba(212,175,55,.6); }
+.search-pill i { color:#d4af37; font-size:.9rem; }
+.search-pill input { background:none; border:none; outline:none; color:var(--text-primary); font-size:.82rem; font-weight:500; width:100%; font-family:'Inter',sans-serif; }
+.search-pill input::placeholder { color:var(--text-secondary); }
+.search-results { position:fixed; top:75px; left:50%; transform:translateX(-50%); z-index:60; background:var(--glass-bg); backdrop-filter:var(--glass-blur); border:1px solid var(--glass-border); border-radius:14px; width:320px; max-width:80vw; max-height:250px; overflow-y:auto; display:none; box-shadow:var(--glass-shadow); }
+.search-results.open { display:block; }
+.sr-item { padding:12px 18px; cursor:pointer; border-bottom:1px solid rgba(255,255,255,.04); transition:background .2s; display:flex; align-items:center; gap:10px; }
+.sr-item:hover { background:rgba(212,175,55,.08); }
+.sr-item:last-child { border-bottom:none; }
+.sr-name { font-size:.82rem; font-weight:600; color:var(--text-primary); }
+.sr-city { font-size:.68rem; color:var(--text-secondary); }
+.sr-avatar { width:30px; height:30px; border-radius:50%; object-fit:cover; border:1px solid rgba(212,175,55,.3); }
+
+/* ===== CONTROLS (KANAN BAWAH) ===== */
+.radar-controls { position:fixed; bottom:35px; right:35px; z-index:50; display:flex; flex-direction:column; align-items:flex-end; gap:10px; }
+.btn-radar { display:flex; align-items:center; gap:8px; backdrop-filter:var(--glass-blur)!important; border-radius:50px; font-size:.75rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; cursor:pointer; transition:all .4s; box-shadow:var(--glass-shadow); border:none; }
+.btn-radar-gold { background:rgba(212,175,55,.1); border:1px solid rgba(212,175,55,.5); color:#d4af37; padding:10px 20px; }
+.btn-radar-gold:hover:not(:disabled) { background:#d4af37; color:#000; transform:translateY(-2px); }
+.btn-radar-gold:disabled { opacity:.5; cursor:wait; }
+.btn-radar-glass { background:var(--glass-bg); border:1px solid var(--glass-border); color:var(--text-primary); padding:9px 18px; }
+.btn-radar-glass:hover { background:rgba(255,255,255,.1); transform:translateY(-2px); }
+.sync-status { font-size:.68rem; color:#d4af37; letter-spacing:1px; opacity:0; transition:opacity .4s; text-align:right; max-width:240px; }
+
+/* ===== MAP DROPDOWN ===== */
+.map-dropdown-wrap { position:relative; }
+.map-dropdown { display:none; position:absolute; bottom:100%; right:0; margin-bottom:8px; background:var(--glass-bg); backdrop-filter:var(--glass-blur); border:1px solid var(--glass-border); border-radius:14px; padding:8px; min-width:200px; box-shadow:var(--glass-shadow); }
+.map-dropdown.open { display:block; }
+.map-dropdown a { display:flex; align-items:center; gap:10px; padding:10px 14px; color:var(--text-secondary); font-size:.72rem; font-weight:600; letter-spacing:1px; text-decoration:none; border-radius:10px; transition:all .2s; text-transform:uppercase; }
+.map-dropdown a:hover { background:rgba(212,175,55,.1); color:#d4af37; }
+.map-dropdown a i { width:18px; text-align:center; font-size:.85rem; }
+
+/* ===== INFO DRAWER ===== */
+.info-drawer { position:fixed; top:0; right:-400px; width:380px; max-width:90vw; height:100vh; background:var(--glass-bg); backdrop-filter:blur(50px) saturate(180%); border-left:1px solid var(--glass-border); z-index:200; transition:right .5s cubic-bezier(.16,1,.3,1); overflow-y:auto; padding:0; }
+.info-drawer.open { right:0; }
+.id-close { position:absolute; top:20px; right:20px; background:none; border:none; color:var(--text-secondary); font-size:1.2rem; cursor:pointer; z-index:5; transition:color .2s; }
+.id-close:hover { color:#d4af37; }
+.id-header { padding:40px 30px 20px; text-align:center; border-bottom:1px solid rgba(255,255,255,.05); }
+.id-avatar { width:90px; height:90px; border-radius:50%; object-fit:cover; border:3px solid #d4af37; box-shadow:0 0 25px rgba(212,175,55,.3); margin-bottom:15px; }
+.id-name { font-family:'Playfair Display',serif; font-size:1.5rem; color:var(--text-primary); font-weight:700; }
+.id-nick { font-size:.78rem; color:#d4af37; letter-spacing:2px; margin-top:3px; }
+.id-body { padding:20px 30px; }
+.id-row { display:flex; align-items:center; gap:12px; padding:14px 0; border-bottom:1px solid rgba(255,255,255,.04); }
+.id-row i { color:#d4af37; width:20px; text-align:center; font-size:.9rem; }
+.id-row-label { font-size:.68rem; color:var(--text-secondary); text-transform:uppercase; letter-spacing:1px; }
+.id-row-val { font-size:.88rem; color:var(--text-primary); font-weight:600; margin-top:2px; }
+.id-actions { padding:20px 30px; display:flex; flex-direction:column; gap:10px; }
+.id-btn { display:flex; align-items:center; justify-content:center; gap:8px; padding:12px; border-radius:50px; font-size:.78rem; font-weight:700; letter-spacing:1px; text-transform:uppercase; text-decoration:none; transition:all .3s; cursor:pointer; border:none; }
+.id-btn-wa { background:#25d366; color:#fff; }
+.id-btn-wa:hover { background:#1da851; transform:translateY(-2px); }
+.id-btn-profile { background:rgba(212,175,55,.12); border:1px solid rgba(212,175,55,.4); color:#d4af37; }
+.id-btn-profile:hover { background:#d4af37; color:#000; }
+.id-overlay { position:fixed; inset:0; background:rgba(0,0,0,.4); z-index:199; display:none; }
+.id-overlay.open { display:block; }
+
+/* ===== FILTER PANEL (KIRI BAWAH) ===== */
+.filter-panel { position:fixed; bottom:35px; left:150px; z-index:50; display:flex; gap:8px; flex-wrap:wrap; }
+.filter-chip { background:var(--glass-bg); backdrop-filter:var(--glass-blur); border:1px solid var(--glass-border); border-radius:50px; padding:7px 14px; font-size:.68rem; font-weight:700; color:var(--text-secondary); cursor:pointer; transition:all .3s; letter-spacing:1px; text-transform:uppercase; display:flex; align-items:center; gap:6px; }
+.filter-chip:hover,.filter-chip.active { border-color:rgba(212,175,55,.5); color:#d4af37; background:rgba(212,175,55,.08); }
+.filter-chip i { font-size:.75rem; }
+
+/* ===== LEADERBOARD ===== */
+.leaderboard { position:fixed; bottom:35px; left:150px; z-index:49; background:var(--glass-bg); backdrop-filter:var(--glass-blur); border:1px solid var(--glass-border); border-radius:14px; padding:16px 20px; width:240px; box-shadow:var(--glass-shadow); display:none; }
+.leaderboard.open { display:block; }
+.lb-title { font-size:.65rem; color:#d4af37; letter-spacing:2px; text-transform:uppercase; font-weight:700; margin-bottom:10px; }
+.lb-row { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+.lb-rank { font-family:'Playfair Display',serif; font-size:.85rem; color:#d4af37; font-weight:700; width:18px; }
+.lb-city { font-size:.75rem; color:var(--text-primary); font-weight:600; flex:1; }
+.lb-bar-wrap { width:60px; height:6px; background:rgba(255,255,255,.06); border-radius:4px; overflow:hidden; }
+.lb-bar { height:100%; background:linear-gradient(90deg,#d4af37,#f0d060); border-radius:4px; transition:width 1s ease; }
+.lb-count { font-size:.65rem; color:var(--text-secondary); width:20px; text-align:right; }
+
+/* ===== TOUR OVERLAY ===== */
+.tour-overlay { position:fixed; bottom:120px; left:50%; transform:translateX(-50%); z-index:55; text-align:center; pointer-events:none; opacity:0; transition:opacity .8s; }
+.tour-overlay.show { opacity:1; }
+.tour-name { font-family:'Playfair Display',serif; font-size:1.8rem; color:#d4af37; font-weight:700; text-shadow:0 4px 15px rgba(0,0,0,.8); }
+.tour-city { font-size:.8rem; color:var(--text-secondary); letter-spacing:2px; margin-top:4px; }
+
+/* ===== TOOLTIP ===== */
+.globe-tooltip { background:rgba(5,10,8,.92)!important; backdrop-filter:blur(20px)!important; border:1px solid rgba(212,175,55,.3)!important; border-radius:14px!important; padding:14px 18px!important; pointer-events:none; }
+.tt-name { font-family:'Playfair Display',serif; font-size:1.1rem; color:#d4af37; margin-bottom:4px; font-weight:700; }
+.tt-loc { font-size:.75rem; color:#ccc; }
+
+/* ===== DESKTOP SIDEBAR ADJUSTMENTS ===== */
+.radar-hud, .filter-panel, .leaderboard { transition: left 0.8s var(--awwwards-ease), bottom 0.8s var(--awwwards-ease), top 0.8s var(--awwwards-ease); }
+body.sidebar-closed .radar-hud,
+body.sidebar-closed .filter-panel,
+body.sidebar-closed .leaderboard { left: 40px; }
+
+/* ===== MOBILE APP-LIKE EXPERIENCE ===== */
+@media(max-width:768px) {
+    /* Search Bar ke atas penuh */
+    .search-pill { top:20px; width:calc(100vw - 40px); }
+    .search-results { top:70px; width:calc(100vw - 40px); }
+
+    /* HUD jadi pill horizontal kecil di bawah search */
+    .radar-hud { top:75px; left:20px; right:20px; display:flex; justify-content:space-between; align-items:center; background:var(--glass-bg); backdrop-filter:var(--glass-blur); border:1px solid var(--glass-border); padding:10px 15px; border-radius:15px; }
+    .hud-title { font-size:1.1rem; margin:0; }
+    .hud-subtitle { display:none; }
+    .stats-panel { margin-top:0; gap:10px; }
+    .stat-box { border:none; padding:0; background:transparent; box-shadow:none; text-align:right; }
+    .stat-num { font-size:1.1rem; }
+    .stat-label { font-size:.5rem; }
+    #sFar, #sArea { display:none; }
+
+    /* Drawer Info dari bawah (Bottom Sheet) */
+    .info-drawer { top:auto; bottom:-100vh; right:0; width:100vw; max-width:100vw; height:auto; max-height:85vh; border-left:none; border-top:1px solid var(--glass-border); border-radius:25px 25px 0 0; transition:bottom .5s cubic-bezier(.16,1,.3,1); }
+    .info-drawer.open { right:0; bottom:0; z-index: 10000; }
+    .id-close { top:15px; background:rgba(255,255,255,0.1); border-radius:50%; width:30px; height:30px; display:flex; align-items:center; justify-content:center; }
+    .id-header { padding:30px 20px 15px; }
+    .id-avatar { width:70px; height:70px; }
+    .id-name { font-size:1.3rem; }
+    
+    /* Control Bar bawah seperti Native App */
+    .radar-controls { right:20px; left:20px; flex-direction:row; justify-content:center; gap:8px; background:var(--glass-bg); backdrop-filter:var(--glass-blur); padding:10px; border-radius:50px; border:1px solid var(--glass-border); transition: bottom 0.8s var(--awwwards-ease); }
+    .btn-radar { font-size:.65rem; padding:8px 12px; border:none; box-shadow:none; flex:1; justify-content:center; }
+    .btn-radar-gold { background:rgba(212,175,55,.15); }
+    .btn-radar-glass { background:transparent; }
+    .sync-status { position:absolute; top:-25px; right:10px; text-align:right; }
+    
+    /* Map Dropdown menu naik ke atas */
+    .map-dropdown { bottom:120%; margin-bottom:15px; left:0; right:0; }
+    
+    /* Filter Panel dipindah ke atas map controls */
+    .filter-panel { left:50%; transform:translateX(-50%); width:max-content; background:var(--glass-bg); backdrop-filter:var(--glass-blur); border-radius:50px; padding:5px; border:1px solid var(--glass-border); justify-content:center; transition: bottom 0.8s var(--awwwards-ease); }
+    .filter-chip { padding:6px 12px; font-size:.6rem; border:none; background:transparent; }
+    .filter-chip.active { background:rgba(212,175,55,.2); border-radius:50px; }
+
+    /* Leaderboard di tengah layar sebagai Modal */
+    .leaderboard { left:50%; transform:translate(-50%, -50%); bottom:auto; z-index:200; width:85vw; max-width:320px; transition: top 0.8s var(--awwwards-ease); }
+    
+    .tour-overlay { width:90%; transition: bottom 0.8s var(--awwwards-ease); }
+    .tour-name { font-size:1.4rem; }
+
+    /* --- PENGHINDARAN TABRAKAN DENGAN SIDEBAR MOBILE --- */
+    
+    /* 1. Jika Sidebar DIBUKA (Default Mobile) */
+    body:not(.sidebar-closed) .radar-controls { bottom: 110px; } /* Di atas sidebar */
+    body:not(.sidebar-closed) .filter-panel { bottom: 165px; }
+    body:not(.sidebar-closed) .leaderboard { top: 40%; } /* Naik sedikit */
+    body:not(.sidebar-closed) .tour-overlay { bottom: 210px; }
+    body:not(.sidebar-closed) .aegis-toast { bottom: 110px !important; }
+
+    /* 2. Jika Sidebar DITUTUP (Oleh User) */
+    body.sidebar-closed .radar-controls { bottom: 45px; } /* Hindari tombol menu-toggle bulat di bawah */
+    body.sidebar-closed .filter-panel { bottom: 100px; }
+    body.sidebar-closed .leaderboard { top: 50%; } /* Ke tengah layar */
+    body.sidebar-closed .tour-overlay { bottom: 145px; }
+    body.sidebar-closed .aegis-toast { bottom: 45px !important; }
+    
+    /* Kembalikan offset left ke normal saat sidebar tutup di mobile, karena pakai margin auto/center */
+    body.sidebar-closed .filter-panel, body.sidebar-closed .leaderboard { left: 50%; }
+}
+</style>
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
-<div class="radar-container">
-    <div id="globeViz"></div>
+<!-- 1. CINEMATIC LOADING -->
+<div id="radarLoading">
+    <div class="rl-ring"></div>
+    <div class="rl-txt">Jaringan Silaturahmi</div>
+    <div class="rl-sub">Menghubungkan titik-titik persaudaraan...</div>
+</div>
 
-    <div class="scanner-overlay" id="scannerOverlay">
-        <div class="scanner-line" id="scannerLine"></div>
-    </div>
-    <div class="flash-bang" id="flashBang"></div>
+<!-- STAR FIELD -->
+<canvas id="starField"></canvas>
 
-    <div class="radar-hud">
-        <h1 class="hud-title">Global Radar</h1>
-        <div class="hud-subtitle">Persebaran Alumni di Seluruh Dunia</div>
-        <div class="stats-panel">
-            <div class="stat-box">
-                <div class="stat-num" id="totalAgents"><?= count($alumni_nodes) > 0 ? count($alumni_nodes) - 1 : 0 ?></div>
-                <div class="stat-label">Alumni Tercatat</div>
-            </div>
-            <div class="stat-box" style="border-left-color: #00ff88;">
-                <div class="stat-num" id="livePingCount">ON</div>
-                <div class="stat-label">Status Peta</div>
-            </div>
-        </div>
-    </div>
+<!-- GLOBE -->
+<div id="globeViz"></div>
 
-    <div class="scanner-controls">
-        <button class="btn-scan hover-trigger" id="btnScanGPS">
-            <i class="fa-solid fa-satellite-dish"></i> Sinkronisasi Lokasi Saya
-            <div class="ping-dot"></div>
-        </button>
-        <div class="scan-status" id="scanStatus">Menunggu izin lokasi...</div>
-        
-        <button class="btn-flat hover-trigger" id="btnGoFlat">
-            <i class="fa-solid fa-map"></i> Beralih ke Peta Datar (2D)
-        </button>
+<!-- 3. SEARCH -->
+<div class="search-pill">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input type="text" id="searchInput" placeholder="Cari nama alumni..." autocomplete="off">
+</div>
+<div class="search-results" id="searchResults"></div>
+
+<!-- HUD -->
+<div class="radar-hud">
+    <div class="hud-title">Jaringan Silaturahmi <span class="status-dot"></span></div>
+    <div class="hud-subtitle">Persebaran Alumni Global</div>
+    <div class="stats-panel">
+        <div class="stat-box"><div class="stat-num" id="sTotal">0</div><div class="stat-label">Total</div></div>
+        <div class="stat-box"><div class="stat-num" id="sArea">0</div><div class="stat-label">Area</div></div>
+        <div class="stat-box"><div class="stat-num" id="sFar">0</div><div class="stat-label">KM Terjauh</div></div>
     </div>
 </div>
-<?= $this->endSection() ?>
 
-<?= $this->section('scripts') ?>
-<script src="https://unpkg.com/globe.gl"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script> <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        
-        let alumniData = <?= json_encode($alumni_nodes) ?>;
-        let centerNode = alumniData.find(n => n.type === 'center');
-        let agentNodes = alumniData.filter(n => n.type === 'agent');
+<!-- TOUR NAME OVERLAY -->
+<div class="tour-overlay" id="tourOverlay">
+    <div class="tour-name" id="tourName"></div>
+    <div class="tour-city" id="tourCity"></div>
+</div>
 
-        let arcData = agentNodes.map(agent => ({
-            startLat: centerNode.lat, startLng: centerNode.lng,
-            endLat: agent.lat, endLng: agent.lng,
-            color: ['rgba(212,175,55,0.0)', 'rgba(212,175,55,1)'] // Gradasi untuk efek ekor komet
-        }));
+<!-- 8. FILTER -->
+<div class="filter-panel" id="filterPanel">
+    <div class="filter-chip active" data-filter="all"><i class="fa-solid fa-globe"></i> Semua</div>
+    <div class="filter-chip" data-filter="L"><i class="fa-solid fa-mars"></i> Ikhwan</div>
+    <div class="filter-chip" data-filter="P"><i class="fa-solid fa-venus"></i> Akhwat</div>
+    <div class="filter-chip" data-filter="lb"><i class="fa-solid fa-trophy"></i> Leaderboard</div>
+</div>
 
-        const isMobile = window.innerWidth <= 768;
-        const defaultAltitude = isMobile ? 3.5 : 2.2;
-        const elem = document.getElementById('globeViz');
-        
-        const getGlobeTexture = () => document.documentElement.getAttribute('data-theme') === 'light' 
-            ? '//unpkg.com/three-globe/example/img/earth-day.jpg' 
-            : '//unpkg.com/three-globe/example/img/earth-night.jpg';
+<!-- 12. LEADERBOARD -->
+<div class="leaderboard" id="leaderboard">
+    <div class="lb-title"><i class="fa-solid fa-trophy" style="margin-right:6px;"></i>Top 5 Kota</div>
+    <div id="lbContent"></div>
+</div>
 
-        const getAtmosphereColor = () => document.documentElement.getAttribute('data-theme') === 'light' 
-            ? '#b08d85' 
-            : '#d4af37'; 
+<!-- CONTROLS -->
+<div class="radar-controls">
+    <button class="btn-radar btn-radar-gold" id="btnSyncLocation"><i class="fa-solid fa-location-crosshairs"></i> Perbarui Domisili</button>
+    <button class="btn-radar btn-radar-glass" id="btnAutoTour"><i class="fa-solid fa-plane-departure"></i> Jelajahi Jaringan</button>
+    <div class="sync-status" id="syncStatus"></div>
+    <!-- 6. MAP DROPDOWN -->
+    <div class="map-dropdown-wrap">
+        <button class="btn-radar btn-radar-glass" id="btnMapMenu"><i class="fa-solid fa-layer-group"></i> Pilih Peta</button>
+        <div class="map-dropdown" id="mapDropdown">
+            <a href="/radar/flat"><i class="fa-solid fa-map"></i> Peta Datar</a>
+            <a href="/radar/satellite"><i class="fa-solid fa-satellite"></i> Peta Satelit</a>
+            <a href="/radar/terrain"><i class="fa-solid fa-mountain-sun"></i> Peta Terrain</a>
+            <a href="/radar/dark"><i class="fa-solid fa-moon"></i> Peta Gelap</a>
+            <a href="/radar/watercolor"><i class="fa-solid fa-map-location-dot"></i> Peta Google</a>
+            <a href="/radar/classic"><i class="fa-solid fa-signs-post"></i> Peta Klasik</a>
+        </div>
+    </div>
+</div>
 
-        // INISIALISASI BUMI BERSAMA ATMOSFER & COMET TRAILS
-        const world = Globe()(elem)
-            .globeImageUrl(getGlobeTexture())
-            .bumpImageUrl('//unpkg.com/three-globe/example/img/earth-topology.png')
-            .backgroundColor('rgba(0,0,0,0)') 
-            .showAtmosphere(true)           
-            .atmosphereColor(getAtmosphereColor())
-            .atmosphereAltitude(0.15)
-            .arcsData(arcData)
-            .arcColor('color')
-            .arcDashLength(0.15)            
-            .arcDashGap(2)                  
-            .arcDashInitialGap(() => Math.random() * 5)
-            .arcDashAnimateTime(2000)       
-            .arcStroke(1.2)
-            .ringsData(alumniData)
-            .ringColor(d => d.type === 'center' ? t => `rgba(0,255,136,${1-t})` : t => `rgba(212,175,55,${1-t})`)
-            .ringMaxRadius(d => d.type === 'center' ? 5 : 3)
-            .ringPropagationSpeed(d => d.type === 'center' ? 2 : 1)
-            .ringRepeatPeriod(d => d.type === 'center' ? 800 : 1500)
-            .labelsData(alumniData)
-            .labelLat(d => d.lat)
-            .labelLng(d => d.lng)
-            .labelText(d => '') 
-            .labelSize(1.5)
-            .labelDotRadius(0.5)
-            .labelColor(d => d.type === 'center' ? '#00ff88' : '#d4af37')
-            .labelResolution(2)
-            .labelLabel(d => `
-                <div class="tt-name">${d.name}</div>
-                <div class="tt-loc"><i class="fa-solid fa-location-dot"></i> ${d.city}</div>
-                <div style="font-size:0.7rem; color:#777; margin-top:5px; font-family:monospace;">
-                    LAT: ${d.lat.toFixed(4)} | LNG: ${d.lng.toFixed(4)}
-                </div>
-            `);
+<!-- 2. INFO DRAWER -->
+<div class="id-overlay" id="idOverlay"></div>
+<div class="info-drawer" id="infoDrawer">
+    <button class="id-close" id="idClose"><i class="fa-solid fa-xmark"></i></button>
+    <div class="id-header">
+        <img id="idAvatar" class="id-avatar" src="/images/default-avatar.jpg" alt="">
+        <div class="id-name" id="idName"></div>
+        <div class="id-nick" id="idNick"></div>
+    </div>
+    <div class="id-body">
+        <div class="id-row"><i class="fa-solid fa-location-dot"></i><div><div class="id-row-label">Domisili</div><div class="id-row-val" id="idCity"></div></div></div>
+        <div class="id-row"><i class="fa-solid fa-venus-mars"></i><div><div class="id-row-label">Gender</div><div class="id-row-val" id="idGender"></div></div></div>
+        <div class="id-row"><i class="fa-solid fa-ruler"></i><div><div class="id-row-label">Jarak dari Pondok</div><div class="id-row-val" id="idDist"></div></div></div>
+    </div>
+    <div class="id-actions">
+        <a class="id-btn id-btn-wa" id="idWa" href="#" target="_blank"><i class="fa-brands fa-whatsapp"></i> Hubungi via WhatsApp</a>
+        <a class="id-btn id-btn-profile" id="idProfile" href="#"><i class="fa-solid fa-user"></i> Lihat Profil</a>
+    </div>
+</div>
 
-        if(centerNode) {
-            world.pointOfView({ lat: centerNode.lat, lng: centerNode.lng, altitude: 0.1 });
-            setTimeout(() => {
-                world.pointOfView({ lat: centerNode.lat - (isMobile ? 0 : 10), lng: centerNode.lng, altitude: defaultAltitude }, 4000);
-            }, 800);
-        }
-        
-        world.controls().autoRotate = true;
-        world.controls().autoRotateSpeed = 0.5;
-        world.controls().minDistance = 10; 
-
-        window.addEventListener('resize', () => {
-            world.width([window.innerWidth]);
-            world.height([window.innerHeight]);
-        });
-
-        // SENSOR MUTASI TEMA
-        const themeObserver = new MutationObserver(() => {
-            world.globeImageUrl(getGlobeTexture()); 
-            world.atmosphereColor(getAtmosphereColor());
-        });
-        themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
-
-        // Tombol Peta Datar
-        document.getElementById('btnGoFlat').addEventListener('click', () => {
-            document.body.style.opacity = '0';
-            document.body.style.transition = 'opacity 0.5s ease';
-            setTimeout(() => { window.location.href = '<?= base_url('radar/flat') ?>'; }, 500);
-        });
-
-        // =========================================================
-        // PROSES SINKRONISASI LOKASI
-        // =========================================================
-        const btnScan = document.getElementById('btnScanGPS');
-        const scanStatus = document.getElementById('scanStatus');
-        const totalAgentsCounter = document.getElementById('totalAgents');
-        const scannerOverlay = document.getElementById('scannerOverlay');
-        const scannerLine = document.getElementById('scannerLine');
-        let isScanning = false;
-
-        const stopScanner = (message, isError = true) => {
-            scanStatus.innerText = message;
-            scanStatus.style.color = isError ? "#ff3366" : "#00ff88";
-            btnScan.innerHTML = isError ? '<i class="fa-solid fa-triangle-exclamation"></i> Proses Gagal' : '<i class="fa-solid fa-check-double"></i> Tersinkronisasi';
-            gsap.to(scannerOverlay, { opacity: 0, duration: 0.3, onComplete: () => scannerOverlay.style.display = 'none' });
-            isScanning = false;
-        };
-
-        btnScan.addEventListener('click', () => {
-            if(isScanning) return;
-            isScanning = true;
-
-            if (navigator.vibrate) navigator.vibrate(20);
-            btnScan.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Mencari Lokasi...';
-            scanStatus.style.opacity = 1;
-            scanStatus.innerText = "Meminta Izin Akses Lokasi Perangkat...";
-            scanStatus.style.color = "#d4af37";
-
-            scannerOverlay.style.display = 'block';
-            gsap.to(scannerOverlay, { opacity: 1, duration: 0.3 });
-            
-            let scanAnim = gsap.fromTo(scannerLine, 
-                { y: -10 }, 
-                { y: window.innerHeight, duration: 1.5, ease: "linear", repeat: -1 }
-            );
-
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                        const userLat = position.coords.latitude;
-                        const userLng = position.coords.longitude;
-                        scanStatus.innerText = "Menyelaraskan Titik Koordinat...";
-                        
-                        // Menambahkan email agar patuh aturan Nominatim API dan tidak kena ban
-                        fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${userLat}&lon=${userLng}&zoom=10&addressdetails=1&email=<?= $nominatim_email ?? 'admin@expedient.com' ?>`)
-                        .then(res => res.json())
-                        .then(geoData => {
-                            const realCity = geoData.address.city || geoData.address.town || geoData.address.county || geoData.address.state || "Lokasi Anda";
-                            
-                            // MENGGUNAKAN CSRF TOKEN UNTUK KEAMANAN
-                            fetch('<?= base_url('api/location/update') ?>', {
-                                method: 'POST',
-                                headers: { 
-                                    'Content-Type': 'application/json', 
-                                    'X-Requested-With': 'XMLHttpRequest',
-                                    'X-CSRF-TOKEN': '<?= csrf_hash() ?>' 
-                                },
-                                body: JSON.stringify({ lat: userLat, lng: userLng })
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                if(data.status === 'success') {
-                                    scanAnim.kill();
-                                    stopScanner(`LOKASI DITEMUKAN DI: ${realCity.toUpperCase()}`, false);
-                                    
-                                    if (navigator.vibrate) navigator.vibrate([50, 100, 50]);
-
-                                    btnScan.innerHTML = '<i class="fa-solid fa-location-dot"></i> ' + realCity;
-                                    btnScan.style.background = 'rgba(0, 255, 136, 0.2)';
-                                    btnScan.style.borderColor = '#00ff88';
-                                    btnScan.style.color = '#fff';
-                                    btnScan.style.boxShadow = '0 10px 30px rgba(0, 255, 136, 0.4)';
-
-                                    world.controls().autoRotate = false;
-                                    world.pointOfView({ lat: userLat, lng: userLng, altitude: 0.4 }, 3000);
-
-                                    const newMeNode = { name: "Anda (Perangkat Ini)", city: realCity, lat: userLat, lng: userLng, type: 'agent' };
-                                    const newArc = { startLat: centerNode.lat, startLng: centerNode.lng, endLat: userLat, endLng: userLng, color: ['rgba(212,175,55,0.0)', 'rgba(0, 255, 136, 1)'] };
-
-                                    world.labelsData([...world.labelsData(), newMeNode]);
-                                    world.ringsData([...world.ringsData(), newMeNode]);
-                                    world.arcsData([...world.arcsData(), newArc]);
-                                    
-                                    let currentTotal = parseInt(totalAgentsCounter.innerText);
-                                    totalAgentsCounter.innerText = currentTotal + 1;
-                                } else {
-                                    scanAnim.kill();
-                                    stopScanner("GAGAL MENYIMPAN KE DATABASE LOKAL.", true);
-                                }
-                            })
-                            .catch(err => {
-                                scanAnim.kill();
-                                stopScanner("SERVER INTERNAL TIDAK MERESPONS.", true);
-                            });
-                        })
-                        .catch(err => {
-                            scanAnim.kill();
-                            stopScanner("API PETA (NOMINATIM) SIBUK / ERROR.", true);
-                        });
-                    },
-                    (error) => {
-                        scanAnim.kill();
-                        stopScanner("IZIN DITOLAK ATAU GPS TIDAK AKTIF.", true);
-                    },
-                    { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
-                );
-            } else {
-                stopScanner("BROWSER TIDAK MENDUKUNG GEOLOCATION.", true);
-            }
-        });
-    });
+<script>
+    window.__radarData = <?= json_encode($alumni_nodes) ?>;
+    window.__pusherKey = '<?= env('PUSHER_APP_KEY') ?>';
+    window.__pusherCluster = '<?= env('PUSHER_APP_CLUSTER') ?>';
 </script>
+<script src="https://cdn.jsdelivr.net/npm/globe.gl"></script>
+<script src="/vendor/pusher/pusher.min.js"></script>
+<script src="/assets/js/radar-globe.js"></script>
 <?= $this->endSection() ?>

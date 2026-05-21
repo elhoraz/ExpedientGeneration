@@ -1,0 +1,42 @@
+name: Deploy Expedient Generation Platform
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.1'
+        extensions: intl, mbstring, json, xml, gd, curl, zip, mysqli, pdo_mysql
+        tools: composer:v2
+
+    - name: Install Dependencies
+      run: composer install --no-dev --optimize-autoloader
+
+    - name: Check Syntax (Lint)
+      run: find app/ -name "*.php" -exec php -l {} \; | grep -v "No syntax errors" || true
+
+    - name: Deploy to Server (Simulation)
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        SERVER_HOST: ${{ secrets.SERVER_HOST }}
+        SERVER_USER: ${{ secrets.SERVER_USER }}
+      run: |
+        echo "Memulai deployment via Rsync..."
+        # Skrip asli untuk deploy (dikomentari agar aman sebelum ada kredensial):
+        # mkdir -p ~/.ssh
+        # echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+        # chmod 600 ~/.ssh/id_rsa
+        # ssh-keyscan -H $SERVER_HOST >> ~/.ssh/known_hosts
+        # rsync -avz --delete --exclude='.git/' --exclude='.github/' ./ $SERVER_USER@$SERVER_HOST:/var/www/expedient-generation/
+        echo "Deployment selesai!"

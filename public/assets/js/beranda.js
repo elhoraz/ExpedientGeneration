@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+﻿document.addEventListener("DOMContentLoaded", () => {
         gsap.config({ force3D: true });
         gsap.registerPlugin(ScrollTrigger);
 
@@ -81,7 +81,10 @@ document.addEventListener("DOMContentLoaded", () => {
             const cw = stage ? stage.offsetWidth : window.innerWidth;
             const ch = stage ? stage.offsetHeight : window.innerHeight;
 
-            for(let i=0; i<236; i++) {
+            const isMobile = window.innerWidth <= 768;
+            const particleCount = isMobile ? 50 : 150;
+
+            for(let i=0; i<particleCount; i++) {
                 let r = Math.random() * 180 + 80;
                 let g = Math.random() * 0.5 + 0.2;
                 let s = Math.random() * 0.015 + 0.005;
@@ -132,8 +135,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 p.offsetX += (0 - p.offsetX) * 0.05;
                 p.offsetY += (0 - p.offsetY) * 0.05;
 
-                let drawX = targetX + p.offsetX;
-                let drawY = targetY + p.offsetY;
+                let drawX = Math.floor(targetX + p.offsetX);
+                let drawY = Math.floor(targetY + p.offsetY);
 
                 ctxConstel.beginPath();
                 ctxConstel.arc(drawX, drawY, p.size, 0, Math.PI*2);
@@ -144,23 +147,16 @@ document.addEventListener("DOMContentLoaded", () => {
                     let shimmer = Math.sin(time / 150 + p.angle) * 0.5 + 0.5;
                     let alpha = (0.5 + shimmer * 0.5) * glowRatio;
                     ctxConstel.fillStyle = `rgba(255, 215, 0, ${alpha})`;
-                    ctxConstel.shadowBlur = (10 + shimmer * 15) * glowRatio;
-                    ctxConstel.shadowColor = `rgba(255, 215, 0, ${alpha})`;
                 } else {
                     let alpha = p.glow + (0.3 * glowRatio);
                     ctxConstel.fillStyle = `rgba(212, 175, 55, ${alpha})`;
-                    ctxConstel.shadowBlur = 10 * glowRatio;
-                    ctxConstel.shadowColor = '#d4af37';
                 }
                 ctxConstel.fill();
-                ctxConstel.shadowBlur = 0; 
             });
 
             // 2. Render Garis Konstelasi Dinamis (Super Duper Upgrade)
             if(isScattered || isAnimating) {
                 ctxConstel.strokeStyle = isLight ? 'rgba(212, 175, 55, 0.4)' : 'rgba(212, 175, 55, 0.3)';
-                ctxConstel.shadowBlur = 8;
-                ctxConstel.shadowColor = '#d4af37';
                 ctxConstel.lineWidth = 1.5; 
                 ctxConstel.lineJoin = "round";
                 ctxConstel.beginPath();
@@ -177,23 +173,22 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
 
                 dynamicPositions.forEach((pos, i) => {
-                    ctxConstel.moveTo(cx, cy); 
-                    ctxConstel.lineTo(pos.x, pos.y);
+                    ctxConstel.moveTo(Math.floor(cx), Math.floor(cy)); 
+                    ctxConstel.lineTo(Math.floor(pos.x), Math.floor(pos.y));
                     if(i > 0) {
                         const prev = dynamicPositions[i-1];
-                        ctxConstel.moveTo(prev.x, prev.y); 
-                        ctxConstel.lineTo(pos.x, pos.y);
+                        ctxConstel.moveTo(Math.floor(prev.x), Math.floor(prev.y)); 
+                        ctxConstel.lineTo(Math.floor(pos.x), Math.floor(pos.y));
                     }
                 });
                 
                 if(dynamicPositions.length > 1) {
                     const first = dynamicPositions[0]; 
                     const last = dynamicPositions[dynamicPositions.length-1];
-                    ctxConstel.moveTo(last.x, last.y); 
-                    ctxConstel.lineTo(first.x, first.y);
+                    ctxConstel.moveTo(Math.floor(last.x), Math.floor(last.y)); 
+                    ctxConstel.lineTo(Math.floor(first.x), Math.floor(first.y));
                 }
                 ctxConstel.stroke();
-                ctxConstel.shadowBlur = 0; // Reset
             }
         };
 
@@ -241,7 +236,10 @@ document.addEventListener("DOMContentLoaded", () => {
             shard.tx = layout.coords[i].tx; shard.ty = layout.coords[i].ty; shard.scale = layout.scale; 
         });
 
+        let lastWidth = window.innerWidth;
         window.addEventListener('resize', () => {
+            if (window.innerWidth === lastWidth) return; // FIX MOBILE GLITCH: Only resize if width changes
+            lastWidth = window.innerWidth;
             layout = getLayoutConfig();
             assetsData.shards.forEach((shard, i) => { shard.tx = layout.coords[i].tx; shard.ty = layout.coords[i].ty; shard.scale = layout.scale; });
             if (isScattered && !isAnimating) {
@@ -260,37 +258,45 @@ document.addEventListener("DOMContentLoaded", () => {
         let loadedImages = 0;
 
         const lores = [
-            '"Menghimpun kepingan sejarah..."',
-            '"Merangkai pecahan memori angkatan..."',
-            '"Membangkitkan proyeksi Sovereign..."',
-            '"Meresonansi energi Expedient..."',
-            '"Menyelaraskan frekuensi masa lalu dan masa depan..."',
-            '"Ruang pameran hampir siap dibuka..."'
+            '"Dan bersabarlah kamu bersama-sama dengan orang-orang yang menyeru Tuhannya di pagi dan senja hari..." (Al-Kahfi: 28)',
+            '"Niscaya Allah akan meninggikan orang-orang yang beriman di antaramu dan orang-orang yang diberi ilmu pengetahuan..." (Al-Mujadilah: 11)',
+            '"Dan berpeganglah kamu semuanya kepada tali (agama) Allah, dan janganlah kamu bercerai berai..." (Ali Imran: 103)',
+            '"Maka sesungguhnya sesudah kesulitan itu ada kemudahan..." (Al-Insyirah: 5)',
+            '"Bukanlah golongan kami orang yang tidak menyayangi yang muda dan tidak menghormati yang tua." (HR. Tirmidzi)'
         ];
 
+        let currentLoreIndex = -1;
+        const loreInterval = setInterval(() => {
+            const loreEl = document.getElementById('loaderLore');
+            if (loreEl) {
+                currentLoreIndex = (currentLoreIndex + 1) % lores.length;
+                loreEl.style.opacity = '0';
+                setTimeout(() => {
+                    loreEl.innerText = lores[currentLoreIndex];
+                    loreEl.style.opacity = '1';
+                }, 500);
+            }
+        }, 4000);
+
+        let currentDisplayPct = 0;
         const updateProgress = () => {
             loadedImages++;
             const pct = Math.floor((loadedImages / totalImagesToLoad) * 100);
             
             const percentEl = document.getElementById('loadPercent');
-            const barEl = document.getElementById('loadBar');
-            const loreEl = document.getElementById('loaderLore');
-            
-            if (percentEl) percentEl.innerText = pct + '%'; 
-            if (barEl) barEl.style.width = pct + '%';
-            
-            if (loreEl) {
-                const loreIndex = Math.min(Math.floor(pct / 20), lores.length - 1);
-                if (loreEl.innerText !== lores[loreIndex]) {
-                    loreEl.style.opacity = '0';
-                    setTimeout(() => {
-                        loreEl.innerText = lores[loreIndex];
-                        loreEl.style.opacity = '1';
-                    }, 300);
-                }
+            if (percentEl && pct > currentDisplayPct) {
+                gsap.to({ val: currentDisplayPct }, {
+                    val: pct,
+                    duration: 0.3,
+                    onUpdate: function() {
+                        percentEl.innerText = Math.floor(this.targets()[0].val) + '%';
+                    }
+                });
+                currentDisplayPct = pct;
             }
 
             if(loadedImages === totalImagesToLoad) {
+                clearInterval(loreInterval);
                 setTimeout(() => {
                     gsap.to('#loader', { duration: 0.5, opacity: 0, onComplete: () => {
                         document.getElementById('loader').style.display = 'none';
@@ -316,7 +322,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const wrap = document.createElement('div'); wrap.className = 'shard-wrapper hover-trigger cursor-bind'; wrap.id = `shardWrap_${shard.id}`;
                 const c = document.createElement('canvas'); c.width = 800; c.height = 450; c.className = 'shard-canvas'; c.id = `shardCanvas_${shard.id}`;
                 
-                const ctx = c.getContext('2d', { willReadFrequently: true });
+                const ctx = c.getContext('2d');
                 shardCanvases.push({ ctx: ctx, images: shard.images, id: shard.id });
                 const statImg = document.createElement('img'); statImg.src = shard.static; statImg.className = 'shard-static'; statImg.id = `shardStatic_${shard.id}`;
                 wrap.appendChild(c); wrap.appendChild(statImg); container.appendChild(wrap);
@@ -357,6 +363,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
         preloadImages();
 
+        // SAFETY NET: Force-dismiss loader after 15 seconds
+        setTimeout(() => {
+            const loader = document.getElementById('loader');
+            if (loader && loader.style.display !== 'none') {
+                clearInterval(loreInterval);
+                gsap.to('#loader', { duration: 0.5, opacity: 0, onComplete: () => {
+                    loader.style.display = 'none';
+                    gsap.set('#fullLogoBox', { scale: layout.scale * 1.5 }); isPlaying = true;
+                }});
+            }
+        }, 15000);
+
         const monuText = document.getElementById('monumentalText');
         const godRays = document.getElementById('godRays');
 
@@ -367,9 +385,7 @@ document.addEventListener("DOMContentLoaded", () => {
         };
 
         window.addEventListener('mousemove', (e) => { if(window.innerWidth > 768) { applyParallax((e.clientX / window.innerWidth - 0.5) * 2, (e.clientY / window.innerHeight - 0.5) * 2); } });
-        // MATIKAN GYROSCOPE PADA MOBILE UNTUK MENCEGAH GPU OVERLOAD & LAG
-        // window.addEventListener('deviceorientation', ...);
-
+        
         // =========================================================
         // SAFE RENDER ENGINE (PERBAIKAN CANVAS CRASH DOMException)
         // =========================================================
@@ -377,7 +393,6 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!isScattered) {
                 const fIdx = Math.floor(frameData.full);
                 const img = assetsData.full.images[fIdx];
-                // Wajib cek naturalWidth untuk menghindari crash dari frame yg gagal dimuat (broken image)
                 if(img && img.complete && img.naturalWidth !== 0) { 
                     ctxFull.clearRect(0, 0, canvasFull.width, canvasFull.height);
                     ctxFull.drawImage(img, 0, 0, canvasFull.width, canvasFull.height); 
@@ -394,6 +409,15 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         };
 
+        let isStageVisible = true;
+        const stageObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                isStageVisible = entry.isIntersecting;
+            });
+        }, { threshold: 0.01 });
+        const stageEl = document.getElementById('stage');
+        if(stageEl) stageObserver.observe(stageEl);
+
         const autoPlayEngine = () => {
             if (!isPlaying) return; let needsRender = false;
             if (!isScattered) {
@@ -403,7 +427,12 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             if (needsRender || draggedItem !== null) { renderCurrentFrame(); }
         };
-        gsap.ticker.add(() => { autoPlayEngine(); drawConstellation(); });
+        gsap.ticker.add(() => { 
+            if (isStageVisible) {
+                autoPlayEngine(); 
+                drawConstellation(); 
+            }
+        });
 
         let draggedItem = null; let hasDragged = false; let startX = 0; let lastX = 0; let frameAtDragStart = 0; let lastTickTime = 0; 
 
@@ -920,3 +949,23 @@ document.addEventListener("DOMContentLoaded", () => {
         window.addEventListener('touchmove', onMove, {passive: false});
         window.addEventListener('touchend', onEnd);
     }
+
+// Birthday Toast Logic
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+        const toast = document.getElementById('bdayToast');
+        if(toast) {
+            toast.style.transform = 'translateX(-50%) translateY(0)';
+            toast.style.opacity = '1';
+        }
+    }, 3000);
+});
+
+function closeBdayToast() {
+    const toast = document.getElementById('bdayToast');
+    if(toast) {
+        toast.style.transform = 'translateX(-50%) translateY(150px)';
+        toast.style.opacity = '0';
+        setTimeout(() => toast.style.display = 'none', 800);
+    }
+}

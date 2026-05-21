@@ -277,6 +277,7 @@ Tarbiyah Nexus - Mentorship & B2B Halal Ecosystem
     <div class="nexus-tabs">
         <button class="tab-btn active" onclick="switchTab('mentorship')">Jaringan Mentorship</button>
         <button class="tab-btn" onclick="switchTab('b2b')">Sovereign B2B & Tender</button>
+        <button class="tab-btn" onclick="switchTab('status')">Status Permohonan Saya</button>
     </div>
 
     <!-- MENTORSHIP TAB -->
@@ -320,6 +321,24 @@ Tarbiyah Nexus - Mentorship & B2B Halal Ecosystem
             </form>
         </div>
         <?php endforeach; ?>
+    </div>
+
+    <!-- STATUS TAB (Hidden by default) -->
+    <div class="nexus-grid" id="status-tab" style="display: none;">
+        <?php if (empty($my_requests)): ?>
+            <div style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 50px;">
+                Belum ada permohonan yang diajukan.
+            </div>
+        <?php else: ?>
+            <?php foreach ($my_requests as $req): ?>
+            <div class="nexus-card" style="border-left: 4px solid <?= $req['status'] == 'Pending' ? '#d4af37' : ($req['status'] == 'Approved' ? '#00ff88' : '#ff3366') ?>">
+                <div class="card-badge"><?= $req['status'] ?></div>
+                <h3 class="card-title"><?= esc($req['target_name']) ?></h3>
+                <div class="card-subtitle">Permohonan: <?= $req['type'] ?></div>
+                <p class="card-desc">Diajukan pada: <?= date('d M Y, H:i', strtotime($req['created_at'])) ?></p>
+            </div>
+            <?php endforeach; ?>
+        <?php endif; ?>
     </div>
 
 </div>

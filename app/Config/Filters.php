@@ -38,6 +38,7 @@ class Filters extends BaseFilters
         'throttle'      => \App\Filters\ThrottleApiFilter::class,
         'admin'         => \App\Filters\AdminFilter::class,
         'track_visit'   => \App\Filters\VisitorTrackingFilter::class,
+        'securityheaders' => \App\Filters\SecurityHeaders::class,
     ];
 
     /**
@@ -55,7 +56,7 @@ class Filters extends BaseFilters
      */
     public array $required = [
         'before' => [
-            // 'forcehttps', // Aktifkan di production (uncomment saat deploy)
+            'forcehttps', // Aktifkan di production (uncomment saat deploy)
             'pagecache',  // Web Page Caching
         ],
         'after' => [
@@ -77,13 +78,14 @@ class Filters extends BaseFilters
     public array $globals = [
         'before' => [
             // 'honeypot',
-            'csrf',
+            'csrf' => ['except' => ['radar/update-location']],
             'track_visit',
             // 'invalidchars',
         ],
         'after' => [
             // 'honeypot',
             // 'secureheaders',
+            'securityheaders',
         ],
     ];
 

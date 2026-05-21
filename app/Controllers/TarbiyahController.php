@@ -11,7 +11,8 @@ class TarbiyahController extends BaseController
     public function index()
     {
         $service = new \App\Services\TarbiyahService();
-        $data = $service->getDashboardData();
+        $userId = session()->get('user_id');
+        $data = $service->getDashboardData($userId);
 
         return view('tarbiyah_nexus', $data);
     }

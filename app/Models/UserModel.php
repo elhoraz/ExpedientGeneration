@@ -26,7 +26,9 @@ class UserModel extends Model
         'face_data', // <--- [BARU] Gerbang Matriks Wajah Face ID
         'reset_password_code', 'reset_password_expires', // <--- [BARU] Forgot Password fields
         'role', // <--- Admin Role
+        'is_active', // <--- Toggle aktif/nonaktif oleh admin
         'prestise_points', // <--- Gamification Score
-        'birth_month_day' // <--- Optimasi query birthday (format MM-DD)
+        'birth_month_day', // <--- Optimasi query birthday (format MM-DD)
+        'remember_token' // <--- Keep Login token
     ];
 }

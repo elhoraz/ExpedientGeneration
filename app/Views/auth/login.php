@@ -374,9 +374,13 @@
                     <i class="fa-solid fa-eye icon-eye" id="togglePw"></i>
                 </div>
                 
-                <div style="text-align:right;margin-top:-10px;margin-bottom:5px;transform:translateZ(25px);">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:-10px; margin-bottom:15px; transform:translateZ(25px);">
+                    <label style="color:var(--text-muted); font-size:clamp(0.7rem,1.3vh,0.8rem); display:flex; align-items:center; gap:5px; cursor:pointer;">
+                        <input type="checkbox" name="remember" style="accent-color:#d4af37; cursor:pointer;">
+                        Ingat Saya
+                    </label>
                     <a href="<?= base_url('auth/forgot-password') ?>" style="color:var(--text-muted);font-size:clamp(0.7rem,1.3vh,0.8rem);text-decoration:none;transition:0.3s;border-bottom:1px solid transparent;" onmouseover="this.style.color='#d4af37';this.style.borderColor='#d4af37'" onmouseout="this.style.color='var(--text-muted)';this.style.borderColor='transparent'">
-                        <i class="fa-solid fa-key" style="font-size:0.65rem;margin-right:4px;"></i>Lupa Kata Sandi?
+                        <i class="fa-solid fa-key" style="font-size:0.65rem;margin-right:4px;"></i>Lupa Sandi?
                     </a>
                 </div>
 
@@ -399,6 +403,10 @@
 
             <div class="register-link">
                 Identitas belum terdaftar? <a href="<?= base_url('auth/register') ?>">Ajukan Registrasi</a>
+            </div>
+            
+            <div class="register-link" style="margin-top: 10px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.05);">
+                <a href="<?= base_url('/') ?>"><i class="fa-solid fa-arrow-left"></i> Kembali ke Gerbang Utama</a>
             </div>
 
         </div>

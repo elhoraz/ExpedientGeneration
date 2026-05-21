@@ -4,9 +4,21 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\BaitulMaalModel;
+use App\Models\UserModel;
 
 class BaitulMaalController extends BaseController
 {
+    /**
+     * Cek apakah user saat ini memiliki hak akses bendahara/admin.
+     */
+    private function canManageFinance(): bool
+    {
+        $userId = session()->get('user_id');
+        if (!$userId) return false;
+        $user = (new UserModel())->find($userId);
+        return $user && in_array($user['role'] ?? '', ['admin', 'bendahara']);
+    }
+
     public function index()
     {
         $baitulMaalModel = new BaitulMaalModel();
@@ -26,12 +38,18 @@ class BaitulMaalController extends BaseController
         $data['saldo_akhir'] = $pemasukan - $pengeluaran;
         $data['total_pemasukan'] = $pemasukan;
         $data['total_pengeluaran'] = $pengeluaran;
+        $data['can_manage'] = $this->canManageFinance();
 
         return view('baitul_maal', $data);
     }
 
     public function store()
     {
+        // OTORISASI: Hanya admin/bendahara yang boleh mencatat transaksi
+        if (!$this->canManageFinance()) {
+            return redirect()->to('/baitul-maal')->with('error', 'Akses ditolak. Hanya Bendahara atau Admin yang dapat mencatat transaksi.');
+        }
+
         $userId = session()->get('user_id');
         
         // ================= VALIDASI INPUT =================
@@ -60,6 +78,13 @@ class BaitulMaalController extends BaseController
             'description'      => $this->request->getPost('description'),
             'created_at'       => date('Y-m-d H:i:s')
         ]);
+
+        $pusher = new \App\Services\PusherService();
+        $pusher->broadcastNotification(
+            'Transaksi Baitul Maal',
+            'Satu transaksi ' . strtolower($this->request->getPost('type')) . ' baru telah dicatat.',
+            '/baitul-maal'
+        );
 
         return redirect()->to('/baitul-maal')->with('success', 'Transaksi tercatat di Ledger Baitul Maal.');
     }

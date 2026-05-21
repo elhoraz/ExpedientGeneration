@@ -86,4 +86,71 @@ class ProfileController extends BaseController
 
         return redirect()->to('/profil')->with('pesan', 'Data entitas berhasil diperbarui!');
     }
+
+    /**
+     * Mengubah kata sandi dari halaman profil.
+     */
+    public function changePassword()
+    {
+        $userId = session()->get('user_id');
+        if (!$userId) return redirect()->to('/login');
+
+        $rules = [
+            'current_password'  => 'required',
+            'new_password'      => 'required|min_length[8]',
+            'confirm_password'  => 'required|matches[new_password]'
+        ];
+
+        $messages = [
+            'new_password' => [
+                'min_length' => 'Kata sandi baru minimal 8 karakter.'
+            ],
+            'confirm_password' => [
+                'matches' => 'Konfirmasi kata sandi tidak cocok.'
+            ]
+        ];
+
+        if (!$this->validate($rules, $messages)) {
+            return redirect()->to('/profil')->with('error', implode(' ', $this->validator->getErrors()));
+        }
+
+        $userModel = new UserModel();
+        $user = $userModel->find($userId);
+
+        // Verifikasi kata sandi lama
+        if (!password_verify($this->request->getPost('current_password'), $user['password_hash'])) {
+            return redirect()->to('/profil')->with('error', 'Kata sandi lama yang Anda masukkan salah.');
+        }
+
+        // Update hash password baru
+        $userModel->update($userId, [
+            'password_hash' => password_hash($this->request->getPost('new_password'), PASSWORD_DEFAULT)
+        ]);
+
+        return redirect()->to('/profil')->with('pesan', 'Kata sandi berhasil diperbarui!');
+    }
+
+    /**
+     * Fitur Soft Delete Akun
+     */
+    public function deleteAccount()
+    {
+        $userId = session()->get('user_id');
+        if (!$userId) return redirect()->to('/login');
+
+        // Verify password before deleting
+        $userModel = new UserModel();
+        $user = $userModel->find($userId);
+        $password = $this->request->getPost('password_delete');
+
+        if (!password_verify($password, $user['password_hash'])) {
+            return redirect()->to('/profil')->with('error', 'Kata sandi salah. Penghapusan akun dibatalkan.');
+        }
+
+        // Soft delete: set is_active to 0
+        $userModel->update($userId, ['is_active' => 0]); 
+        
+        session()->destroy();
+        return redirect()->to('/login')->with('pesan', 'Akun Anda telah dinonaktifkan secara permanen dari sistem.');
+    }
 }

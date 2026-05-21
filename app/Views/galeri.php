@@ -86,10 +86,19 @@ Arsip Visual 5D | The Syndicate Yearbook
     .sheet:first-child::before, .sheet:last-child::before { width: 4px; background: #030504; top: 0; bottom: 0; }
     .sheet:first-child::after, .sheet:last-child::after { width: 4px; background: #030504; }
 
-    .face { position: absolute; inset: 0; backface-visibility: hidden; background-color: #030504; box-shadow: inset 0 0 10px rgba(0,0,0,0.5); border: 1px solid rgba(212, 175, 55, 0.2); }
+    .face { 
+        position: absolute; inset: 0; backface-visibility: hidden; 
+        background: radial-gradient(circle at center, #1a1508 0%, #030504 100%); 
+        box-shadow: inset 0 0 10px rgba(0,0,0,0.5); border: 1px solid rgba(212, 175, 55, 0.2); 
+        display: flex; justify-content: center; align-items: center;
+    }
+    .face::before {
+        content: '\f02d'; font-family: 'Font Awesome 6 Free'; font-weight: 900;
+        position: absolute; color: rgba(212,175,55,0.1); font-size: 4rem; z-index: -1;
+    }
     .face.front { transform: rotateY(0deg); border-radius: 2px 8px 8px 2px; }
     .face.back { transform: rotateY(180deg); border-radius: 8px 2px 2px 8px; }
-    .face img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+    .face img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; z-index: 1; }
     
     /* Gradient Lekukan Tengah Buku (Deep Crease) */
     .face.front::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.1) 6%, transparent 15%); }

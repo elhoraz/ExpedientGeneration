@@ -110,6 +110,11 @@ class BerandaService
             ];
         }
 
+        // 7. Pesan Buku Tamu terbaru (5)
+        $bukuTamuRecent = $this->bukuTamuModel
+            ->orderBy('created_at', 'DESC')
+            ->findAll(5);
+
         return [
             'total_alumni'      => $totalAlumni,
             'total_provinsi'    => $totalProvinsi, 
@@ -135,7 +140,8 @@ class BerandaService
             ],
 
             'birthday_users' => $birthdayUsers,
-            'leaderboard'    => $leaderboard
+            'leaderboard'    => $leaderboard,
+            'buku_tamu'      => $bukuTamuRecent,
         ];
     }
 

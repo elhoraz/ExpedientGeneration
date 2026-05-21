@@ -100,4 +100,16 @@ class PusherService
             'link'    => $link,
         ]);
     }
+
+    /**
+     * Shortcut: Kirim notifikasi global ke semua user.
+     */
+    public function broadcastNotification(string $title, string $message, string $link = '#'): bool
+    {
+        return $this->trigger('expedient-channel', 'broadcast-notification', [
+            'title'   => $title,
+            'message' => $message,
+            'link'    => $link,
+        ]);
+    }
 }

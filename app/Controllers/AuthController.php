@@ -18,6 +18,27 @@ class AuthController extends BaseController
 
     public function index()
     {
+        if (session()->get('logged_in')) {
+            return redirect()->to('/beranda');
+        }
+
+        helper('cookie');
+        $token = get_cookie('remember_me');
+        if ($token) {
+            $userModel = new \App\Models\UserModel();
+            $user = $userModel->where('remember_token', $token)->first();
+            if ($user) {
+                $sesData = [
+                    'user_id'         => $user['id'],
+                    'nama_panggilan' => $user['nama_panggilan'],
+                    'email'          => $user['email'],
+                    'logged_in'      => TRUE
+                ];
+                session()->set($sesData);
+                return redirect()->to('/beranda');
+            }
+        }
+
         // Tampilkan halaman Login/Register yang berdesain Glassmorphism
         return view('auth/login'); 
     }
@@ -60,6 +81,23 @@ class AuthController extends BaseController
                     'logged_in'      => TRUE
                 ];
                 session()->set($sesData);
+                
+                // Keep Login (Remember Me)
+                $remember = $this->request->getPost('remember');
+                if ($remember) {
+                    $token = bin2hex(random_bytes(32));
+                    $userModel = new \App\Models\UserModel();
+                    $userModel->update($user['id'], ['remember_token' => $token]);
+                    helper('cookie');
+                    set_cookie([
+                        'name'     => 'remember_me',
+                        'value'    => $token,
+                        'expire'   => 30 * 24 * 3600, // 30 hari
+                        'secure'   => true,
+                        'httponly' => true,
+                    ]);
+                }
+
                 
                 // Tambahkan poin prestise untuk login harian
                 $gamificationService = new GamificationService();
@@ -166,7 +204,16 @@ class AuthController extends BaseController
     
     public function logout()
     {
-        // ActivityLogger sudah dihandle saat logout lewat authService kalau mau, tapi cukup destroy session saja.
+        // Hapus token remember_me jika ada
+        helper('cookie');
+        if (get_cookie('remember_me')) {
+            $userModel = new \App\Models\UserModel();
+            if (session()->get('user_id')) {
+                $userModel->update(session()->get('user_id'), ['remember_token' => null]);
+            }
+            delete_cookie('remember_me');
+        }
+
         \App\Libraries\ActivityLogger::log('LOGOUT', 'User logout', session()->get('user_id'));
         session()->destroy();
         return redirect()->to('/login')->with('success', 'Anda berhasil keluar.');

@@ -289,9 +289,16 @@ Baitul Maal - Constellation of Giving
     </div>
 
     <!-- Action Button -->
+    <?php if(!empty($can_manage)): ?>
     <button class="btn-donate" id="btnTogglePanel">
         <i class="fa-solid fa-hand-holding-dollar"></i> Catat Transaksi
     </button>
+    <?php else: ?>
+    <div style="background: rgba(212,175,55,0.05); border: 1px solid rgba(212,175,55,0.15); border-radius: 16px; padding: 20px 30px; margin-bottom: 60px; text-align: center; max-width: 500px;">
+        <i class="fa-solid fa-lock" style="color: rgba(212,175,55,0.4); font-size: 1.5rem; margin-bottom: 10px;"></i>
+        <div style="font-size: 0.85rem; color: #888;">Pencatatan transaksi hanya dapat dilakukan oleh <strong style="color: var(--gold-main);">Bendahara</strong> atau <strong style="color: var(--gold-main);">Admin</strong>.</div>
+    </div>
+    <?php endif; ?>
 
     <!-- Specific Campaigns -->
     <div class="campaign-grid">
@@ -321,7 +328,8 @@ Baitul Maal - Constellation of Giving
     </div>
 </div>
 
-<!-- Panel Transaksi (Slide) -->
+<!-- Panel Transaksi (Slide) — Hanya untuk Bendahara/Admin -->
+<?php if(!empty($can_manage)): ?>
 <div class="transactions-panel" id="txPanel">
     <div class="panel-title">Pencatatan Ledger</div>
     <form action="/baitul-maal/store" method="POST" class="maal-form">
@@ -356,6 +364,7 @@ Baitul Maal - Constellation of Giving
         <div style="text-align:center; padding:20px; color:#555; font-size:0.8rem;">Belum ada catatan transaksi.</div>
     <?php endif; ?>
 </div>
+<?php endif; ?>
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
@@ -368,19 +377,21 @@ document.addEventListener("DOMContentLoaded", () => {
     gsap.from(".btn-donate", { y: 30, opacity: 0, duration: 1, delay: 0.5, ease: "power2.out" });
     gsap.from(".campaign-card", { y: 50, opacity: 0, duration: 0.8, stagger: 0.2, delay: 0.8, ease: "power2.out" });
 
-    // Toggle Panel
+    // Toggle Panel (hanya jika user adalah bendahara/admin)
     const btnToggle = document.getElementById('btnTogglePanel');
     const txPanel = document.getElementById('txPanel');
     
-    btnToggle.addEventListener('click', () => {
-        txPanel.classList.toggle('open');
-        if(navigator.vibrate) navigator.vibrate(20);
-    });
+    if (btnToggle && txPanel) {
+        btnToggle.addEventListener('click', () => {
+            txPanel.classList.toggle('open');
+            if(navigator.vibrate) navigator.vibrate(20);
+        });
 
-    // Auto-open panel on flashdata success/error (handled by template for toast, but we can open panel too)
-    <?php if(session()->getFlashdata('success') || session()->getFlashdata('error')): ?>
-        txPanel.classList.add('open');
-    <?php endif; ?>
+        // Auto-open panel on flashdata success/error
+        <?php if(session()->getFlashdata('success') || session()->getFlashdata('error')): ?>
+            txPanel.classList.add('open');
+        <?php endif; ?>
+    }
 });
 </script>
 <?= $this->endSection() ?>

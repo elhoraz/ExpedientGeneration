@@ -34,7 +34,15 @@ class MajlisController extends BaseController
             $topic['has_voted'] = (bool) $topic['has_voted'];
         }
 
-        return view('majlis_syura', ['topics' => $topics]);
+        // Get current user role
+        $userModel = new \App\Models\UserModel();
+        $currentUser = $userModel->find($userId);
+
+        return view('majlis_syura', [
+            'topics'    => $topics,
+            'user_id'   => $userId,
+            'user_role' => $currentUser['role'] ?? 'member',
+        ]);
     }
 
     public function store()
@@ -57,6 +65,13 @@ class MajlisController extends BaseController
             'status'      => 'Open',
             'created_at'  => date('Y-m-d H:i:s')
         ]);
+
+        $pusher = new \App\Services\PusherService();
+        $pusher->broadcastNotification(
+            'Mosi Baru di Majlis',
+            $this->request->getPost('title'),
+            '/majlis'
+        );
 
         return redirect()->to('/majlis')->with('success', 'Mosi musyawarah berhasil diajukan ke forum.');
     }
@@ -88,5 +103,33 @@ class MajlisController extends BaseController
         ]);
 
         return redirect()->to('/majlis')->with('success', 'Suara Anda telah direkam di Majlis.');
+    }
+
+    /**
+     * Tutup sesi voting (hanya pembuat mosi atau admin).
+     */
+    public function close($topicId)
+    {
+        $userId = session()->get('user_id');
+        $topicModel = new MajlisTopicModel();
+        $topic = $topicModel->find($topicId);
+
+        if (!$topic) {
+            return redirect()->to('/majlis')->with('error', 'Mosi tidak ditemukan.');
+        }
+
+        // Cek otorisasi: pembuat mosi atau admin
+        $userModel = new \App\Models\UserModel();
+        $user = $userModel->find($userId);
+        $isCreator = (int)$topic['created_by'] === (int)$userId;
+        $isAdmin = $user && ($user['role'] ?? '') === 'admin';
+
+        if (!$isCreator && !$isAdmin) {
+            return redirect()->to('/majlis')->with('error', 'Hanya pembuat mosi atau admin yang dapat menutup voting.');
+        }
+
+        $topicModel->update($topicId, ['status' => 'Closed']);
+
+        return redirect()->to('/majlis')->with('success', 'Sesi voting telah ditutup.');
     }
 }

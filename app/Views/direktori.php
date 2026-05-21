@@ -15,8 +15,15 @@ The Archive - 42nd Expedient
     <div class="ethereal-glow"></div>
 
     <div class="search-wrapper">
-        <input type="text" id="searchInput" class="search-input" placeholder="Temukan Rekam Jejak...">
-        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <form action="/direktori" method="GET" style="display:flex; gap:8px; width:100%; max-width:500px; margin:0 auto;">
+            <input type="text" id="searchInput" name="q" class="search-input" placeholder="Temukan Rekam Jejak..." value="<?= esc($search ?? '') ?>">
+            <button type="submit" style="background:#d4af37; border:none; color:#000; padding:10px 18px; border-radius:10px; cursor:pointer; font-weight:bold; font-size:0.85rem; letter-spacing:1px;"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </form>
+        <?php if(!empty($search)): ?>
+            <div style="text-align:center; margin-top:10px;">
+                <a href="/direktori" style="color:var(--text-secondary); font-size:0.8rem; text-decoration:none;"><i class="fa-solid fa-times"></i> Reset pencarian</a>
+            </div>
+        <?php endif; ?>
     </div>
 
     <?php if(empty($alumni)): ?>

@@ -44,6 +44,7 @@ $routes->get('/direktori', 'DirektoriController::index');
 
 // Interaksi ANGGOTA (tetap butuh login)
 $routes->post('/beranda/simpan_pesan', 'BerandaController::simpan_pesan', ['filter' => 'auth']);
+$routes->get('/buku-tamu', 'BukuTamuController::index');
 $routes->get('/fitur', 'FiturController::index', ['filter' => 'auth']);
 $routes->get('/oracle', 'OracleController::index', ['filter' => 'auth']);
 $routes->post('/oracle/store', 'OracleController::store', ['filter' => 'auth']);
@@ -56,6 +57,10 @@ $routes->get('/celestial', 'CelestialController::index', ['filter' => 'auth']);
 $routes->get('/majlis', 'MajlisController::index', ['filter' => 'auth']);
 $routes->post('/majlis/store', 'MajlisController::store', ['filter' => 'auth']);
 $routes->post('/majlis/vote/(:num)', 'MajlisController::vote/$1', ['filter' => 'auth']);
+$routes->post('/majlis/close/(:num)', 'MajlisController::close/$1', ['filter' => 'auth']);
+$routes->get('/event', 'EventController::index', ['filter' => 'auth']);
+$routes->post('/event/store', 'EventController::store', ['filter' => 'auth']);
+$routes->post('/event/rsvp/(:num)', 'EventController::rsvp/$1', ['filter' => 'auth']);
 $routes->get('/tarbiyah', 'TarbiyahController::index', ['filter' => 'auth']);
 $routes->post('/tarbiyah/request', 'TarbiyahController::request', ['filter' => 'auth']);
 $routes->get('/baitul-maal', 'BaitulMaalController::index', ['filter' => 'auth']);
@@ -64,15 +69,19 @@ $routes->get('/wasiat', 'WasiatController::index', ['filter' => 'auth']);
 $routes->post('/wasiat/store', 'WasiatController::store', ['filter' => 'auth']);
 $routes->post('/wasiat/unlock/(:num)', 'WasiatController::unlock/$1', ['filter' => 'auth']);
 $routes->get('/multazam', 'MultazamController::index', ['filter' => 'auth']);
-$routes->post('/multazam/store', 'MultazamController::store', ['filter' => 'auth']);
-$routes->get('/kontemplasi', 'KontemplasiController::index', ['filter' => 'auth']);
-$routes->post('/kontemplasi/store', 'KontemplasiController::store', ['filter' => 'auth']);
-// ================= FASILITAS: GLOBAL RADAR =================
+// ================= FASILITAS: GLOBAL RADAR / PETA ALUMNI =================
 // Menampilkan halaman Peta 3D
 $routes->get('/radar', 'RadarController::index', ['filter' => 'auth']);
 $routes->get('/radar/flat', 'RadarController::flatMap', ['filter' => 'auth']);
+$routes->get('/radar/satellite', 'RadarController::satelliteMap', ['filter' => 'auth']);
+$routes->get('/radar/terrain', 'RadarController::terrainMap', ['filter' => 'auth']);
+$routes->get('/radar/dark', 'RadarController::darkMap', ['filter' => 'auth']);
+$routes->get('/radar/watercolor', 'RadarController::watercolorMap', ['filter' => 'auth']);
+$routes->get('/radar/classic', 'RadarController::classicMap', ['filter' => 'auth']);
 // Endpoint API (AJAX) untuk menerima dan menyimpan koordinat GPS dari HP User
-$routes->post('/radar/update-location', 'Api\LocationApi::update', ['filter' => 'auth']);
+$routes->post('/radar/update-location', 'RadarController::updateLocation', ['filter' => 'auth']);
+$routes->get('/kontemplasi', 'KontemplasiController::index', ['filter' => 'auth']);
+$routes->post('/kontemplasi/store', 'KontemplasiController::store', ['filter' => 'auth']);
 // ================= FASILITAS: THE SYNDICATE =================
 // Menampilkan galeri kartu VIP
 $routes->get('/syndicate', 'SyndicateController::index', ['filter' => 'auth']);
@@ -91,6 +100,8 @@ $routes->post('/syndicate/delete/(:num)', 'SyndicateController::delete/$1', ['fi
 // Menampilkan halaman profil dan pengaturan biometrik agen
 $routes->get('/profil', 'ProfileController::index', ['filter' => 'auth']);
 $routes->post('/profil/update', 'ProfileController::updateProfile', ['filter' => 'auth']);
+$routes->post('/profil/change-password', 'ProfileController::changePassword', ['filter' => 'auth']);
+$routes->post('/profil/delete-account', 'ProfileController::deleteAccount', ['filter' => 'auth']);
 // ==========================================================
 // 4. RUTE BIOMETRIK (DISELARASKAN DENGAN Api\BiometricApi)
 // ==========================================================
@@ -132,6 +143,8 @@ $routes->get('/chat/personal/(:num)', 'ChatController::personal/$1', ['filter' =
 $routes->get('/chat/unread', 'ChatController::getUnreadCount', ['filter' => 'auth']);
 $routes->post('/chat/read/(:num)', 'ChatController::markAsRead/$1', ['filter' => 'auth']);
 $routes->post('/chat/send', 'ChatController::send', ['filter' => 'auth']);
+$routes->post('/chat/delete/(:num)', 'ChatController::deleteMessage/$1', ['filter' => 'auth']);
+$routes->get('/chat/load-more', 'ChatController::loadMore', ['filter' => 'auth']);
 
 $routes->get('/nexus', 'NexusController::index', ['filter' => 'auth']);
 $routes->get('/nexus/calculate', 'NexusController::calculateMatches', ['filter' => 'auth']);
@@ -144,6 +157,18 @@ $routes->get('/birthday/(:num)', 'BirthdayController::show/$1', ['filter' => 'au
 // ====================================================================
 $routes->get('/offline', function() { return view('offline'); });
 $routes->get('/admin/dashboard', 'AdminController::index', ['filter' => 'admin']);
+
+// Admin: User Management
+$routes->get('/admin/users', 'AdminController::users', ['filter' => 'admin']);
+$routes->post('/admin/users/role/(:num)', 'AdminController::updateRole/$1', ['filter' => 'admin']);
+$routes->post('/admin/users/toggle/(:num)', 'AdminController::toggleActive/$1', ['filter' => 'admin']);
+
+// Admin: Content Moderation
+$routes->get('/admin/moderation', 'AdminController::moderation', ['filter' => 'admin']);
+$routes->post('/admin/delete/(:segment)/(:num)', 'AdminController::deleteContent/$1/$2', ['filter' => 'admin']);
+
+// Admin: Export CSV
+$routes->get('/admin/export-csv', 'AdminController::exportCsv', ['filter' => 'admin']);
 
 // Admin: CRUD Pengumuman
 $routes->get('/admin/announcements', 'Admin\AnnouncementController::index', ['filter' => 'admin']);

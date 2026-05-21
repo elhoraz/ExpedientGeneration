@@ -70,6 +70,7 @@ class ChatController extends BaseController
                 ->where('sender_id', $receiverId)
                 ->where('receiver_id', $myId)
             ->groupEnd()
+            ->where('chat_messages.is_deleted', 0)
             ->orderBy('chat_messages.created_at', 'ASC')
             ->findAll(50);
 
@@ -95,40 +96,134 @@ class ChatController extends BaseController
         $userId = session()->get('user_id');
         if (!$userId) return $this->response->setJSON(['status' => 'error', 'message' => 'Unauthorized', 'csrf_hash' => csrf_hash()]);
 
-        $message = $this->request->getPost('message');
+        $message = $this->request->getPost('message') ?? '';
         $receiverId = $this->request->getPost('receiver_id');
         $receiverId = empty($receiverId) ? null : (int)$receiverId;
 
-        if (empty(trim($message))) return $this->response->setJSON(['status' => 'error', 'message' => 'Pesan kosong', 'csrf_hash' => csrf_hash()]);
+        // Cek apakah ada file gambar
+        $imageFile = $this->request->getFile('chat_image');
+        $imagePath = null;
+
+        if ($imageFile && $imageFile->isValid() && !$imageFile->hasMoved()) {
+            // Validasi tipe dan ukuran (max 3MB)
+            if (!in_array($imageFile->getMimeType(), ['image/jpeg', 'image/png', 'image/gif', 'image/webp'])) {
+                return $this->response->setJSON(['status' => 'error', 'message' => 'Format gambar tidak didukung.', 'csrf_hash' => csrf_hash()]);
+            }
+            if ($imageFile->getSizeByUnit('mb') > 3) {
+                return $this->response->setJSON(['status' => 'error', 'message' => 'Ukuran gambar maks 3MB.', 'csrf_hash' => csrf_hash()]);
+            }
+
+            $newName = $imageFile->getRandomName();
+            $imageFile->move(FCPATH . 'uploads/chat/', $newName);
+            $imagePath = $newName;
+        }
+
+        // Validasi: pesan atau gambar harus ada
+        if (empty(trim($message)) && empty($imagePath)) {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Pesan kosong', 'csrf_hash' => csrf_hash()]);
+        }
+
+        // Validasi panjang pesan (maks 1000 karakter)
+        if (mb_strlen($message) > 1000) {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Pesan terlalu panjang (maks 1000 karakter).', 'csrf_hash' => csrf_hash()]);
+        }
 
         // Simpan pesan ke DB
         $chatData = [
-            'sender_id' => $userId,
+            'sender_id'   => $userId,
             'receiver_id' => $receiverId,
-            'message' => $message,
-            'created_at' => date('Y-m-d H:i:s')
+            'message'     => $message,
+            'image_path'  => $imagePath,
+            'created_at'  => date('Y-m-d H:i:s')
         ];
         $chatId = $this->chatModel->insert($chatData);
 
         // Ambil data user untuk dikirim ke Pusher
         $user = $this->userModel->find($userId);
 
-        // =========================================================
-        // TRIGGER PUSHER
-        // =========================================================
+        // Trigger Pusher
         $pusherService = new PusherService();
         $pusherService->sendChatMessage([
-            'id' => $chatId,
-            'sender_id' => $userId,
-            'receiver_id' => $receiverId,
-            'sender_name' => $user['nama_lengkap'],
+            'id'            => $chatId,
+            'sender_id'     => $userId,
+            'receiver_id'   => $receiverId,
+            'sender_name'   => $user['nama_lengkap'],
             'sender_avatar' => $user['foto_profil'] ?? 'default.webp',
-            'message' => esc($message),
-            'created_at' => $chatData['created_at']
+            'message'       => esc($message),
+            'image_path'    => $imagePath,
+            'created_at'    => $chatData['created_at']
         ]);
 
         return $this->response->setJSON(['status' => 'success', 'csrf_hash' => csrf_hash()]);
     }
+
+    /**
+     * Hapus pesan sendiri (soft delete).
+     */
+    public function deleteMessage($msgId)
+    {
+        $userId = session()->get('user_id');
+        if (!$userId) return $this->response->setJSON(['status' => 'error', 'csrf_hash' => csrf_hash()]);
+
+        $msg = $this->chatModel->find($msgId);
+
+        if (!$msg || (int)$msg['sender_id'] !== (int)$userId) {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Tidak diizinkan.', 'csrf_hash' => csrf_hash()]);
+        }
+
+        $this->chatModel->update($msgId, ['is_deleted' => 1]);
+
+        return $this->response->setJSON(['status' => 'success', 'csrf_hash' => csrf_hash()]);
+    }
+
+    /**
+     * Load More: ambil pesan lebih lama dari ID tertentu.
+     */
+    public function loadMore()
+    {
+        $userId = session()->get('user_id');
+        if (!$userId) return $this->response->setJSON(['status' => 'error']);
+
+        $beforeId = (int)$this->request->getGet('before_id');
+        $receiverId = $this->request->getGet('receiver_id');
+        $receiverId = empty($receiverId) || $receiverId === 'null' ? null : (int)$receiverId;
+
+        $builder = $this->chatModel->withUser();
+
+        if ($receiverId === null) {
+            // Lounge
+            $builder->where('receiver_id', null);
+        } else {
+            $builder->groupStart()
+                ->groupStart()
+                    ->where('sender_id', $userId)
+                    ->where('receiver_id', $receiverId)
+                ->groupEnd()
+                ->orGroupStart()
+                    ->where('sender_id', $receiverId)
+                    ->where('receiver_id', $userId)
+                ->groupEnd()
+            ->groupEnd();
+        }
+
+        if ($beforeId > 0) {
+            $builder->where('chat_messages.id <', $beforeId);
+        }
+
+        $messages = $builder
+            ->orderBy('chat_messages.created_at', 'DESC')
+            ->findAll(20);
+
+        // Reverse supaya urutan kronologis
+        $messages = array_reverse($messages);
+
+        return $this->response->setJSON([
+            'status' => 'success',
+            'data'   => $messages,
+            'csrf_hash' => csrf_hash()
+        ]);
+    }
+
     public function getUnreadCount()
     {
         $userId = session()->get('user_id');
@@ -136,6 +231,7 @@ class ChatController extends BaseController
 
         $count = $this->chatModel->where('receiver_id', $userId)
                                 ->where('is_read', 0)
+                                ->where('is_deleted', 0)
                                 ->countAllResults();
 
         return $this->response->setJSON([
