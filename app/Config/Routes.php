@@ -18,11 +18,11 @@ $routes->get('/', 'LandingController::index');
 // Halaman Login
 $routes->get('/login', 'AuthController::index');
 $routes->get('/auth/login', 'AuthController::index'); // Alias agar link 'Kembali' berfungsi
-$routes->post('/auth/login', 'AuthController::processLogin'); // Proses cek password
+$routes->post('/auth/login', 'AuthController::processLogin', ['filter' => 'throttleauth']); // Proses cek password
 
 // Halaman Register
 $routes->get('/auth/register', 'AuthController::registerView'); // Menampilkan view
-$routes->post('/auth/register', 'AuthController::register');    // Memproses data submit
+$routes->post('/auth/register', 'AuthController::register', ['filter' => 'throttleauth']);    // Memproses data submit
 
 // Verifikasi Email & Logout
 $routes->get('/auth/verify/(:segment)', 'AuthController::verifyEmail/$1'); 
@@ -58,6 +58,11 @@ $routes->get('/majlis', 'MajlisController::index', ['filter' => 'auth']);
 $routes->post('/majlis/store', 'MajlisController::store', ['filter' => 'auth']);
 $routes->post('/majlis/vote/(:num)', 'MajlisController::vote/$1', ['filter' => 'auth']);
 $routes->post('/majlis/close/(:num)', 'MajlisController::close/$1', ['filter' => 'auth']);
+$routes->get('/majlis/state', 'MajlisController::getState', ['filter' => 'auth']);
+$routes->post('/majlis/raise_hand', 'MajlisController::raiseHand', ['filter' => 'auth']);
+$routes->post('/majlis/approve_speaker', 'MajlisController::approveSpeaker', ['filter' => 'auth']);
+$routes->post('/majlis/stop_speaker', 'MajlisController::stopSpeaker', ['filter' => 'auth']);
+$routes->post('/pusher/auth', 'MajlisController::pusherAuth', ['filter' => 'auth']);
 $routes->get('/event', 'EventController::index', ['filter' => 'auth']);
 $routes->post('/event/store', 'EventController::store', ['filter' => 'auth']);
 $routes->post('/event/rsvp/(:num)', 'EventController::rsvp/$1', ['filter' => 'auth']);
@@ -69,6 +74,7 @@ $routes->get('/wasiat', 'WasiatController::index', ['filter' => 'auth']);
 $routes->post('/wasiat/store', 'WasiatController::store', ['filter' => 'auth']);
 $routes->post('/wasiat/unlock/(:num)', 'WasiatController::unlock/$1', ['filter' => 'auth']);
 $routes->get('/multazam', 'MultazamController::index', ['filter' => 'auth']);
+$routes->post('/multazam/store', 'MultazamController::store', ['filter' => 'auth']);
 // ================= FASILITAS: GLOBAL RADAR / PETA ALUMNI =================
 // Menampilkan halaman Peta 3D
 $routes->get('/radar', 'RadarController::index', ['filter' => 'auth']);
@@ -78,6 +84,21 @@ $routes->get('/radar/terrain', 'RadarController::terrainMap', ['filter' => 'auth
 $routes->get('/radar/dark', 'RadarController::darkMap', ['filter' => 'auth']);
 $routes->get('/radar/watercolor', 'RadarController::watercolorMap', ['filter' => 'auth']);
 $routes->get('/radar/classic', 'RadarController::classicMap', ['filter' => 'auth']);
+$routes->get('/radar/natgeo', 'RadarController::natgeoMap', ['filter' => 'auth']);
+$routes->get('/radar/voyager', 'RadarController::voyagerMap', ['filter' => 'auth']);
+$routes->get('/radar/hybrid', 'RadarController::hybridMap', ['filter' => 'auth']);
+$routes->get('/radar/graycanvas', 'RadarController::graycanvasMap', ['filter' => 'auth']);
+$routes->get('/radar/hot', 'RadarController::hotMap', ['filter' => 'auth']);
+$routes->get('/radar/googleterrain', 'RadarController::googleterrainMap', ['filter' => 'auth']);
+$routes->get('/radar/esriclarity', 'RadarController::esriclarityMap', ['filter' => 'auth']);
+$routes->get('/radar/nightnav', 'RadarController::nightnavMap', ['filter' => 'auth']);
+$routes->get('/radar/googletransit', 'RadarController::googletransitMap', ['filter' => 'auth']);
+$routes->get('/radar/physical', 'RadarController::physicalMap', ['filter' => 'auth']);
+$routes->get('/radar/nasamarble', 'RadarController::nasamarbleMap', ['filter' => 'auth']);
+$routes->get('/radar/googletraffic', 'RadarController::googletrafficMap', ['filter' => 'auth']);
+$routes->get('/radar/navigation', 'RadarController::navigationMap', ['filter' => 'auth']);
+$routes->get('/radar/esristreet', 'RadarController::esristreetMap', ['filter' => 'auth']);
+$routes->get('/radar/toner', 'RadarController::tonerMap', ['filter' => 'auth']);
 // Endpoint API (AJAX) untuk menerima dan menyimpan koordinat GPS dari HP User
 $routes->post('/radar/update-location', 'RadarController::updateLocation', ['filter' => 'auth']);
 $routes->get('/kontemplasi', 'KontemplasiController::index', ['filter' => 'auth']);
@@ -106,8 +127,8 @@ $routes->post('/profil/delete-account', 'ProfileController::deleteAccount', ['fi
 // 4. RUTE BIOMETRIK (DISELARASKAN DENGAN Api\BiometricApi)
 // ==========================================================
 // Proses Login Biometrik (Dari halaman depan)
-$routes->get('/biometric/login-options', 'Api\BiometricApi::loginOptions');
-$routes->post('/biometric/login-verify', 'Api\BiometricApi::loginVerify');
+$routes->get('/biometric/login-options', 'Api\BiometricApi::loginOptions', ['filter' => 'throttle']);
+$routes->post('/biometric/login-verify', 'Api\BiometricApi::loginVerify', ['filter' => 'throttle']);
 
 // Proses Mendaftarkan Biometrik Baru (Dari dalam dashboard/settings)
 $routes->get('/biometric/register-options', 'Api\BiometricApi::registerOptions', ['filter' => 'auth']);
@@ -119,23 +140,30 @@ $routes->post('/biometric/register-verify', 'Api\BiometricApi::registerVerify', 
 // Sovereign ID Card 5D (Butuh login)
 $routes->get('/sovereign', 'SovereignController::index', ['filter' => 'auth']);
 
-// Gateway saat KTA di-scan (Publik — bisa diakses tanpa login)
-$routes->get('scan/(:num)', 'VaultController::scan_gateway/$1');
+// Gateway saat KTA di-scan (Publik — menggunakan public_token, bukan ID)
+$routes->get('scan/(:alphanum)', 'VaultController::scan_gateway/$1');
 
 // Opsi 1: Hologram AR (Publik)
-$routes->get('ar_hologram/(:num)', 'VaultController::ar_hologram/$1');
+$routes->get('ar_hologram/(:alphanum)', 'VaultController::ar_hologram/$1');
 
 // Opsi 2: Download vCard Eksekutif (Publik)
-$routes->get('download_vcard/(:num)', 'VaultController::download_vcard/$1');
+$routes->get('download_vcard/(:alphanum)', 'VaultController::download_vcard/$1');
 
 // Halaman Profil Kaca 3D / Dossier Publik
-$routes->get('profil/(:num)', 'VaultController::profil/$1');
+$routes->get('profil/(:alphanum)', 'VaultController::profil/$1');
+
+// In-App QR Scanner
+$routes->get('scanner', 'VaultController::scanner');
 
 // ====================================================================
 // P3: NOTIFICATION & CHAT
 // ====================================================================
 $routes->get('/notifications/unread', 'NotificationController::getUnread', ['filter' => 'auth']);
 $routes->post('/notifications/read/(:num)', 'NotificationController::markAsRead/$1', ['filter' => 'auth']);
+
+// Web Push API Subscriptions
+$routes->get('/push/public-key', 'PushController::publicKey', ['filter' => 'auth']);
+$routes->post('/push/subscribe', 'PushController::subscribe', ['filter' => 'auth']);
 
 $routes->get('/chat', 'ChatController::index', ['filter' => 'auth']);
 $routes->get('/chat/lounge', 'ChatController::lounge', ['filter' => 'auth']);
@@ -151,6 +179,9 @@ $routes->get('/nexus/calculate', 'NexusController::calculateMatches', ['filter' 
 
 $routes->get('/birthday', 'BirthdayController::index', ['filter' => 'auth']);
 $routes->get('/birthday/(:num)', 'BirthdayController::show/$1', ['filter' => 'auth']);
+
+// Expedient Wrapped (Recap Tahunan)
+$routes->get('/wrapped', 'WrappedController::index', ['filter' => 'auth']);
 
 // ====================================================================
 // P4: ADMIN & OFFLINE

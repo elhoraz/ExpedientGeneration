@@ -1,4 +1,4 @@
-﻿document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => {
         gsap.config({ force3D: true });
         gsap.registerPlugin(ScrollTrigger);
 
@@ -308,17 +308,27 @@
 
         const preloadImages = () => {
             const isMobile = window.innerWidth <= 768;
-            const imageQueue = [];
+            assetsData.full.images = new Array(TOTAL_FRAMES).fill(null);
             
+            const fastTrackQueue = [];
+            const midTrackQueue = [];
+            const backgroundQueue = [];
+
+            const step1 = isMobile ? 24 : 16;
+            const step2 = isMobile ? 8 : 4;
+
             for(let i=1; i<=TOTAL_FRAMES; i++) {
-                const img = new Image(); 
-                assetsData.full.images.push(img);
-                imageQueue.push({ img, src: `${basePath}${assetsData.full.folder}/frame_${pad(i)}.webp` });
+                const src = `${basePath}${assetsData.full.folder}/frame_${pad(i)}.webp`;
+                const item = { idx: i, src: src, targetArray: assetsData.full.images };
+                if (i % step1 === 1) fastTrackQueue.push(item);
+                else if (i % step2 === 1) midTrackQueue.push(item);
+                else backgroundQueue.push(item);
             }
 
             const container = document.getElementById('shardsContainer');
             assetsData.shards.forEach((shard) => {
-                shard.images = []; frameData.shards[shard.id] = 0; 
+                shard.images = new Array(TOTAL_FRAMES).fill(null); 
+                frameData.shards[shard.id] = 0; 
                 const wrap = document.createElement('div'); wrap.className = 'shard-wrapper hover-trigger cursor-bind'; wrap.id = `shardWrap_${shard.id}`;
                 const c = document.createElement('canvas'); c.width = 800; c.height = 450; c.className = 'shard-canvas'; c.id = `shardCanvas_${shard.id}`;
                 
@@ -336,31 +346,85 @@
                 });
 
                 for(let i=1; i<=TOTAL_FRAMES; i++) {
-                    const img = new Image(); 
-                    shard.images.push(img);
-                    imageQueue.push({ img, src: `${basePath}${shard.folder}/frame_${pad(i)}.webp` });
+                    const src = `${basePath}${shard.folder}/frame_${pad(i)}.webp`;
+                    const item = { idx: i, src: src, targetArray: shard.images };
+                    if (i % step1 === 1) fastTrackQueue.push(item);
+                    else if (i % step2 === 1) midTrackQueue.push(item);
+                    else backgroundQueue.push(item);
                 }
             });
             document.getElementById('fullLogoBox').addEventListener('mousedown', (e) => handleDragStart(e, 'full'));
             document.getElementById('fullLogoBox').addEventListener('touchstart', (e) => handleDragStart(e, 'full'), {passive: false});
             
-            // CONCURRENT LOADING MANAGER (15 Requests at a time to prevent browser network stall)
-            let queueIndex = 0;
-            const CONCURRENCY = 15;
+            // CONCURRENT LOADING MANAGER (Progressive)
+            let loadedImages = 0;
+            const totalImagesToLoad = fastTrackQueue.length; 
             
-            const loadNext = () => {
-                if(queueIndex >= imageQueue.length) return;
-                const item = imageQueue[queueIndex++];
-                item.img.onload = () => { updateProgress(); loadNext(); };
-                item.img.onerror = () => { updateProgress(); loadNext(); };
-                item.img.src = item.src;
+            const processItem = async (item, callback) => {
+                try {
+                    if (window.createImageBitmap) {
+                        const response = await fetch(item.src, { mode: 'cors' });
+                        if (!response.ok) throw new Error('Fetch failed');
+                        const blob = await response.blob();
+                        const bitmap = await createImageBitmap(blob);
+                        item.targetArray[item.idx - 1] = bitmap;
+                    } else {
+                        throw new Error('Fallback to Image');
+                    }
+                } catch(e) {
+                    const img = new Image();
+                    img.onload = () => { item.targetArray[item.idx - 1] = img; };
+                    img.src = item.src;
+                }
+                if (callback) callback();
+            };
+
+            const updateProgress = () => {
+                loadedImages++;
+                const pct = Math.floor((loadedImages / totalImagesToLoad) * 100);
+                const percentEl = document.getElementById('loadPercent');
+                if (percentEl && pct > currentDisplayPct) {
+                    gsap.to({ val: currentDisplayPct }, {
+                        val: pct, duration: 0.3,
+                        onUpdate: function() { percentEl.innerText = Math.floor(this.targets()[0].val) + '%'; }
+                    });
+                    currentDisplayPct = pct;
+                }
+            };
+
+            let qIndex = 0;
+            let loaderDismissed = false;
+            const loadFastTrack = () => {
+                if(qIndex >= fastTrackQueue.length) {
+                    if (!loaderDismissed) {
+                        loaderDismissed = true;
+                        clearInterval(loreInterval);
+                        setTimeout(() => {
+                            gsap.to('#loader', { duration: 0.5, opacity: 0, onComplete: () => {
+                                document.getElementById('loader').style.display = 'none';
+                                gsap.set('#fullLogoBox', { scale: layout.scale * 1.5 }); isPlaying = true; 
+                            }});
+                        }, 200);
+                        loadBackgroundTracks();
+                    }
+                    return;
+                }
+                const item = fastTrackQueue[qIndex++];
+                processItem(item, () => { updateProgress(); loadFastTrack(); });
+            };
+
+            const loadBackgroundTracks = () => {
+                const fullQueue = [...midTrackQueue, ...backgroundQueue];
+                let bgIndex = 0;
+                const loadNextBg = () => {
+                    if(bgIndex >= fullQueue.length) return;
+                    processItem(fullQueue[bgIndex++], loadNextBg);
+                };
+                for(let i=0; i<8; i++) loadNextBg();
             };
             
-            for(let i=0; i<CONCURRENCY; i++) {
-                loadNext();
-            }
+            for(let i=0; i<15; i++) loadFastTrack();
         };
-
         preloadImages();
 
         // SAFETY NET: Force-dismiss loader after 15 seconds
@@ -389,19 +453,35 @@
         // =========================================================
         // SAFE RENDER ENGINE (PERBAIKAN CANVAS CRASH DOMException)
         // =========================================================
+        const getClosestImage = (imagesArr, targetIdx) => {
+            if (imagesArr[targetIdx] && (imagesArr[targetIdx] instanceof ImageBitmap || imagesArr[targetIdx].complete)) return imagesArr[targetIdx];
+            let offset = 1;
+            while(offset < TOTAL_FRAMES / 2) {
+                let checkPrev = targetIdx - offset;
+                if (checkPrev < 0) checkPrev += TOTAL_FRAMES;
+                if (imagesArr[checkPrev] && (imagesArr[checkPrev] instanceof ImageBitmap || imagesArr[checkPrev].complete)) return imagesArr[checkPrev];
+                
+                let checkNext = targetIdx + offset;
+                if (checkNext >= TOTAL_FRAMES) checkNext -= TOTAL_FRAMES;
+                if (imagesArr[checkNext] && (imagesArr[checkNext] instanceof ImageBitmap || imagesArr[checkNext].complete)) return imagesArr[checkNext];
+                offset++;
+            }
+            return null;
+        };
+
         const renderCurrentFrame = () => {
             if (!isScattered) {
                 const fIdx = Math.floor(frameData.full);
-                const img = assetsData.full.images[fIdx];
-                if(img && img.complete && img.naturalWidth !== 0) { 
+                const img = getClosestImage(assetsData.full.images, fIdx);
+                if(img) { 
                     ctxFull.clearRect(0, 0, canvasFull.width, canvasFull.height);
                     ctxFull.drawImage(img, 0, 0, canvasFull.width, canvasFull.height); 
                 }
             } else {
                 shardCanvases.forEach(shardObj => {
                     const fIdx = Math.floor(frameData.shards[shardObj.id]);
-                    const img = shardObj.images[fIdx];
-                    if(img && img.complete && img.naturalWidth !== 0) { 
+                    const img = getClosestImage(shardObj.images, fIdx);
+                    if(img) { 
                         shardObj.ctx.clearRect(0, 0, 800, 450);
                         shardObj.ctx.drawImage(img, 0, 0, 800, 450); 
                     }
@@ -435,9 +515,13 @@
         });
 
         let draggedItem = null; let hasDragged = false; let startX = 0; let lastX = 0; let frameAtDragStart = 0; let lastTickTime = 0; 
+        let currentVelocity = 0;
+        let inertiaAnim = null;
 
         const handleDragStart = (e, id) => {
             if(isAnimating) return; e.stopPropagation(); initAudio(); 
+            if(inertiaAnim) { inertiaAnim.kill(); inertiaAnim = null; }
+            currentVelocity = 0;
             draggedItem = id; hasDragged = false; startX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX; lastX = startX;
             frameAtDragStart = (id === 'full') ? frameData.full : frameData.shards[id];
             document.getElementById('hudHint').innerText = "MEMUTAR HOLOGRAM..."; document.getElementById('hudHint').style.color = "#d4af37";
@@ -446,11 +530,12 @@
 
         const handleDragMove = (e) => {
             if(!draggedItem) return;
-            const x = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX; const deltaX = x - startX; const velocity = Math.abs(x - lastX);
+            const x = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX; const deltaX = x - startX; 
+            currentVelocity = x - lastX;
             if(Math.abs(deltaX) > 5) hasDragged = true; 
             
             const now = Date.now();
-            if(velocity > 2 && (now - lastTickTime) > (100 - Math.min(velocity*2, 80))) { playTick(velocity); lastTickTime = now; }
+            if(Math.abs(currentVelocity) > 2 && (now - lastTickTime) > (100 - Math.min(Math.abs(currentVelocity)*2, 80))) { playTick(Math.abs(currentVelocity)); lastTickTime = now; }
             
             const ghostTarget = draggedItem === 'full' ? document.getElementById('fullLogoBox') : document.getElementById(`shardWrap_${draggedItem}`);
             ghostTarget.style.filter = `none`;
@@ -462,10 +547,31 @@
             lastX = x; 
         };
 
+        const applyInertia = (id, velocity) => {
+            const obj = { v: velocity };
+            inertiaAnim = gsap.to(obj, {
+                v: 0,
+                duration: 1.5,
+                ease: "power2.out",
+                onUpdate: () => {
+                    if (Math.abs(obj.v) > 0.1) {
+                        let newFrame = ((id === 'full') ? frameData.full : frameData.shards[id]) + (obj.v / 3);
+                        while(newFrame >= TOTAL_FRAMES) newFrame -= TOTAL_FRAMES; while(newFrame < 0) newFrame += TOTAL_FRAMES;
+                        if (id === 'full') { frameData.full = newFrame; } else { frameData.shards[id] = newFrame; }
+                    }
+                }
+            });
+        };
+
         const handleDragEnd = () => {
             if(!draggedItem) return;
             const ghostTarget = draggedItem === 'full' ? document.getElementById('fullLogoBox') : document.getElementById(`shardWrap_${draggedItem}`);
             if (ghostTarget) { ghostTarget.style.filter = `none`; }
+            
+            if (Math.abs(currentVelocity) > 2) {
+                applyInertia(draggedItem, currentVelocity);
+            }
+            
             draggedItem = null; 
             if (!isScattered) { document.getElementById('hudHint').innerHTML = "<i class='fa-solid fa-arrows-left-right'></i> Tahan & Geser Untuk Memutar"; } else { document.getElementById('hudHint').innerHTML = "<i class='fa-solid fa-hand-pointer'></i> Geser Untuk Putar / Klik Untuk Data"; }
             document.getElementById('hudHint').style.color = "var(--text-secondary)"; setTimeout(() => hasDragged = false, 100); 

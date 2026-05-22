@@ -17,7 +17,10 @@ class AuthFilter implements FilterInterface
 
             if ($token) {
                 $userModel = new \App\Models\UserModel();
-                $user = $userModel->where('remember_token', $token)->first();
+                $user = $userModel
+                    ->where('remember_token', $token)
+                    ->where('remember_token_expires >', date('Y-m-d H:i:s'))
+                    ->first();
 
                 if ($user) {
                     // Auto Login

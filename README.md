@@ -1,6 +1,8 @@
 # 🏛️ EXPEDIENT GENERATION — Museum Digital VVIP
 
 > Platform komunitas alumni eksklusif Pondok Modern Arrisalah Angkatan ke-42, dibangun dengan **CodeIgniter 4**, estetika **luxury dark/gold glassmorphism**, dan fitur interaktif tingkat tinggi.
+>
+> **Status**: Aktif Dikembangkan · **Terakhir diperbarui**: 21 Mei 2026
 
 ---
 
@@ -31,14 +33,16 @@
 | Layer | Stack |
 |-------|-------|
 | Framework | CodeIgniter 4.7+ |
-| Database | MySQL |
-| Frontend | Vanilla JS, GSAP, Three.js, Globe.gl, Swiper.js |
-| Font | Playfair Display, Inter, Amiri (Arabic) |
-| Auth | Password + FIDO2/WebAuthn Biometric |
+| Database | MySQL (MySQLi Driver) |
+| Frontend | Vanilla JS, GSAP, Three.js, Globe.gl, Swiper.js, face-api.js |
+| Font | Playfair Display, Inter, Amiri (Arabic), Alex Brush |
+| Auth | Password + FIDO2/WebAuthn Biometric + Remember Me |
 | Realtime | Pusher / Soketi self-hosted (port 6001) |
-| Email | SMTP Gmail + Async Queue (cron) |
-| 3D Engine | Three.js (Sovereign Vault) |
-| Maps | Globe.gl + Nominatim API |
+| Email | SMTP Gmail (SSL, port 465) + Async Queue (cron) |
+| 3D Engine | Three.js (Sovereign Vault, AR Hologram) |
+| Maps | Globe.gl + Leaflet.js + Nominatim API |
+| PWA | Service Worker + Manifest + Offline Page |
+| Admin | Dashboard + User Management + Content Moderation |
 
 ---
 
@@ -47,36 +51,49 @@
 ```
 app/
 ├── Config/
-│   ├── Routes.php          # Routing utama + auth filter + API group
-│   └── Filters.php         # AuthFilter + ThrottleApiFilter
+│   ├── Routes.php          # 70+ route definitions (auth, dashboard, API, admin)
+│   └── Filters.php         # 5 filter aliases (auth, throttle, admin, track_visit, securityheaders)
 ├── Controllers/
+│   ├── Admin/              # Admin sub-controllers (Announcements)
 │   ├── Api/                # REST API controllers (JSON standar)
 │   │   ├── BaseApiController.php
 │   │   ├── LocationApi.php
 │   │   └── BiometricApi.php
-│   └── ...                 # 25 controller halaman
-├── Database/Migrations/    # 7 migrasi (users, biometrics, syndicate, buku_tamu, dll)
+│   └── ...                 # 31 controller halaman
+├── Database/Migrations/    # 20 migrasi (users, biometrics, syndicate, chat, events, dll)
 ├── Filters/
-│   ├── AuthFilter.php      # Middleware cek session login
-│   └── ThrottleApiFilter.php  # Rate limiting 10 req/menit per IP
+│   ├── AuthFilter.php          # Middleware cek session + remember me
+│   ├── AdminFilter.php         # Middleware cek role admin
+│   ├── ThrottleApiFilter.php   # Rate limiting 10 req/menit per IP
+│   ├── SecurityHeaders.php     # CSP, HSTS, X-Frame-Options
+│   └── VisitorTrackingFilter.php # Analytics visitor tracking
 ├── Libraries/
 │   └── ActivityLogger.php  # Audit trail ke writable/logs/
-├── Models/
-│   └── UserModel.php       # Model utama data alumni
-├── Services/
+├── Models/                 # 24 model (users, chat, events, syndicate, dll)
+├── Services/               # 13 service classes
 │   ├── AuthService.php         # Business logic otentikasi
 │   ├── ProfileService.php      # Business logic profil + foto
 │   ├── PusherService.php       # Centralized Pusher/Soketi
 │   ├── EmailQueueService.php   # Async email queue
 │   ├── AnalyticsService.php    # Dashboard analytics
 │   ├── BerandaService.php      # Homepage data aggregation
-│   └── GamificationService.php # Prestise points system
+│   ├── GamificationService.php # Prestise points system
+│   ├── GaleriService.php       # Gallery data management
+│   ├── NexusService.php        # Alumni matching algorithm
+│   ├── RadarService.php        # Geolocation data
+│   ├── SyndicateService.php    # Business portfolio logic
+│   ├── TarbiyahService.php     # Mentorship logic
+│   └── WasiatService.php       # Encrypted messages logic
 ├── Commands/
 │   └── ProcessEmailQueue.php   # php spark email:process
-└── Views/                      # 25+ view files + subdirektori
-    ├── layout/template.php # Base template (dual theme)
-    ├── auth/               # Login & Register
+└── Views/                      # 30+ view files + 8 subdirektori
+    ├── layout/template.php # Base template (dual theme, 719 baris)
+    ├── auth/               # Login, Register, Forgot Password, Biometric
+    ├── admin/              # Admin dashboard views
     ├── syndicate/          # Bisnis alumni
+    ├── fitur/              # Sub-fitur views
+    ├── components/         # Reusable view components
+    ├── pager/              # Pagination templates
     └── errors/             # Custom error pages
 ```
 
@@ -386,34 +403,55 @@ id, user_id, credential_id (TEXT), public_key (TEXT), sign_count, created_at
 ## 🌟 Fitur Utama
 
 ### 1. Otentikasi Multi-Layer
-Login password + biometric WebAuthn + email verifikasi + forgot password
+Login password + biometric WebAuthn + email verifikasi + forgot password + remember me (30 hari)
 
-### 2. Museum Interaktif (Beranda)
-192-frame sequence animation, 13 shard logo interaktif, Panca Jiwa modal, buku tamu swipe-to-seal
+### 2. Landing Page Publik
+Halaman landing untuk visitor non-login dengan CTA masuk ke portal
 
-### 3. Global Radar
-Globe 3D persebaran alumni + GPS sync + peta datar fallback
+### 3. Museum Interaktif (Beranda)
+192-frame sequence animation, 13 shard logo interaktif, Panca Jiwa modal, buku tamu swipe-to-seal, leaderboard prestise
 
-### 4. Sovereign ID 3D
+### 4. Global Radar
+Globe 3D persebaran alumni + GPS sync + 6 varian peta (flat, satellite, terrain, dark, watercolor, classic)
+
+### 5. Sovereign ID 3D
 Kartu identitas VVIP di-render Three.js dengan material fisik, foto, QR code, dan lanyard
 
-### 5. Modul Gamifikasi
+### 6. Modul Gamifikasi
 Oracle Vision (aura scanner), Enigma Vault (puzzle ring), Celestial Codex (tarik kartu), Genesis Core (filosofi)
 
-### 6. Kalam Ilahi (Divine Verse)
+### 7. Kalam Ilahi (Divine Verse)
 32 ayat Al-Quran dengan tipografi Arab premium dan animasi reveal
 
-### 7. Direktori Alumni
+### 8. Direktori Alumni
 Swiper coverflow dengan search real-time dan reveal animasi
 
-### 8. Birthday System
-Auto-detect ulang tahun + notifikasi popup + halaman ucapan personal
+### 9. Birthday System
+Auto-detect ulang tahun + notifikasi popup + halaman ucapan personal + daftar birthday
 
-### 9. The Syndicate
+### 10. The Syndicate
 Portofolio bisnis alumni dengan CRUD dan relasi database
 
-### 10. Notifikasi Real-time
-Pusher/Soketi untuk notifikasi alumni baru bergabung
+### 11. Notifikasi Real-time
+Pusher/Soketi untuk notifikasi alumni baru, pesan chat, dan broadcast announcement
+
+### 12. Executive Chat
+Chat personal antar alumni + lounge publik + real-time via Pusher + kirim gambar + hapus pesan
+
+### 13. The Nexus
+Algoritma matching cerdas yang menghubungkan alumni berdasarkan visi, lokasi, dan minat
+
+### 14. Majlis Syura
+Forum diskusi dengan sistem voting dan penutupan topik oleh pembuat
+
+### 15. Admin Dashboard
+User management (role, toggle aktif), content moderation, export CSV, CRUD pengumuman
+
+### 16. Event & Agenda
+Sistem pembuatan event + RSVP pintar untuk pertemuan angkatan
+
+### 17. PWA (Progressive Web App)
+Service worker, manifest.json, offline page, installable di mobile
 
 ---
 
@@ -470,16 +508,18 @@ Endpoint API terpisah di `app/Controllers/Api/` dengan format response JSON stan
 
 | Filter | File | Fungsi |
 |--------|------|--------|
-| `auth` | `AuthFilter.php` | Cek session `logged_in`, redirect ke `/login` jika belum |
+| `auth` | `AuthFilter.php` | Cek session `logged_in` + auto-login via remember_me cookie, redirect ke `/login` jika belum |
 | `throttle` | `ThrottleApiFilter.php` | Rate limiting: maks 10 req/menit per IP per endpoint, return JSON 429 |
+| `admin` | `AdminFilter.php` | Cek role admin, redirect jika bukan admin |
+| `track_visit` | `VisitorTrackingFilter.php` | Analytics visitor tracking pada setiap request |
+| `securityheaders` | `SecurityHeaders.php` | Menambahkan CSP, X-Frame-Options, HSTS, X-XSS-Protection, Referrer-Policy |
 
-Filter `throttle` diterapkan pada endpoint:
-- `POST /radar/update-location`
-- `POST /biometric/login-verify` & `register-verify`
-- `POST /beranda/simpan_pesan`
-- `POST /syndicate/store`
-- `POST /profil/update`
-- Seluruh group `/api/*`
+Filter `auth` diterapkan pada:
+- Semua route dashboard, fitur, profil, radar, syndicate, chat, notifications
+- Endpoint POST sensitif (update profil, kirim pesan, CRUD)
+
+Filter `admin` diterapkan pada:
+- `/admin/*` (dashboard, users, moderation, export, announcements)
 
 ---
 
@@ -609,47 +649,70 @@ PUSHER_SCHEME="https"
 ```
 app/
 ├── Config/
-│   ├── Routes.php              # 40+ route definitions + API group
-│   └── Filters.php             # AuthFilter + ThrottleApiFilter
+│   ├── Routes.php              # 70+ route definitions + admin group
+│   └── Filters.php             # 5 filter aliases
 ├── Controllers/
+│   ├── Admin/                  # Admin sub-controllers
 │   ├── Api/                    # REST API controllers
-│   │   ├── BaseApiController.php
-│   │   ├── LocationApi.php
-│   │   └── BiometricApi.php
-│   ├── AuthController.php      # Otentikasi (login/register/reset)
+│   ├── AuthController.php      # Otentikasi (login/register/reset/remember)
+│   ├── AdminController.php     # Dashboard admin + user mgmt + moderation
 │   ├── BerandaController.php   # Dashboard + cache
-│   ├── DirektoriController.php # Daftar alumni + cache
-│   ├── ProfileController.php   # Manajemen profil + foto
-│   ├── RadarController.php     # Globe/Peta + cache
-│   └── ... (20 controller lainnya)
-├── Filters/
-│   ├── AuthFilter.php          # Middleware cek session
-│   └── ThrottleApiFilter.php   # Rate limiting API
+│   ├── ChatController.php      # Executive Chat (personal + lounge)
+│   ├── ProfileController.php   # Profil + change password + delete account
+│   ├── RadarController.php     # Globe/Peta (6 varian) + cache
+│   ├── NexusController.php     # Alumni matching algorithm
+│   ├── EventController.php     # Event & RSVP system
+│   └── ... (21 controller lainnya)
+├── Filters/                    # 5 middleware filters
 ├── Libraries/
 │   └── ActivityLogger.php      # Audit trail logger
-├── Models/
-│   └── UserModel.php           # Model utama data alumni
-├── Services/
-│   ├── AuthService.php         # Business logic otentikasi
-│   └── ProfileService.php      # Business logic profil
-└── Views/                      # 23 view files + subdirektori
+├── Models/                     # 24 model classes
+├── Services/                   # 13 service classes
+└── Views/                      # 30+ view files + 8 subdirektori
 
 public/
-├── css/
-│   └── design-system.css       # Shared styles (glassmorphism, buttons, dll)
-├── vendor/                     # Library CDN lokal
-├── images/                     # Logo, shard assets
-├── uploads/profiles/           # Foto profil user
-└── assets/sequence/            # Frame animasi logo
+├── css/                        # 6 CSS files (design-system, beranda, profil, dll)
+├── assets/
+│   ├── css/                    # Page-specific CSS (beranda)
+│   ├── js/                     # Page-specific JS (beranda, galeri)
+│   ├── foto_putra/             # Yearbook photos putra (150+ halaman)
+│   ├── foto_putri/             # Yearbook photos putri (82+ halaman)
+│   ├── audio/                  # Background music & whisper audio
+│   ├── models/                 # 3D model assets
+│   └── sequence/               # Frame animasi logo (192 frame)
+├── vendor/                     # Library CDN lokal (GSAP, Three.js, Globe.gl, dll)
+├── images/                     # Logo, ornamen, shard assets
+├── uploads/profiles/           # Foto profil user (WebP, max 512px)
+├── manifest.json               # PWA manifest
+├── sw.js                       # Service Worker
+└── service-worker.js           # Extended Service Worker
 
 scripts/
-└── download_vendor.php         # Script download CDN ke lokal
+├── download_vendor.php         # Script download CDN ke lokal
+├── extract_js.php              # JS extractor utility
+├── extract_js_robust.php       # Robust JS extractor
+└── extract_node.js             # Node.js extractor
 
 tests/unit/
 └── Services/                   # Unit tests
     ├── AuthServiceTest.php
     └── ProfileServiceTest.php
 ```
+
+---
+
+## 📊 Statistik Proyek
+
+| Metrik | Jumlah |
+|--------|--------|
+| Controllers | 31 (+ 2 subdirektori) |
+| Views | 30+ files (+ 8 subdirektori) |
+| Models | 24 |
+| Services | 13 |
+| Filters | 5 |
+| Migrations | 20 |
+| Routes | 70+ |
+| CSS Files | 6 (design system + page-specific) |
 
 ---
 

@@ -193,20 +193,20 @@ Arsip Visual 5D | The Syndicate Yearbook
     <div class="dimension-core" id="dimCore">
         <div class="book-scene" id="bookPutra">
             <?php $pathPutra = base_url('assets/foto_putra/'); $idxPutra = 0; ?>
-            <div class="sheet cursor-bind" data-sheet="<?= $idxPutra++ ?>"><div class="face front cover-material"><img src="<?= $pathPutra ?>Cover Depan.webp" loading="lazy"></div><div class="face back"><img src="<?= $pathPutra ?>Cover Dalem Depan.webp" loading="lazy"></div></div>
+            <div class="sheet cursor-bind" data-sheet="<?= $idxPutra++ ?>"><div class="face front cover-material"><img data-src="<?= $pathPutra ?>Cover Depan.webp"></div><div class="face back"><img data-src="<?= $pathPutra ?>Cover Dalem Depan.webp"></div></div>
             <?php for($i = 1; $i <= 75; $i++): ?>
-                <div class="sheet cursor-bind" data-sheet="<?= $idxPutra++ ?>"><div class="face front"><img src="<?= $pathPutra ?>Hal <?= ($i * 2) - 1 ?>.webp" loading="lazy"></div><div class="face back"><img src="<?= $pathPutra ?>Hal <?= ($i * 2) ?>.webp" loading="lazy"></div></div>
+                <div class="sheet cursor-bind" data-sheet="<?= $idxPutra++ ?>"><div class="face front"><img data-src="<?= $pathPutra ?>Hal <?= ($i * 2) - 1 ?>.webp"></div><div class="face back"><img data-src="<?= $pathPutra ?>Hal <?= ($i * 2) ?>.webp"></div></div>
             <?php endfor; ?>
-            <div class="sheet cursor-bind" data-sheet="<?= $idxPutra++ ?>"><div class="face front"><img src="<?= $pathPutra ?>Cover Dalem Belakang.webp" loading="lazy"></div><div class="face back cover-material"><img src="<?= $pathPutra ?>Cover Belakang.webp" loading="lazy"></div></div>
+            <div class="sheet cursor-bind" data-sheet="<?= $idxPutra++ ?>"><div class="face front"><img data-src="<?= $pathPutra ?>Cover Dalem Belakang.webp"></div><div class="face back cover-material"><img data-src="<?= $pathPutra ?>Cover Belakang.webp"></div></div>
         </div>
 
         <div class="book-scene" id="bookPutri">
             <?php $pathPutri = base_url('assets/foto_putri/'); $idxPutri = 0; ?>
-            <div class="sheet cursor-bind" data-sheet="<?= $idxPutri++ ?>"><div class="face front cover-material"><img src="<?= $pathPutri ?>Cover Depan.webp" loading="lazy"></div><div class="face back"><img src="<?= $pathPutri ?>Cover Dalem Depan.webp" loading="lazy"></div></div>
+            <div class="sheet cursor-bind" data-sheet="<?= $idxPutri++ ?>"><div class="face front cover-material"><img data-src="<?= $pathPutri ?>Cover Depan.webp"></div><div class="face back"><img data-src="<?= $pathPutri ?>Cover Dalem Depan.webp"></div></div>
             <?php for($i = 1; $i <= 41; $i++): ?>
-                <div class="sheet cursor-bind" data-sheet="<?= $idxPutri++ ?>"><div class="face front"><img src="<?= $pathPutri ?>Hal <?= ($i * 2) - 1 ?>.webp" loading="lazy"></div><div class="face back"><img src="<?= $pathPutri ?>Hal <?= ($i * 2) ?>.webp" loading="lazy"></div></div>
+                <div class="sheet cursor-bind" data-sheet="<?= $idxPutri++ ?>"><div class="face front"><img data-src="<?= $pathPutri ?>Hal <?= ($i * 2) - 1 ?>.webp"></div><div class="face back"><img data-src="<?= $pathPutri ?>Hal <?= ($i * 2) ?>.webp"></div></div>
             <?php endfor; ?>
-            <div class="sheet cursor-bind" data-sheet="<?= $idxPutri++ ?>"><div class="face front"><img src="<?= $pathPutri ?>Cover Dalem Belakang.webp" loading="lazy"></div><div class="face back cover-material"><img src="<?= $pathPutri ?>Cover Belakang.webp" loading="lazy"></div></div>
+            <div class="sheet cursor-bind" data-sheet="<?= $idxPutri++ ?>"><div class="face front"><img data-src="<?= $pathPutri ?>Cover Dalem Belakang.webp"></div><div class="face back cover-material"><img data-src="<?= $pathPutri ?>Cover Belakang.webp"></div></div>
         </div>
     </div>
 
@@ -234,6 +234,6 @@ Arsip Visual 5D | The Syndicate Yearbook
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="/vendor/gsap/gsap.min.js"></script>
 <script src="/assets/js/galeri.js" defer></script>
 <?= $this->endSection() ?>

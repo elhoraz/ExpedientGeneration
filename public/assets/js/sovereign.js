@@ -28,7 +28,7 @@ import * as THREE from 'three';
             camera.position.set(0, 0, 28); 
 
             // Renderer Murni
-            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "high-performance" });
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "high-performance", preserveDrawingBuffer: true });
             renderer.setClearColor( 0x000000, 0 ); 
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -511,6 +511,31 @@ import * as THREE from 'three';
                 }
                 updateFocusState();
             });
+
+            // ==========================================
+            // EXPORT ID CARD (PNG)
+            // ==========================================
+            const btnExportId = document.getElementById('btnExportId');
+            if (btnExportId) {
+                btnExportId.addEventListener('click', () => {
+                    // Paksa render frame terbaru sebelum ditangkap
+                    renderer.render(scene, camera);
+                    
+                    const dataURL = renderer.domElement.toDataURL('image/png');
+                    const link = document.createElement('a');
+                    link.download = `Expedient_ID_${expedientData.nama.replace(/\s+/g, '_')}.png`;
+                    link.href = dataURL;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    if (navigator.vibrate) navigator.vibrate(50);
+                    btnExportId.innerHTML = '<i class="fa-solid fa-check"></i>';
+                    setTimeout(() => {
+                        btnExportId.innerHTML = '<i class="fa-solid fa-download"></i>';
+                    }, 2000);
+                });
+            }
 
             // ==========================================
             // IMAGE & QR LOADER

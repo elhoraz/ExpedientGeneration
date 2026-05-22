@@ -71,7 +71,7 @@ class SyndicateController extends BaseController
             return redirect()->to('/syndicate/create')->withInput()->with('validation_errors', $this->validator->getErrors());
         }
 
-        $syndicateService = new SyndicateService();
+        $syndicateService = service('syndicateService');
         $syndicateService->storeBisnis(
             $userId, 
             [
@@ -134,7 +134,7 @@ class SyndicateController extends BaseController
             'link_url'    => $this->request->getPost('link_url'),
         ];
 
-        $syndicateService = new SyndicateService();
+        $syndicateService = service('syndicateService');
         try {
             $syndicateService->updateBisnis($id, $userId, $dataUpdate, $this->request->getFile('logo_bisnis'));
             return redirect()->to('/syndicate')->with('success', 'Data bisnis berhasil diperbarui.');
@@ -155,7 +155,7 @@ class SyndicateController extends BaseController
             return redirect()->to('/syndicate')->with('error', 'Otorisasi gagal.');
         }
 
-        $syndicateService = new SyndicateService();
+        $syndicateService = service('syndicateService');
         try {
             $syndicateService->deleteBisnis($id, $userId);
             return redirect()->to('/syndicate')->with('success', 'Data bisnis berhasil dihapus.');

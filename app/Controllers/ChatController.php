@@ -142,7 +142,7 @@ class ChatController extends BaseController
         $user = $this->userModel->find($userId);
 
         // Trigger Pusher
-        $pusherService = new PusherService();
+        $pusherService = service('pusherService');
         $pusherService->sendChatMessage([
             'id'            => $chatId,
             'sender_id'     => $userId,

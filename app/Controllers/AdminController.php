@@ -4,12 +4,13 @@ namespace App\Controllers;
 
 use App\Models\UserModel;
 use App\Services\AnalyticsService;
+use App\Libraries\ActivityLogger;
 
 class AdminController extends BaseController
 {
     public function index()
     {
-        $analyticsService = new AnalyticsService();
+        $analyticsService = service('analyticsService');
 
         // Gunakan AnalyticsService untuk semua data
         $weeklyTrend = $analyticsService->getWeeklyTrend();
@@ -42,12 +43,11 @@ class AdminController extends BaseController
     public function users()
     {
         $userModel = new UserModel();
-        $db = \Config\Database::connect();
 
         $search = $this->request->getGet('q');
         $roleFilter = $this->request->getGet('role');
 
-        $builder = $db->table('users')
+        $builder = $userModel->builder()
             ->select('id, nama_lengkap, nama_panggilan, email, role, foto_profil, is_active, prestise_points, created_at')
             ->orderBy('created_at', 'DESC');
 
@@ -101,22 +101,23 @@ class AdminController extends BaseController
      */
     public function toggleActive($userId)
     {
-        // Proteksi: Jangan bisa menonaktifkan diri sendiri
         if ((int)$userId === (int)session()->get('user_id')) {
             return redirect()->to('/admin/users')->with('error', 'Anda tidak bisa menonaktifkan akun sendiri.');
         }
 
-        $db = \Config\Database::connect();
-        $user = $db->table('users')->where('id', $userId)->get()->getRow();
+        $userModel = new UserModel();
+        $user = $userModel->find($userId);
 
         if (!$user) {
             return redirect()->to('/admin/users')->with('error', 'User tidak ditemukan.');
         }
 
-        $newStatus = ($user->is_active ?? 1) == 1 ? 0 : 1;
+        $newStatus = ($user['is_active'] ?? 1) == 1 ? 0 : 1;
+        $db = \Config\Database::connect();
         $db->table('users')->where('id', $userId)->update(['is_active' => $newStatus]);
 
         $label = $newStatus ? 'diaktifkan' : 'dinonaktifkan';
+        ActivityLogger::log('ADMIN_TOGGLE_ACTIVE', "User #{$userId} {$label}", session()->get('user_id'));
         return redirect()->to('/admin/users')->with('success', "Akun berhasil {$label}.");
     }
 
@@ -175,20 +176,25 @@ class AdminController extends BaseController
     public function deleteContent($type, $id)
     {
         $db = \Config\Database::connect();
+        $adminId = session()->get('user_id');
 
         switch ($type) {
             case 'chat':
                 $db->table('chat_messages')->where('id', $id)->update(['is_deleted' => 1]);
+                ActivityLogger::log('ADMIN_DELETE', "Hapus chat #{$id}", $adminId);
                 break;
             case 'majlis':
                 $db->table('majlis_topics')->where('id', $id)->delete();
                 $db->table('majlis_votes')->where('topic_id', $id)->delete();
+                ActivityLogger::log('ADMIN_DELETE', "Hapus majlis topic #{$id} beserta votes", $adminId);
                 break;
             case 'syndicate':
                 $db->table('syndicate')->where('id', $id)->delete();
+                ActivityLogger::log('ADMIN_DELETE', "Hapus syndicate #{$id}", $adminId);
                 break;
             case 'bukutamu':
                 $db->table('buku_tamu')->where('id', $id)->delete();
+                ActivityLogger::log('ADMIN_DELETE', "Hapus buku tamu #{$id}", $adminId);
                 break;
             default:
                 return redirect()->to('/admin/moderation')->with('error', 'Tipe konten tidak dikenali.');
@@ -206,18 +212,16 @@ class AdminController extends BaseController
      */
     public function exportCsv()
     {
-        $db = \Config\Database::connect();
-        $users = $db->table('users')
+        $userModel = new UserModel();
+        $users = $userModel->builder()
             ->select('nama_lengkap, nama_panggilan, email, no_whatsapp, jenis_kelamin, tempat_lahir, tanggal_lahir, alamat_lengkap, akun_ig, akun_tiktok, motivasi_hidup, cita_cita, prestise_points, role, created_at')
             ->orderBy('nama_lengkap', 'ASC')
             ->get()->getResultArray();
 
         $filename = 'direktori_expedient_' . date('Ymd_His') . '.csv';
 
-        header('Content-Type: text/csv; charset=utf-8');
-        header('Content-Disposition: attachment; filename="' . $filename . '"');
-
-        $output = fopen('php://output', 'w');
+        // Build CSV in memory instead of using exit
+        $output = fopen('php://temp', 'w');
 
         // BOM for Excel UTF-8
         fprintf($output, chr(0xEF) . chr(0xBB) . chr(0xBF));
@@ -229,7 +233,15 @@ class AdminController extends BaseController
             fputcsv($output, $u);
         }
 
+        rewind($output);
+        $csvContent = stream_get_contents($output);
         fclose($output);
-        exit;
+
+        ActivityLogger::log('ADMIN_EXPORT', 'Export CSV direktori alumni', session()->get('user_id'));
+
+        return $this->response
+            ->setHeader('Content-Type', 'text/csv; charset=utf-8')
+            ->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"')
+            ->setBody($csvContent);
     }
 }

@@ -20,7 +20,7 @@ Majlis Syura Eksklusif - VVIP Audio Room
         background-image: 
             radial-gradient(circle at 50% 50%, rgba(212,175,55,0.05) 0%, transparent 70%),
             linear-gradient(180deg, #020403 0%, #010201 100%);
-        overflow: hidden; /* Prevent scrolling for app-like feel */
+        overflow: hidden; 
         font-family: 'Inter', sans-serif;
     }
 
@@ -35,7 +35,6 @@ Majlis Syura Eksklusif - VVIP Audio Room
         overflow: hidden;
     }
 
-    /* BACKGROUND PARTICLES & WAVES */
     .bg-wave {
         position: absolute;
         top: 50%;
@@ -58,7 +57,6 @@ Majlis Syura Eksklusif - VVIP Audio Room
         100% { transform: translate(-50%, -50%) rotate(360deg); }
     }
 
-    /* HEADER & BACK BUTTON */
     .majlis-header {
         position: absolute;
         top: 0;
@@ -126,7 +124,6 @@ Majlis Syura Eksklusif - VVIP Audio Room
 
     @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-    /* CENTER STAGE (AUDIO VISUALIZER & SPEAKER) */
     .center-stage {
         position: relative;
         z-index: 10;
@@ -141,14 +138,20 @@ Majlis Syura Eksklusif - VVIP Audio Room
         width: 180px;
         height: 180px;
         border-radius: 50%;
-        background: url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop') center/cover;
+        background-color: #1a1a1a;
+        background-size: cover;
+        background-position: center;
         position: relative;
         box-shadow: 0 0 50px rgba(0,0,0,0.8), inset 0 0 20px rgba(0,0,0,0.5);
         border: 2px solid var(--gold-main);
         z-index: 5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #555;
+        font-size: 3rem;
     }
 
-    /* Golden Audio Rings around speaker */
     .audio-ring {
         position: absolute;
         top: 50%;
@@ -185,7 +188,6 @@ Majlis Syura Eksklusif - VVIP Audio Room
         margin: 5px 0 0 0;
     }
 
-    /* LISTENERS GRID (ORBITING OR SCATTERED) */
     .listeners-container {
         position: absolute;
         bottom: 120px;
@@ -247,7 +249,6 @@ Majlis Syura Eksklusif - VVIP Audio Room
         border: 1px solid #ff3366;
     }
 
-    /* CONTROL DOCK (BOTTOM) */
     .control-dock {
         position: absolute;
         bottom: 40px;
@@ -262,17 +263,26 @@ Majlis Syura Eksklusif - VVIP Audio Room
         z-index: 50;
     }
 
-    /* MAJLIS PANEL (MOSI & VOTING) */
     .majlis-panel {
         position: fixed; top: 0; right: -450px; width: 450px; height: 100vh;
         background: rgba(10, 15, 12, 0.95); backdrop-filter: blur(20px);
         border-left: 1px solid rgba(212,175,55,0.3); z-index: 1000;
-        transition: right 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         padding: 40px 30px; display: flex; flex-direction: column; gap: 20px;
         overflow-y: auto; color: #fff; box-shadow: -20px 0 50px rgba(0,0,0,0.8);
     }
     .majlis-panel.open { right: 0; }
     
+    .requests-panel {
+        position: fixed; top: 0; left: -450px; width: 450px; height: 100vh;
+        background: rgba(10, 15, 12, 0.95); backdrop-filter: blur(20px);
+        border-right: 1px solid rgba(212,175,55,0.3); z-index: 1000;
+        transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        padding: 40px 30px; display: flex; flex-direction: column; gap: 20px;
+        overflow-y: auto; color: #fff; box-shadow: 20px 0 50px rgba(0,0,0,0.8);
+    }
+    .requests-panel.open { left: 0; }
+
     .panel-title { font-family: 'Playfair Display', serif; color: var(--gold-main); font-size: 1.5rem; letter-spacing: 2px; border-bottom: 1px solid rgba(212,175,55,0.3); padding-bottom: 10px; margin-bottom: 10px; }
     .majlis-form input, .majlis-form textarea {
         width: 100%; background: rgba(0,0,0,0.5); border: 1px solid rgba(212,175,55,0.3);
@@ -309,6 +319,7 @@ Majlis Syura Eksklusif - VVIP Audio Room
         justify-content: center;
         cursor: pointer;
         transition: all 0.3s;
+        position: relative;
     }
     .ctrl-btn:hover {
         background: rgba(212,175,55,0.2);
@@ -329,6 +340,15 @@ Majlis Syura Eksklusif - VVIP Audio Room
         color: #fff;
         box-shadow: 0 0 20px #ff3366;
     }
+    .badge-count {
+        position: absolute;
+        top: -5px; right: -5px;
+        background: #ff3366; color: white;
+        font-size: 0.6rem; font-weight: bold;
+        width: 18px; height: 18px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        display: none;
+    }
 
     /* RESPONSIVE */
     @media (max-width: 768px) {
@@ -340,6 +360,7 @@ Majlis Syura Eksklusif - VVIP Audio Room
         .control-dock { bottom: 30px; padding: 10px 20px; gap: 15px; }
         .ctrl-btn { width: 45px; height: 45px; font-size: 1rem; }
         .majlis-panel { width: 100%; right: -100%; }
+        .requests-panel { width: 100%; left: -100%; }
     }
 </style>
 <?= $this->endSection() ?>
@@ -359,7 +380,7 @@ Majlis Syura Eksklusif - VVIP Audio Room
         <div class="room-info">
             <h1 class="room-title">Majlis Syura Utama</h1>
             <div class="room-status">
-                <span class="status-dot"></span> Diskusi Sedang Berlangsung
+                <span class="status-dot"></span> <span id="onlineCount">1</span> Kolega Hadir
             </div>
         </div>
     </header>
@@ -367,22 +388,33 @@ Majlis Syura Eksklusif - VVIP Audio Room
     <!-- Center Stage (Active Speaker) -->
     <div class="center-stage">
         <div class="speaker-orb" id="activeSpeaker">
-            <!-- JS will inject rippling rings here -->
+            <i class="fa-solid fa-microphone-slash"></i>
         </div>
         <div class="speaker-info">
-            <h2 class="speaker-name">Al-Ustadz Fulan Bin Fulan</h2>
-            <p class="speaker-role">Pemateri Kajian Eksekutif</p>
+            <h2 class="speaker-name" id="speakerName">Ruangan Terbuka</h2>
+            <p class="speaker-role" id="speakerRole">Tidak ada pembicara saat ini</p>
         </div>
+        <?php if($user_role === 'admin'): ?>
+        <button id="btnStopSpeaker" onclick="stopSpeaker()" style="margin-top:15px; padding:5px 15px; background:rgba(255,51,102,0.2); border:1px solid #ff3366; color:#ff3366; border-radius:15px; cursor:pointer; font-size:0.7rem; font-weight:bold; letter-spacing:1px; text-transform:uppercase; display:none;">
+            Hentikan Pembicara
+        </button>
+        <?php endif; ?>
     </div>
 
     <!-- Listeners Grid -->
     <div class="listeners-container" id="listenersGrid">
-        <!-- Rendered via JS -->
+        <!-- Rendered via JS Pusher Presence -->
     </div>
 
     <!-- Bottom Controls -->
     <div class="control-dock">
-        <button class="ctrl-btn" title="Angkat Tangan (Request Speak)" id="btnHand">
+        <?php if($user_role === 'admin'): ?>
+        <button class="ctrl-btn" title="Daftar Permintaan Bicara" id="btnAdminRequests">
+            <i class="fa-solid fa-clipboard-list"></i>
+            <span class="badge-count" id="requestsBadge">0</span>
+        </button>
+        <?php endif; ?>
+        <button class="ctrl-btn" title="Angkat Tangan (Request Speak)" id="btnHand" onclick="requestToSpeak()">
             <i class="fa-solid fa-hand"></i>
         </button>
         <button class="ctrl-btn danger" title="Mute Microphone" id="btnMic">
@@ -397,81 +429,40 @@ Majlis Syura Eksklusif - VVIP Audio Room
     </div>
 </div>
 
+<!-- PANEL PERMINTAAN BICARA (ADMIN ONLY) -->
+<?php if($user_role === 'admin'): ?>
+<div class="requests-panel" id="requestsPanel">
+    <div class="panel-title">Antrean Pembicara</div>
+    <div id="requestsList">
+        <div style="text-align:center; padding:20px; color:#555; font-size:0.8rem;">Belum ada permintaan.</div>
+    </div>
+</div>
+<?php endif; ?>
+
 <!-- PANEL MOSI & VOTING -->
 <div class="majlis-panel" id="majlisPanel">
     <div class="panel-title">Ajukan Mosi Baru</div>
-    <form action="/majlis/store" method="POST" class="majlis-form">
-        <?= csrf_field() ?>
-        <input type="text" name="title" placeholder="Judul Mosi (Singkat & Jelas)" required>
-        <textarea name="description" rows="3" placeholder="Deskripsi atau landasan masalah..." required></textarea>
-        <button type="submit" class="btn-submit-majlis">Ajukan ke Forum</button>
+    <form id="formAddTopic" class="majlis-form">
+        <input type="text" name="title" id="topicTitle" placeholder="Judul Mosi (Singkat & Jelas)" required>
+        <textarea name="description" id="topicDesc" rows="3" placeholder="Deskripsi atau landasan masalah..." required></textarea>
+        <button type="submit" class="btn-submit-majlis" id="btnSubmitTopic">Ajukan ke Forum</button>
     </form>
 
     <div class="panel-title" style="margin-top:20px;">Daftar Agenda (Voting)</div>
-    <?php if(!empty($topics)): ?>
-        <?php foreach($topics as $t): ?>
-            <div class="topic-card">
-                <h3 class="topic-title"><?= esc($t['title']) ?></h3>
-                <div class="topic-meta">
-                    <span>Oleh: <?= esc($t['nama_panggilan']) ?></span>
-                    <span style="color: <?= $t['status'] === 'Open' ? 'var(--neon-green)' : '#ff3366' ?>"><?= esc($t['status']) ?></span>
-                </div>
-                <div class="topic-desc"><?= esc($t['description']) ?></div>
-                
-                <div class="vote-stats">
-                    <span class="agree-count"><i class="fa-solid fa-check"></i> Setuju: <?= $t['votes_setuju'] ?></span>
-                    <span class="disagree-count"><i class="fa-solid fa-xmark"></i> Tidak: <?= $t['votes_tidak_setuju'] ?></span>
-                </div>
-
-                <?php if($t['status'] === 'Open'): ?>
-                    <?php if($t['has_voted']): ?>
-                        <div style="margin-top:15px; text-align:center; color:var(--gold-main); font-size:0.8rem; font-weight:bold; border:1px dashed var(--gold-main); padding:8px;">Suara Anda telah direkam.</div>
-                    <?php else: ?>
-                        <div class="vote-btns" style="margin-top:15px;">
-                            <form action="/majlis/vote/<?= $t['id'] ?>" method="POST" style="flex:1;">
-                                <?= csrf_field() ?>
-                                <input type="hidden" name="choice" value="Setuju">
-                                <button type="submit" class="btn-vote agree"><i class="fa-solid fa-check"></i> Setuju</button>
-                            </form>
-                            <form action="/majlis/vote/<?= $t['id'] ?>" method="POST" style="flex:1;">
-                                <?= csrf_field() ?>
-                                <input type="hidden" name="choice" value="Tidak Setuju">
-                                <button type="submit" class="btn-vote disagree"><i class="fa-solid fa-xmark"></i> Tolak</button>
-                            </form>
-                        </div>
-                    <?php endif; ?>
-                    
-                    <?php if((int)$t['created_by'] === (int)$user_id || $user_role === 'admin'): ?>
-                        <form action="/majlis/close/<?= $t['id'] ?>" method="POST" style="margin-top:10px;" onsubmit="return confirm('Tutup sesi voting ini? Tindakan tidak dapat dibatalkan.')">
-                            <?= csrf_field() ?>
-                            <button type="submit" style="width:100%; padding:8px; background:rgba(255,51,102,0.15); border:1px solid rgba(255,51,102,0.3); color:#ff3366; border-radius:5px; cursor:pointer; font-size:0.75rem; font-weight:bold; letter-spacing:1px; text-transform:uppercase;">
-                                <i class="fa-solid fa-lock"></i> Tutup Voting
-                            </button>
-                        </form>
-                    <?php endif; ?>
-                <?php else: ?>
-                    <div style="margin-top:15px; text-align:center; padding:12px; border-radius:8px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08);">
-                        <div style="font-size:0.7rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:2px; margin-bottom:8px;">Hasil Akhir</div>
-                        <div style="display:flex; justify-content:center; gap:30px;">
-                            <span style="color:#00ff88; font-size:1.2rem; font-weight:bold;"><i class="fa-solid fa-check"></i> <?= $t['votes_setuju'] ?></span>
-                            <span style="color:#ff3366; font-size:1.2rem; font-weight:bold;"><i class="fa-solid fa-xmark"></i> <?= $t['votes_tidak_setuju'] ?></span>
-                        </div>
-                        <?php $winner = $t['votes_setuju'] >= $t['votes_tidak_setuju'] ? 'DISETUJUI' : 'DITOLAK'; ?>
-                        <?php $winColor = $t['votes_setuju'] >= $t['votes_tidak_setuju'] ? '#00ff88' : '#ff3366'; ?>
-                        <div style="margin-top:8px; font-size:0.75rem; font-weight:bold; color:<?= $winColor ?>; letter-spacing:2px;"><?= $winner ?></div>
-                    </div>
-                <?php endif; ?>
-            </div>
-        <?php endforeach; ?>
-    <?php else: ?>
-        <div style="text-align:center; padding:20px; color:#555; font-size:0.8rem;">Belum ada Mosi yang diajukan.</div>
-    <?php endif; ?>
+    <div id="topicsContainer">
+        <!-- Rendered via JS -->
+    </div>
 </div>
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="/vendor/gsap/gsap.min.js"></script>
+<script src="/vendor/pusher/pusher.min.js"></script>
 <script>
+// CURRENT USER INFO
+const currentUserId = <?= esc($user_id) ?>;
+const currentUserRole = "<?= esc($user_role) ?>";
+
 document.addEventListener("DOMContentLoaded", () => {
     // 1. Initial Intro Animation
     const tl = gsap.timeline();
@@ -479,97 +470,409 @@ document.addEventListener("DOMContentLoaded", () => {
       .from(".center-stage", { scale: 0.8, opacity: 0, duration: 1.5, ease: "elastic.out(1, 0.5)" }, "-=0.5")
       .from(".control-dock", { y: 100, opacity: 0, duration: 1, ease: "back.out(1.5)" }, "-=1");
 
-    // 2. Audio Visualizer Effect (Golden Ripples)
+    // Ripple effect for active speaker
     const speakerOrb = document.getElementById('activeSpeaker');
-    
-    function createRipple() {
-        const ring = document.createElement('div');
-        ring.classList.add('audio-ring');
-        speakerOrb.appendChild(ring);
-
-        const sizeStart = 180;
-        const sizeEnd = 180 + (Math.random() * 150 + 50); // Random end size between 230 and 380
-
-        gsap.fromTo(ring, 
-            { width: sizeStart, height: sizeStart, opacity: 0.8 },
-            { 
-                width: sizeEnd, height: sizeEnd, opacity: 0, 
-                duration: Math.random() * 1.5 + 1.5, 
-                ease: "power2.out",
-                onComplete: () => ring.remove()
-            }
-        );
+    let talkingInterval = null;
+    function startRipples() {
+        if(talkingInterval) return;
+        talkingInterval = setInterval(() => {
+            const ring = document.createElement('div');
+            ring.classList.add('audio-ring');
+            speakerOrb.appendChild(ring);
+            const sizeStart = 180;
+            const sizeEnd = 180 + (Math.random() * 150 + 50);
+            gsap.fromTo(ring, 
+                { width: sizeStart, height: sizeStart, opacity: 0.8 },
+                { 
+                    width: sizeEnd, height: sizeEnd, opacity: 0, 
+                    duration: Math.random() * 1.5 + 1.5, 
+                    ease: "power2.out",
+                    onComplete: () => ring.remove()
+                }
+            );
+        }, 600);
+    }
+    function stopRipples() {
+        if(talkingInterval) clearInterval(talkingInterval);
+        talkingInterval = null;
+        document.querySelectorAll('.audio-ring').forEach(r => r.remove());
     }
 
-    // Trigger ripple every few milliseconds to simulate talking
-    let talkingInterval = setInterval(createRipple, 600);
-
-    // 3. Populate Listeners
-    const listenersData = [
-        { name: "Ahmad R.", img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=150&auto=format&fit=crop" },
-        { name: "Ibrahim", img: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=150&auto=format&fit=crop" },
-        { name: "Yusuf K.", img: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=150&auto=format&fit=crop" },
-        { name: "Tariq", img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=150&auto=format&fit=crop" },
-        { name: "Hasan", img: "https://images.unsplash.com/photo-1530268729831-4b0b9e170218?q=80&w=150&auto=format&fit=crop" },
-        { name: "Ridwan", img: "https://images.unsplash.com/photo-1504257432389-52343af06ae3?q=80&w=150&auto=format&fit=crop" },
-        { name: "Zaid M.", img: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?q=80&w=150&auto=format&fit=crop" }
-    ];
-
-    const grid = document.getElementById('listenersGrid');
-    listenersData.forEach((user, index) => {
-        const node = document.createElement('div');
-        node.classList.add('listener-node');
-        node.innerHTML = `
-            <div style="position:relative;">
-                <div class="listener-avatar" style="background-image: url('${user.img}');"></div>
-                <div class="mic-status"><i class="fa-solid fa-microphone-slash"></i></div>
-            </div>
-            <span class="listener-name">${user.name}</span>
-        `;
-        grid.appendChild(node);
-    });
-
-    gsap.from(".listener-node", {
-        y: 30, opacity: 0, duration: 0.8, stagger: 0.1, ease: "power2.out", delay: 1
-    });
-
-    // 4. Interactions
-    document.getElementById('btnMic').addEventListener('click', function() {
+    // Interactions
+    const btnMic = document.getElementById('btnMic');
+    btnMic.addEventListener('click', function() {
         const icon = this.querySelector('i');
         if(this.classList.contains('danger')) {
             this.classList.remove('danger');
             this.classList.add('active');
             icon.classList.replace('fa-microphone-slash', 'fa-microphone');
             this.style.color = "#000";
+            if(window.currentActiveSpeakerId == currentUserId) startRipples();
         } else {
             this.classList.add('danger');
             this.classList.remove('active');
             icon.classList.replace('fa-microphone', 'fa-microphone-slash');
             this.style.color = "#fff";
+            stopRipples();
         }
     });
 
-    document.getElementById('btnHand').addEventListener('click', function() {
-        this.classList.toggle('active');
-        if(this.classList.contains('active')) {
-            gsap.to(this, { y: -10, yoyo: true, repeat: 3, duration: 0.2 });
-        }
-    });
-
-    // Panel Toggle
     const btnToggleMajlis = document.getElementById('btnToggleMajlis');
     const majlisPanel = document.getElementById('majlisPanel');
-    
     btnToggleMajlis.addEventListener('click', () => {
         majlisPanel.classList.toggle('open');
+        if(document.getElementById('requestsPanel')) document.getElementById('requestsPanel').classList.remove('open');
         if(navigator.vibrate) navigator.vibrate(20);
     });
 
-    // Flashdata Success/Error Handling
-    <?php if(session()->getFlashdata('success') || session()->getFlashdata('error')): ?>
-        majlisPanel.classList.add('open');
-    <?php endif; ?>
+    const btnAdminRequests = document.getElementById('btnAdminRequests');
+    if (btnAdminRequests) {
+        btnAdminRequests.addEventListener('click', () => {
+            document.getElementById('requestsPanel').classList.toggle('open');
+            majlisPanel.classList.remove('open');
+        });
+    }
 
+    // --- PUSHER & REAL-TIME LOGIC ---
+    let presenceChannel;
+    let onlineMembers = new Map();
+    const listenersGrid = document.getElementById('listenersGrid');
+
+    if (window.ExpedientConfig && window.ExpedientConfig.userId !== null) {
+        const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+        const csrfHash = csrfMeta ? csrfMeta.getAttribute('content') : '';
+
+        const config = window.ExpedientConfig.pusher;
+        const pusherConfig = { 
+            cluster: config.cluster, 
+            forceTLS: true,
+            authEndpoint: '/pusher/auth',
+            auth: {
+                headers: {
+                    'X-CSRF-TOKEN': csrfHash
+                }
+            }
+        };
+        
+        if (config.host) {
+            pusherConfig.wsHost = config.host;
+            pusherConfig.wsPort = config.port;
+            pusherConfig.wssPort = config.port;
+            pusherConfig.forceTLS = config.forceTLS;
+            pusherConfig.enabledTransports = ['ws', 'wss'];
+        }
+        
+        const pusher = new Pusher(config.key, pusherConfig);
+        presenceChannel = pusher.subscribe('presence-majlis');
+
+        presenceChannel.bind('pusher:subscription_succeeded', (members) => {
+            document.getElementById('onlineCount').innerText = members.count;
+            members.each(member => onlineMembers.set(member.id, member.info));
+            renderListeners();
+        });
+
+        presenceChannel.bind('pusher:member_added', (member) => {
+            onlineMembers.set(member.id, member.info);
+            document.getElementById('onlineCount').innerText = onlineMembers.size;
+            renderListeners();
+        });
+
+        presenceChannel.bind('pusher:member_removed', (member) => {
+            onlineMembers.delete(member.id);
+            document.getElementById('onlineCount').innerText = onlineMembers.size;
+            renderListeners();
+        });
+
+        // App events
+        presenceChannel.bind('majlis-update', () => {
+            fetchState(); // re-fetch topics
+        });
+
+        presenceChannel.bind('hand-raised', (data) => {
+            renderRequests(data.requests);
+            if(data.requests.length > 0 && navigator.vibrate) navigator.vibrate([50, 50, 50]);
+        });
+
+        presenceChannel.bind('speaker-changed', (data) => {
+            updateActiveSpeakerUI(data.speaker);
+            if(data.requests) renderRequests(data.requests);
+        });
+    }
+
+    function renderListeners() {
+        listenersGrid.innerHTML = '';
+        onlineMembers.forEach((info, id) => {
+            // Don't render active speaker in the grid
+            if (window.currentActiveSpeakerId == id) return;
+
+            const node = document.createElement('div');
+            node.classList.add('listener-node');
+            node.innerHTML = `
+                <div style="position:relative;">
+                    <div class="listener-avatar" style="background-image: url('${info.avatar}');"></div>
+                    <div class="mic-status"><i class="fa-solid fa-microphone-slash"></i></div>
+                </div>
+                <span class="listener-name">${info.name}</span>
+            `;
+            listenersGrid.appendChild(node);
+        });
+    }
+
+    function updateActiveSpeakerUI(speaker) {
+        if (speaker) {
+            window.currentActiveSpeakerId = speaker.user_id;
+            document.getElementById('speakerName').innerText = speaker.name;
+            document.getElementById('speakerRole').innerText = speaker.role === 'admin' ? 'Pimpinan Sidang' : 'Peserta Majlis';
+            document.getElementById('activeSpeaker').style.backgroundImage = `url('${speaker.avatar}')`;
+            document.getElementById('activeSpeaker').innerHTML = ''; // remove mic slash
+            startRipples();
+            
+            if(currentUserRole === 'admin') {
+                document.getElementById('btnStopSpeaker').style.display = 'inline-block';
+            }
+        } else {
+            window.currentActiveSpeakerId = null;
+            document.getElementById('speakerName').innerText = "Ruangan Terbuka";
+            document.getElementById('speakerRole').innerText = "Tidak ada pembicara saat ini";
+            document.getElementById('activeSpeaker').style.backgroundImage = 'none';
+            document.getElementById('activeSpeaker').innerHTML = '<i class="fa-solid fa-microphone-slash"></i>';
+            stopRipples();
+            if(document.getElementById('btnStopSpeaker')) {
+                document.getElementById('btnStopSpeaker').style.display = 'none';
+            }
+        }
+        renderListeners(); // to remove/add from grid
+    }
+
+    window.requestToSpeak = async function() {
+        const btn = document.getElementById('btnHand');
+        btn.classList.add('active');
+        gsap.to(btn, { y: -10, yoyo: true, repeat: 3, duration: 0.2 });
+
+        try {
+            const formData = new FormData();
+            formData.append('<?= csrf_token() ?>', getCsrfToken());
+            const res = await fetch('/majlis/raise_hand', { method: 'POST', body: formData, headers: {'X-Requested-With': 'XMLHttpRequest'} });
+            const data = await res.json();
+            if(data.status === 'success') {
+                showAegisToast("Informasi", data.message);
+            }
+        } catch(e) {}
+    }
+
+    window.approveSpeaker = async function(userId) {
+        try {
+            const formData = new FormData();
+            formData.append('user_id', userId);
+            formData.append('<?= csrf_token() ?>', getCsrfToken());
+            const res = await fetch('/majlis/approve_speaker', { method: 'POST', body: formData, headers: {'X-Requested-With': 'XMLHttpRequest'} });
+            const data = await res.json();
+        } catch(e) {}
+    }
+
+    window.stopSpeaker = async function() {
+        try {
+            const formData = new FormData();
+            formData.append('<?= csrf_token() ?>', getCsrfToken());
+            const res = await fetch('/majlis/stop_speaker', { method: 'POST', body: formData, headers: {'X-Requested-With': 'XMLHttpRequest'} });
+            const data = await res.json();
+        } catch(e) {}
+    }
+
+    function renderRequests(requests) {
+        const badge = document.getElementById('requestsBadge');
+        const list = document.getElementById('requestsList');
+        if(!badge || !list) return;
+
+        if (requests && requests.length > 0) {
+            badge.style.display = 'flex';
+            badge.innerText = requests.length;
+            list.innerHTML = requests.map(r => `
+                <div class="topic-card" style="display:flex; align-items:center; justify-content:space-between; padding:10px;">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <img src="${r.avatar}" style="width:40px; height:40px; border-radius:50%;">
+                        <div>
+                            <div style="font-weight:bold; font-size:0.9rem;">${r.name}</div>
+                            <div style="font-size:0.7rem; color:var(--text-muted);">${r.role}</div>
+                        </div>
+                    </div>
+                    <button class="btn-vote agree" style="flex:0; padding:5px 15px;" onclick="approveSpeaker(${r.user_id})">Verifikasi</button>
+                </div>
+            `).join('');
+        } else {
+            badge.style.display = 'none';
+            list.innerHTML = '<div style="text-align:center; padding:20px; color:#555; font-size:0.8rem;">Belum ada permintaan.</div>';
+        }
+    }
+
+    // --- FORMS & TOPICS LOGIC ---
+    function getCsrfToken() {
+        const meta = document.querySelector('meta[name="csrf-token"]');
+        return meta ? meta.getAttribute('content') : '';
+    }
+
+    async function fetchState() {
+        try {
+            const res = await fetch('/majlis/state');
+            const data = await res.json();
+            if (data.status === 'success') {
+                renderTopics(data.topics);
+                updateActiveSpeakerUI(data.active_speaker);
+                if(currentUserRole === 'admin') renderRequests(data.requests);
+            }
+        } catch(e) {}
+    }
+
+    function renderTopics(topics) {
+        const container = document.getElementById('topicsContainer');
+        if (topics.length === 0) {
+            container.innerHTML = '<div style="text-align:center; padding:20px; color:#555; font-size:0.8rem;">Belum ada Mosi yang diajukan.</div>';
+            return;
+        }
+
+        container.innerHTML = topics.map(t => {
+            let html = `
+                <div class="topic-card">
+                    <h3 class="topic-title">${t.title}</h3>
+                    <div class="topic-meta">
+                        <span>Oleh: ${t.nama_panggilan}</span>
+                        <span style="color: ${t.status === 'Open' ? 'var(--neon-green)' : '#ff3366'}">${t.status}</span>
+                    </div>
+                    <div class="topic-desc">${t.description}</div>
+                    
+                    <div class="vote-stats">
+                        <span class="agree-count"><i class="fa-solid fa-check"></i> Setuju: ${t.votes_setuju}</span>
+                        <span class="disagree-count"><i class="fa-solid fa-xmark"></i> Tidak: ${t.votes_tidak_setuju}</span>
+                    </div>
+            `;
+
+            if (t.status === 'Open') {
+                if (t.has_voted) {
+                    html += `<div style="margin-top:15px; text-align:center; color:var(--gold-main); font-size:0.8rem; font-weight:bold; border:1px dashed var(--gold-main); padding:8px;">Suara Anda telah direkam.</div>`;
+                } else {
+                    html += `
+                        <div class="vote-btns" style="margin-top:15px;">
+                            <button type="button" class="btn-vote agree" onclick="submitVote(${t.id}, 'Setuju')"><i class="fa-solid fa-check"></i> Setuju</button>
+                            <button type="button" class="btn-vote disagree" onclick="submitVote(${t.id}, 'Tidak Setuju')"><i class="fa-solid fa-xmark"></i> Tolak</button>
+                        </div>
+                    `;
+                }
+                
+                if(t.created_by == currentUserId || currentUserRole === 'admin') {
+                    html += `
+                        <button type="button" onclick="closeTopic(${t.id})" style="width:100%; padding:8px; background:rgba(255,51,102,0.15); border:1px solid rgba(255,51,102,0.3); color:#ff3366; border-radius:5px; cursor:pointer; font-size:0.75rem; font-weight:bold; letter-spacing:1px; text-transform:uppercase; margin-top:10px;">
+                            <i class="fa-solid fa-lock"></i> Tutup Voting
+                        </button>
+                    `;
+                }
+            } else {
+                const winner = parseInt(t.votes_setuju) >= parseInt(t.votes_tidak_setuju) ? 'DISETUJUI' : 'DITOLAK';
+                const winColor = parseInt(t.votes_setuju) >= parseInt(t.votes_tidak_setuju) ? '#00ff88' : '#ff3366';
+                html += `
+                    <div style="margin-top:15px; text-align:center; padding:12px; border-radius:8px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08);">
+                        <div style="font-size:0.7rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:2px; margin-bottom:8px;">Hasil Akhir</div>
+                        <div style="display:flex; justify-content:center; gap:30px;">
+                            <span style="color:#00ff88; font-size:1.2rem; font-weight:bold;"><i class="fa-solid fa-check"></i> ${t.votes_setuju}</span>
+                            <span style="color:#ff3366; font-size:1.2rem; font-weight:bold;"><i class="fa-solid fa-xmark"></i> ${t.votes_tidak_setuju}</span>
+                        </div>
+                        <div style="margin-top:8px; font-size:0.75rem; font-weight:bold; color:${winColor}; letter-spacing:2px;">${winner}</div>
+                    </div>
+                `;
+            }
+
+            html += `</div>`;
+            return html;
+        }).join('');
+    }
+
+    document.getElementById('formAddTopic').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('btnSubmitTopic');
+        btn.disabled = true;
+        btn.innerText = "Mengajukan...";
+
+        const formData = new FormData(this);
+        formData.append('<?= csrf_token() ?>', getCsrfToken());
+
+        try {
+            const res = await fetch('/majlis/store', {
+                method: 'POST',
+                body: formData,
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            });
+            const data = await res.json();
+            if (data.status === 'success') {
+                this.reset();
+                showAegisToast("Mosi Berhasil", data.message);
+                fetchState(); // Re-fetch immediately
+            } else {
+                showAegisToast("Error", data.message);
+            }
+        } catch (err) {
+            console.error(err);
+        }
+        
+        btn.disabled = false;
+        btn.innerText = "Ajukan ke Forum";
+    });
+
+    window.submitVote = async function(topicId, choice) {
+        const formData = new FormData();
+        formData.append('choice', choice);
+        formData.append('<?= csrf_token() ?>', getCsrfToken());
+
+        try {
+            const res = await fetch('/majlis/vote/' + topicId, {
+                method: 'POST',
+                body: formData,
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            });
+            const data = await res.json();
+            if (data.status === 'success') {
+                showAegisToast("Suara Direkam", data.message);
+                fetchState();
+            } else {
+                showAegisToast("Gagal", data.message);
+            }
+        } catch(e) {}
+    }
+
+    window.closeTopic = async function(topicId) {
+        if(!confirm('Tutup sesi voting ini? Tindakan tidak dapat dibatalkan.')) return;
+        
+        const formData = new FormData();
+        formData.append('<?= csrf_token() ?>', getCsrfToken());
+
+        try {
+            const res = await fetch('/majlis/close/' + topicId, {
+                method: 'POST',
+                body: formData,
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            });
+            const data = await res.json();
+            if (data.status === 'success') {
+                showAegisToast("Sesi Ditutup", data.message);
+                fetchState();
+            }
+        } catch(e) {}
+    }
+
+    function showAegisToast(title, message) {
+        const aegisToast = document.getElementById('aegisToast');
+        const radarName = document.getElementById('radarName');
+        if(aegisToast && radarName) {
+            document.querySelector('.aegis-title').innerText = title;
+            radarName.innerText = message; 
+            aegisToast.classList.add('show');
+            if (navigator.vibrate) navigator.vibrate([50, 50]);
+            setTimeout(() => aegisToast.classList.remove('show'), 6000);
+        } else {
+            alert(title + ": " + message);
+        }
+    }
+
+    // Initial Fetch
+    fetchState();
 });
 </script>
 <?= $this->endSection() ?>

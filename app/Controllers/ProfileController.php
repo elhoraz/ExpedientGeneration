@@ -12,7 +12,7 @@ class ProfileController extends BaseController
 
     public function __construct()
     {
-        $this->profileService = new ProfileService();
+        $this->profileService = service('profileService');
     }
 
     public function index()
@@ -21,8 +21,20 @@ class ProfileController extends BaseController
         $user = $userModel->find(session()->get('user_id'));
         
         $faceData = empty($user['face_data']) ? 'null' : $user['face_data'];
+        if ($faceData !== 'null') {
+            try {
+                // Check if it's hex (encrypted)
+                if (ctype_xdigit($faceData)) {
+                    $faceData = \Config\Services::encrypter()->decrypt(hex2bin($faceData));
+                }
+            } catch (\Exception $e) {
+                // If decryption fails, it might be legacy unencrypted data or corrupted.
+                // We fallback to the raw data or null.
+                $faceData = 'null';
+            }
+        }
 
-        $gamificationService = new GamificationService();
+        $gamificationService = service('gamificationService');
         $prestisePoints = $user['prestise_points'] ?? 0;
         
         $data = [
@@ -84,7 +96,7 @@ class ProfileController extends BaseController
             'email'          => $dataUpdate['email']
         ]);
 
-        return redirect()->to('/profil')->with('pesan', 'Data entitas berhasil diperbarui!');
+        return redirect()->to('/profil')->with('success', 'Data entitas berhasil diperbarui!');
     }
 
     /**
@@ -127,7 +139,7 @@ class ProfileController extends BaseController
             'password_hash' => password_hash($this->request->getPost('new_password'), PASSWORD_DEFAULT)
         ]);
 
-        return redirect()->to('/profil')->with('pesan', 'Kata sandi berhasil diperbarui!');
+        return redirect()->to('/profil')->with('success', 'Kata sandi berhasil diperbarui!');
     }
 
     /**
@@ -151,6 +163,6 @@ class ProfileController extends BaseController
         $userModel->update($userId, ['is_active' => 0]); 
         
         session()->destroy();
-        return redirect()->to('/login')->with('pesan', 'Akun Anda telah dinonaktifkan secara permanen dari sistem.');
+        return redirect()->to('/login')->with('success', 'Akun Anda telah dinonaktifkan secara permanen dari sistem.');
     }
 }

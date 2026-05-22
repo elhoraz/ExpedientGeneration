@@ -36,6 +36,7 @@ class Filters extends BaseFilters
         'performance'   => PerformanceMetrics::class,
         'auth'          => \App\Filters\AuthFilter::class,
         'throttle'      => \App\Filters\ThrottleApiFilter::class,
+        'throttleauth'  => \App\Filters\ThrottleAuthFilter::class,
         'admin'         => \App\Filters\AdminFilter::class,
         'track_visit'   => \App\Filters\VisitorTrackingFilter::class,
         'securityheaders' => \App\Filters\SecurityHeaders::class,

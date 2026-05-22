@@ -332,6 +332,60 @@ The Lounge - Expedient
     }
     .img-modal.show { display: flex; }
     .img-modal img { max-width: 90vw; max-height: 90vh; border-radius: 10px; }
+
+    /* MOBILE RESPONSIVE CSS */
+    @media (max-width: 768px) {
+        .lounge-wrapper {
+            padding: 70px 10px 20px;
+            height: calc(100vh - 60px); /* Adjust for mobile browser UI if needed */
+        }
+        .chat-header h2 {
+            font-size: 1.2rem !important;
+            margin-top: 25px !important;
+        }
+        .chat-header a {
+            font-size: 0.75rem !important;
+        }
+        .chat-messages {
+            padding: 15px;
+            gap: 15px;
+        }
+        .message-bubble {
+            max-width: 95%;
+            gap: 10px;
+        }
+        .message-avatar {
+            width: 30px;
+            height: 30px;
+        }
+        .message-content {
+            padding: 10px 15px;
+            font-size: 0.85rem;
+        }
+        .chat-input-area {
+            padding: 10px;
+            gap: 5px;
+        }
+        .btn-chat-action {
+            font-size: 1rem;
+            padding: 6px;
+        }
+        .chat-input {
+            padding: 8px;
+            font-size: 0.9rem;
+        }
+        .btn-send {
+            width: 40px;
+            height: 40px;
+            font-size: 1rem;
+        }
+        .emoji-picker {
+            width: 250px;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 60px;
+        }
+    }
 </style>
 <?= $this->endSection() ?>
 
@@ -494,7 +548,7 @@ The Lounge - Expedient
     scrollToBottom();
 
     // ============ PUSHER ============
-    const chatChannel = pusher.subscribe('chat-channel');
+    const chatChannel = window.pusher.subscribe('chat-channel');
     chatChannel.bind('new-message', function(data) {
         if (currentReceiverId === null) {
             if (data.receiver_id !== null) return;

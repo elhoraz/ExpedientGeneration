@@ -69,11 +69,11 @@ class EventController extends BaseController
         ]);
 
         // Gamification Reward
-        $gamificationService = new GamificationService();
+        $gamificationService = service('gamificationService');
         $gamificationService->addPrestise($userId, 'CREATE_EVENT', 20);
 
         // Broadcast Notification
-        $pusher = new PusherService();
+        $pusher = service('pusherService');
         $pusher->broadcastNotification(
             'Agenda Baru',
             $this->request->getPost('title') . ' telah dijadwalkan.',
@@ -110,7 +110,7 @@ class EventController extends BaseController
             ]);
             
             // Gamification Reward for first RSVP
-            $gamificationService = new GamificationService();
+            $gamificationService = service('gamificationService');
             $gamificationService->addPrestise($userId, 'RSVP_EVENT', 5);
         }
 

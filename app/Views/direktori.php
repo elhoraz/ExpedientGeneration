@@ -56,7 +56,7 @@ The Archive - 42nd Expedient
                                 <?php if (!empty($isLoggedIn)): ?>
                                 <div class="detail-group reveal-item r-1">
                                     <div class="d-label">Asal</div>
-                                    <div class="d-value"><?= esc($user['tempat_tanggal_lahir'] ?? '-') ?></div>
+                                    <div class="d-value"><?= esc(($user['tempat_lahir'] ?? '-') . (!empty($user['tanggal_lahir']) ? ', ' . date('d F Y', strtotime($user['tanggal_lahir'])) : '')) ?></div>
                                 </div>
                                 <div class="detail-group reveal-item r-2">
                                     <div class="d-label">Domisili</div>
@@ -72,11 +72,12 @@ The Archive - 42nd Expedient
                                 </div>
 
                                 <div class="card-socials reveal-item r-4">
+                                    <a href="/chat/personal/<?= $user['id'] ?>" class="soc-btn" title="Kirim Pesan"><i class="fa-solid fa-comment-dots"></i></a>
                                     <?php if(!empty($user['akun_ig'])): ?>
-                                        <a href="https://instagram.com/<?= esc(ltrim($user['akun_ig'], '@')) ?>" target="_blank" class="soc-btn"><i class="fa-brands fa-instagram"></i></a>
+                                        <a href="https://instagram.com/<?= esc(ltrim($user['akun_ig'], '@')) ?>" target="_blank" class="soc-btn" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
                                     <?php endif; ?>
                                     <?php if(!empty($user['akun_tiktok'])): ?>
-                                        <a href="https://tiktok.com/@<?= esc(ltrim($user['akun_tiktok'], '@')) ?>" target="_blank" class="soc-btn"><i class="fa-brands fa-tiktok"></i></a>
+                                        <a href="https://tiktok.com/@<?= esc(ltrim($user['akun_tiktok'], '@')) ?>" target="_blank" class="soc-btn" title="TikTok"><i class="fa-brands fa-tiktok"></i></a>
                                     <?php endif; ?>
                                 </div>
                                 <?php else: ?>

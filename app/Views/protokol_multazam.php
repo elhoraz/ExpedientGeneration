@@ -91,7 +91,8 @@ Protokol Multazam - VVIP Event Ticketing
     }
 
     .vip-ticket {
-        width: 350px;
+        width: 100%;
+        max-width: 350px;
         height: 600px;
         background: var(--ticket-bg);
         border-radius: 20px;
@@ -286,7 +287,7 @@ Protokol Multazam - VVIP Event Ticketing
 
     /* PRAYER PANEL (DINDING MULTAZAM) */
     .prayer-panel {
-        position: fixed; top: 0; right: -450px; width: 450px; height: 100vh;
+        position: fixed; top: 0; right: -450px; width: 100%; max-width: 450px; height: 100vh;
         background: rgba(5, 5, 5, 0.95); backdrop-filter: blur(20px);
         border-left: 1px solid rgba(212,175,55,0.3); z-index: 1000;
         transition: right 0.6s cubic-bezier(0.16, 1, 0.3, 1);
@@ -295,7 +296,23 @@ Protokol Multazam - VVIP Event Ticketing
     }
     .prayer-panel.open { right: 0; }
     
-    .panel-title { font-family: 'Playfair Display', serif; color: var(--gold-main); font-size: 1.5rem; letter-spacing: 2px; border-bottom: 1px solid rgba(212,175,55,0.3); padding-bottom: 10px; margin-bottom: 10px; }
+    .btn-close-panel {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: transparent;
+        border: none;
+        color: #fff;
+        font-size: 1.5rem;
+        cursor: pointer;
+        z-index: 10;
+        transition: color 0.3s;
+    }
+    .btn-close-panel:hover {
+        color: var(--gold-main);
+    }
+    
+    .panel-title { font-family: 'Playfair Display', serif; color: var(--gold-main); font-size: 1.5rem; letter-spacing: 2px; border-bottom: 1px solid rgba(212,175,55,0.3); padding-bottom: 10px; margin-bottom: 10px; padding-right: 30px; }
     .prayer-form textarea {
         width: 100%; background: rgba(0,0,0,0.5); border: 1px solid rgba(212,175,55,0.3);
         color: #fff; padding: 12px; margin-bottom: 15px; border-radius: 5px; font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.1rem;
@@ -303,17 +320,20 @@ Protokol Multazam - VVIP Event Ticketing
     .btn-submit-prayer { width: 100%; background: var(--gold-main); color: #000; border: none; padding: 12px; font-weight: bold; cursor: pointer; border-radius: 5px; letter-spacing: 2px; text-transform: uppercase; }
     
     .prayer-card { background: rgba(255,255,255,0.02); border: 1px dashed rgba(212,175,55,0.3); padding: 20px; border-radius: 8px; margin-bottom: 15px; position: relative; }
+    .prayer-card:last-child { margin-bottom: 50px; }
     .prayer-date { font-size: 0.75rem; color: var(--gold-main); margin-bottom: 10px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; }
     .prayer-content { font-size: 1rem; line-height: 1.6; color: #ddd; font-family: 'Playfair Display', serif; font-style: italic; }
     .prayer-status { position: absolute; bottom: 15px; right: 15px; font-size: 0.65rem; color: #888; text-transform: uppercase; letter-spacing: 1px; }
 
     @media (max-width: 768px) {
-        .multazam-header { flex-direction: column-reverse; gap: 20px; align-items: center; }
-        .page-title, .page-subtitle { text-align: center; }
-        .vip-ticket { width: 320px; height: 550px; }
+        .multazam-header { flex-direction: column; gap: 15px; align-items: flex-start; margin-bottom: 30px; }
+        .btn-back { align-self: flex-start; }
+        .page-title { text-align: left; font-size: 2rem; }
+        .page-subtitle { text-align: left; }
+        .vip-ticket { max-width: 320px; height: 550px; margin: 0 auto; }
         .action-buttons { flex-direction: column; width: 100%; max-width: 320px; }
         .btn-wallet, .btn-secondary { width: 100%; justify-content: center; }
-        .prayer-panel { width: 100%; right: -100%; }
+        .prayer-panel { width: 100%; right: -100%; padding: 30px 20px; }
     }
 </style>
 <?= $this->endSection() ?>
@@ -388,6 +408,7 @@ Protokol Multazam - VVIP Event Ticketing
 
 <!-- PANEL DINDING MULTAZAM (PRAYERS) -->
 <div class="prayer-panel" id="prayerPanel">
+    <button class="btn-close-panel" id="btnClosePrayer"><i class="fa-solid fa-xmark"></i></button>
     <div class="panel-title">Panjatkan Doa</div>
     <form action="/multazam/store" method="POST" class="prayer-form">
         <?= csrf_field() ?>
@@ -411,7 +432,7 @@ Protokol Multazam - VVIP Event Ticketing
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="/vendor/gsap/gsap.min.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
     // Intro Animations
@@ -454,12 +475,19 @@ function addToWallet(btn) {
 
 // Panel Toggle
 const btnTogglePrayer = document.getElementById('btnTogglePrayer');
+const btnClosePrayer = document.getElementById('btnClosePrayer');
 const prayerPanel = document.getElementById('prayerPanel');
 
 if(btnTogglePrayer) {
     btnTogglePrayer.addEventListener('click', () => {
         prayerPanel.classList.toggle('open');
         if(navigator.vibrate) navigator.vibrate(20);
+    });
+}
+
+if(btnClosePrayer) {
+    btnClosePrayer.addEventListener('click', () => {
+        prayerPanel.classList.remove('open');
     });
 }
 

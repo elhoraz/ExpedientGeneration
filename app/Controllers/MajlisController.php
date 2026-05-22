@@ -5,16 +5,53 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Models\MajlisTopicModel;
 use App\Models\MajlisVoteModel;
+use App\Models\UserModel;
+use App\Services\PusherService;
 
 class MajlisController extends BaseController
 {
     public function index()
     {
+        $userId = session()->get('user_id');
+        $userModel = new UserModel();
+        $currentUser = $userModel->find($userId);
+
+        return view('majlis_syura', [
+            'user_id'   => $userId,
+            'user_role' => $currentUser['role'] ?? 'member',
+        ]);
+    }
+
+    public function pusherAuth()
+    {
+        $userId = session()->get('user_id');
+        if (!$userId) {
+            return $this->response->setStatusCode(403)->setBody('Forbidden');
+        }
+
+        $socketId = $this->request->getPost('socket_id');
+        $channelName = $this->request->getPost('channel_name');
+
+        $userModel = new UserModel();
+        $user = $userModel->find($userId);
+
+        $userInfo = [
+            'name' => $user['nama_panggilan'] ?? $user['nama_lengkap'],
+            'avatar' => $user['foto_profil'] ? base_url('uploads/profil/' . $user['foto_profil']) : 'https://ui-avatars.com/api/?name=' . urlencode($user['nama_panggilan'] ?? 'User') . '&background=random',
+            'role' => $user['role'] ?? 'member'
+        ];
+
+        $pusher = new PusherService();
+        $auth = $pusher->presenceAuth($channelName, $socketId, (string)$userId, $userInfo);
+
+        return $this->response->setContentType('application/json')->setBody($auth);
+    }
+
+    public function getState()
+    {
         $db = \Config\Database::connect();
         $userId = session()->get('user_id');
         
-        // ================= OPTIMIZED: 1 query instead of N+1 =================
-        // Mengambil semua topics + vote counts + user vote status dalam SATU query
         $topics = $db->query("
             SELECT 
                 t.*, 
@@ -29,20 +66,88 @@ class MajlisController extends BaseController
             ORDER BY t.created_at DESC
         ", [$userId])->getResultArray();
 
-        // Cast has_voted ke boolean
         foreach ($topics as &$topic) {
             $topic['has_voted'] = (bool) $topic['has_voted'];
         }
 
-        // Get current user role
-        $userModel = new \App\Models\UserModel();
-        $currentUser = $userModel->find($userId);
+        $activeSpeaker = cache('majlis_active_speaker');
+        $requests = cache('majlis_speaker_requests') ?: [];
 
-        return view('majlis_syura', [
-            'topics'    => $topics,
-            'user_id'   => $userId,
-            'user_role' => $currentUser['role'] ?? 'member',
+        return $this->response->setJSON([
+            'status' => 'success',
+            'topics' => $topics,
+            'active_speaker' => $activeSpeaker,
+            'requests' => array_values($requests)
         ]);
+    }
+
+    public function raiseHand()
+    {
+        $userId = session()->get('user_id');
+        $userModel = new UserModel();
+        $user = $userModel->find($userId);
+
+        $requests = cache('majlis_speaker_requests') ?: [];
+        $requests[$userId] = [
+            'user_id' => $userId,
+            'name' => $user['nama_panggilan'] ?? $user['nama_lengkap'],
+            'avatar' => $user['foto_profil'] ? base_url('uploads/profil/' . $user['foto_profil']) : 'https://ui-avatars.com/api/?name=' . urlencode($user['nama_panggilan'] ?? 'User') . '&background=random',
+            'role' => $user['role'] ?? 'member'
+        ];
+
+        cache()->save('majlis_speaker_requests', $requests, 86400);
+
+        $pusher = new PusherService();
+        $pusher->trigger('presence-majlis', 'hand-raised', ['requests' => array_values($requests)]);
+
+        return $this->response->setJSON(['status' => 'success', 'message' => 'Permintaan berbicara dikirim.']);
+    }
+
+    public function approveSpeaker()
+    {
+        $adminId = session()->get('user_id');
+        $userModel = new UserModel();
+        $admin = $userModel->find($adminId);
+        if (($admin['role'] ?? '') !== 'admin') {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Unauthorized']);
+        }
+
+        $approvedUserId = $this->request->getPost('user_id');
+        $requests = cache('majlis_speaker_requests') ?: [];
+
+        if (isset($requests[$approvedUserId])) {
+            $speaker = $requests[$approvedUserId];
+            cache()->save('majlis_active_speaker', $speaker, 86400);
+            unset($requests[$approvedUserId]);
+            cache()->save('majlis_speaker_requests', $requests, 86400);
+
+            $pusher = new PusherService();
+            $pusher->trigger('presence-majlis', 'speaker-changed', [
+                'speaker' => $speaker,
+                'requests' => array_values($requests)
+            ]);
+
+            return $this->response->setJSON(['status' => 'success', 'message' => 'Pembicara disetujui.']);
+        }
+
+        return $this->response->setJSON(['status' => 'error', 'message' => 'Permintaan tidak ditemukan.']);
+    }
+
+    public function stopSpeaker()
+    {
+        $adminId = session()->get('user_id');
+        $userModel = new UserModel();
+        $admin = $userModel->find($adminId);
+        if (($admin['role'] ?? '') !== 'admin') {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Unauthorized']);
+        }
+
+        cache()->delete('majlis_active_speaker');
+        
+        $pusher = new PusherService();
+        $pusher->trigger('presence-majlis', 'speaker-changed', ['speaker' => null, 'requests' => array_values(cache('majlis_speaker_requests') ?: [])]);
+
+        return $this->response->setJSON(['status' => 'success']);
     }
 
     public function store()
@@ -54,7 +159,7 @@ class MajlisController extends BaseController
         ];
 
         if (!$this->validate($rules)) {
-            return redirect()->to('/majlis')->with('error', 'Gagal membuat mosi. Cek kembali isian Anda.');
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Validasi gagal.']);
         }
 
         $topicModel = new MajlisTopicModel();
@@ -66,33 +171,29 @@ class MajlisController extends BaseController
             'created_at'  => date('Y-m-d H:i:s')
         ]);
 
-        $pusher = new \App\Services\PusherService();
-        $pusher->broadcastNotification(
-            'Mosi Baru di Majlis',
-            $this->request->getPost('title'),
-            '/majlis'
-        );
+        $pusher = new PusherService();
+        $pusher->trigger('presence-majlis', 'majlis-update', []);
 
-        return redirect()->to('/majlis')->with('success', 'Mosi musyawarah berhasil diajukan ke forum.');
+        return $this->response->setJSON(['status' => 'success', 'message' => 'Mosi musyawarah berhasil diajukan.']);
     }
 
     public function vote($topicId)
     {
         $userId = session()->get('user_id');
-        $choice = $this->request->getPost('choice'); // Setuju atau Tidak Setuju
+        $choice = $this->request->getPost('choice'); 
 
         $topicModel = new MajlisTopicModel();
         $topic = $topicModel->find($topicId);
 
         if (!$topic || $topic['status'] !== 'Open') {
-            return redirect()->to('/majlis')->with('error', 'Sesi pemungutan suara telah ditutup atau tidak ada.');
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Sesi pemungutan suara telah ditutup.']);
         }
 
         $voteModel = new MajlisVoteModel();
         $hasVoted = $voteModel->where('topic_id', $topicId)->where('user_id', $userId)->first();
 
         if ($hasVoted) {
-            return redirect()->to('/majlis')->with('error', 'Anda sudah memberikan suara.');
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Anda sudah memberikan suara.']);
         }
 
         $voteModel->insert([
@@ -102,12 +203,12 @@ class MajlisController extends BaseController
             'created_at'  => date('Y-m-d H:i:s')
         ]);
 
-        return redirect()->to('/majlis')->with('success', 'Suara Anda telah direkam di Majlis.');
+        $pusher = new PusherService();
+        $pusher->trigger('presence-majlis', 'majlis-update', []);
+
+        return $this->response->setJSON(['status' => 'success', 'message' => 'Suara Anda telah direkam.']);
     }
 
-    /**
-     * Tutup sesi voting (hanya pembuat mosi atau admin).
-     */
     public function close($topicId)
     {
         $userId = session()->get('user_id');
@@ -115,21 +216,23 @@ class MajlisController extends BaseController
         $topic = $topicModel->find($topicId);
 
         if (!$topic) {
-            return redirect()->to('/majlis')->with('error', 'Mosi tidak ditemukan.');
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Mosi tidak ditemukan.']);
         }
 
-        // Cek otorisasi: pembuat mosi atau admin
-        $userModel = new \App\Models\UserModel();
+        $userModel = new UserModel();
         $user = $userModel->find($userId);
         $isCreator = (int)$topic['created_by'] === (int)$userId;
         $isAdmin = $user && ($user['role'] ?? '') === 'admin';
 
         if (!$isCreator && !$isAdmin) {
-            return redirect()->to('/majlis')->with('error', 'Hanya pembuat mosi atau admin yang dapat menutup voting.');
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Hanya pembuat mosi atau admin yang dapat menutup voting.']);
         }
 
         $topicModel->update($topicId, ['status' => 'Closed']);
 
-        return redirect()->to('/majlis')->with('success', 'Sesi voting telah ditutup.');
+        $pusher = new PusherService();
+        $pusher->trigger('presence-majlis', 'majlis-update', []);
+
+        return $this->response->setJSON(['status' => 'success', 'message' => 'Sesi voting telah ditutup.']);
     }
 }

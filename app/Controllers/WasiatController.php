@@ -36,10 +36,10 @@ class WasiatController extends BaseController
         $message = $this->request->getPost('message');
         $passphrase = $this->request->getPost('passphrase');
 
-        $wasiatService = new WasiatService();
+        $wasiatService = service('wasiatService');
         $wasiatService->encryptAndStore($userId, $message, $passphrase);
 
-        $gamificationService = new GamificationService();
+        $gamificationService = service('gamificationService');
         $gamificationService->addPrestise($userId, 'WASIAT_STORE', 10);
 
         return redirect()->to('/wasiat')->with('success', 'Amanah Anda telah disegel dengan aman di dalam Ruang Wasiat.');
@@ -48,12 +48,12 @@ class WasiatController extends BaseController
     public function unlock($id)
     {
         $passphrase = $this->request->getPost('passphrase');
-        $wasiatService = new WasiatService();
+        $wasiatService = service('wasiatService');
         
         try {
             $decrypted = $wasiatService->unlock($id, $passphrase);
             if ($decrypted !== null) {
-                $gamificationService = new GamificationService();
+                $gamificationService = service('gamificationService');
                 $gamificationService->addPrestise(session()->get('user_id'), 'WASIAT_UNLOCK', 20);
 
                 return redirect()->to('/wasiat')

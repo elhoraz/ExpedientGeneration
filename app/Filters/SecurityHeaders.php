@@ -18,7 +18,7 @@ class SecurityHeaders implements FilterInterface
         if ($response instanceof \CodeIgniter\HTTP\Response) {
             // Content Security Policy
             $csp = "default-src 'self'; ";
-            $csp .= "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; ";
+            $csp .= "script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; ";
             $csp .= "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; ";
             $csp .= "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; ";
             $csp .= "img-src 'self' data: https: blob:; ";

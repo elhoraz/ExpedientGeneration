@@ -59,7 +59,9 @@
 
 /* ===== MAP DROPDOWN ===== */
 .map-dropdown-wrap { position:relative; }
-.map-dropdown { display:none; position:absolute; bottom:100%; right:0; margin-bottom:8px; background:var(--glass-bg); backdrop-filter:var(--glass-blur); border:1px solid var(--glass-border); border-radius:14px; padding:8px; min-width:200px; box-shadow:var(--glass-shadow); }
+.map-dropdown { display:none; position:absolute; bottom:100%; right:0; margin-bottom:8px; background:var(--glass-bg); backdrop-filter:var(--glass-blur); border:1px solid var(--glass-border); border-radius:14px; padding:8px; min-width:200px; box-shadow:var(--glass-shadow); max-height: 50vh; overflow-y: auto; scrollbar-width: thin; scrollbar-color: rgba(212,175,55,.5) transparent; }
+.map-dropdown::-webkit-scrollbar { width: 4px; }
+.map-dropdown::-webkit-scrollbar-thumb { background: rgba(212,175,55,.5); border-radius: 10px; }
 .map-dropdown.open { display:block; }
 .map-dropdown a { display:flex; align-items:center; gap:10px; padding:10px 14px; color:var(--text-secondary); font-size:.72rem; font-weight:600; letter-spacing:1px; text-decoration:none; border-radius:10px; transition:all .2s; text-transform:uppercase; }
 .map-dropdown a:hover { background:rgba(212,175,55,.1); color:#d4af37; }
@@ -132,11 +134,11 @@ body.sidebar-closed .leaderboard { left: 40px; }
     .radar-hud { top:75px; left:20px; right:20px; display:flex; justify-content:space-between; align-items:center; background:var(--glass-bg); backdrop-filter:var(--glass-blur); border:1px solid var(--glass-border); padding:10px 15px; border-radius:15px; }
     .hud-title { font-size:1.1rem; margin:0; }
     .hud-subtitle { display:none; }
-    .stats-panel { margin-top:0; gap:10px; }
-    .stat-box { border:none; padding:0; background:transparent; box-shadow:none; text-align:right; }
-    .stat-num { font-size:1.1rem; }
-    .stat-label { font-size:.5rem; }
-    #sFar, #sArea { display:none; }
+    .stats-panel { margin-top:0; gap:10px; display:flex; align-items:center; }
+    .stat-box { border:none; padding:0; background:transparent; box-shadow:none; text-align:right; display:flex; flex-direction:column; justify-content:center; }
+    .stat-box:nth-child(2), .stat-box:nth-child(3) { display:none; }
+    .stat-num { font-size:1.1rem; line-height:1; }
+    .stat-label { font-size:.55rem; margin-top:2px; }
 
     /* Drawer Info dari bawah (Bottom Sheet) */
     .info-drawer { top:auto; bottom:-100vh; right:0; width:100vw; max-width:100vw; height:auto; max-height:85vh; border-left:none; border-top:1px solid var(--glass-border); border-radius:25px 25px 0 0; transition:bottom .5s cubic-bezier(.16,1,.3,1); }
@@ -147,14 +149,17 @@ body.sidebar-closed .leaderboard { left: 40px; }
     .id-name { font-size:1.3rem; }
     
     /* Control Bar bawah seperti Native App */
-    .radar-controls { right:20px; left:20px; flex-direction:row; justify-content:center; gap:8px; background:var(--glass-bg); backdrop-filter:var(--glass-blur); padding:10px; border-radius:50px; border:1px solid var(--glass-border); transition: bottom 0.8s var(--awwwards-ease); }
-    .btn-radar { font-size:.65rem; padding:8px 12px; border:none; box-shadow:none; flex:1; justify-content:center; }
+    .radar-controls { right:12px; left:12px; flex-direction:row; justify-content:space-between; gap:6px; background:var(--glass-bg); backdrop-filter:var(--glass-blur); padding:8px; border-radius:15px; border:1px solid var(--glass-border); transition: bottom 0.8s var(--awwwards-ease); }
+    .btn-radar { font-size:.65rem; padding:8px 4px; border:none; box-shadow:none; flex:1; justify-content:center; white-space:nowrap; }
+    .map-dropdown-wrap { flex:1; display:flex; }
+    .map-dropdown-wrap .btn-radar { width:100%; flex:1; }
     .btn-radar-gold { background:rgba(212,175,55,.15); }
     .btn-radar-glass { background:transparent; }
     .sync-status { position:absolute; top:-25px; right:10px; text-align:right; }
+    .hide-mobile { display:none; }
     
     /* Map Dropdown menu naik ke atas */
-    .map-dropdown { bottom:120%; margin-bottom:15px; left:0; right:0; }
+    .map-dropdown { bottom:120%; margin-bottom:15px; left:auto; right:0; min-width:160px; text-align:center; }
     
     /* Filter Panel dipindah ke atas map controls */
     .filter-panel { left:50%; transform:translateX(-50%); width:max-content; background:var(--glass-bg); backdrop-filter:var(--glass-blur); border-radius:50px; padding:5px; border:1px solid var(--glass-border); justify-content:center; transition: bottom 0.8s var(--awwwards-ease); }
@@ -243,19 +248,34 @@ body.sidebar-closed .leaderboard { left: 40px; }
 
 <!-- CONTROLS -->
 <div class="radar-controls">
-    <button class="btn-radar btn-radar-gold" id="btnSyncLocation"><i class="fa-solid fa-location-crosshairs"></i> Perbarui Domisili</button>
-    <button class="btn-radar btn-radar-glass" id="btnAutoTour"><i class="fa-solid fa-plane-departure"></i> Jelajahi Jaringan</button>
+    <button class="btn-radar btn-radar-gold" id="btnSyncLocation"><i class="fa-solid fa-location-crosshairs"></i> <span class="hide-mobile">Perbarui </span>Domisili</button>
+    <button class="btn-radar btn-radar-glass" id="btnAutoTour"><i class="fa-solid fa-plane-departure"></i> <span class="hide-mobile">Jelajahi </span>Jaringan</button>
     <div class="sync-status" id="syncStatus"></div>
     <!-- 6. MAP DROPDOWN -->
     <div class="map-dropdown-wrap">
-        <button class="btn-radar btn-radar-glass" id="btnMapMenu"><i class="fa-solid fa-layer-group"></i> Pilih Peta</button>
+        <button class="btn-radar btn-radar-glass" id="btnMapMenu"><i class="fa-solid fa-layer-group"></i> <span class="hide-mobile">Pilih </span>Peta</button>
         <div class="map-dropdown" id="mapDropdown">
-            <a href="/radar/flat"><i class="fa-solid fa-map"></i> Peta Datar</a>
+            <a href="/radar/flat"><i class="fa-solid fa-map"></i> Peta Minimalis</a>
             <a href="/radar/satellite"><i class="fa-solid fa-satellite"></i> Peta Satelit</a>
             <a href="/radar/terrain"><i class="fa-solid fa-mountain-sun"></i> Peta Terrain</a>
             <a href="/radar/dark"><i class="fa-solid fa-moon"></i> Peta Gelap</a>
             <a href="/radar/watercolor"><i class="fa-solid fa-map-location-dot"></i> Peta Google</a>
             <a href="/radar/classic"><i class="fa-solid fa-signs-post"></i> Peta Klasik</a>
+            <a href="/radar/natgeo"><i class="fa-solid fa-compass"></i> Peta NatGeo</a>
+            <a href="/radar/voyager"><i class="fa-solid fa-paper-plane"></i> Peta Voyager</a>
+            <a href="/radar/hybrid"><i class="fa-solid fa-satellite-dish"></i> Peta Hybrid</a>
+            <a href="/radar/graycanvas"><i class="fa-solid fa-palette"></i> Peta Kanvas</a>
+            <a href="/radar/hot"><i class="fa-solid fa-train-subway"></i> Peta HOT</a>
+            <a href="/radar/googleterrain"><i class="fa-solid fa-mountain"></i> Peta Rupa Bumi</a>
+            <a href="/radar/esriclarity"><i class="fa-solid fa-cloud-sun"></i> Peta Satelit Bersih</a>
+            <a href="/radar/nightnav"><i class="fa-solid fa-car-tunnel"></i> Peta Navigasi Malam</a>
+            <a href="/radar/googletransit"><i class="fa-solid fa-car"></i> Peta Google Standar</a>
+            <a href="/radar/physical"><i class="fa-solid fa-mound"></i> Peta Relief</a>
+            <a href="/radar/nasamarble"><i class="fa-solid fa-star"></i> Peta NASA Malam</a>
+            <a href="/radar/googletraffic"><i class="fa-solid fa-traffic-light"></i> Peta Lalu Lintas</a>
+            <a href="/radar/navigation"><i class="fa-solid fa-anchor"></i> Peta Navigasi Laut</a>
+            <a href="/radar/esristreet"><i class="fa-solid fa-city"></i> Peta Tata Kota</a>
+            <a href="/radar/toner"><i class="fa-solid fa-microchip"></i> Peta Hacker (Toner)</a>
         </div>
     </div>
 </div>

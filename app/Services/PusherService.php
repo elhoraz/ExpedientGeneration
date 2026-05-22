@@ -101,9 +101,6 @@ class PusherService
         ]);
     }
 
-    /**
-     * Shortcut: Kirim notifikasi global ke semua user.
-     */
     public function broadcastNotification(string $title, string $message, string $link = '#'): bool
     {
         return $this->trigger('expedient-channel', 'broadcast-notification', [
@@ -111,5 +108,13 @@ class PusherService
             'message' => $message,
             'link'    => $link,
         ]);
+    }
+
+    /**
+     * Autentikasi untuk Presence Channel.
+     */
+    public function presenceAuth(string $channelName, string $socketId, string $userId, array $userInfo = [])
+    {
+        return $this->getPusher()->presence_auth($channelName, $socketId, $userId, $userInfo);
     }
 }

@@ -13,33 +13,17 @@ class AuthController extends BaseController
     public function __construct()
     {
         helper(['url', 'form']);
-        $this->authService = new AuthService();
+        $this->authService = service('authService');
     }
 
     public function index()
     {
+        // AuthFilter sudah menangani auto-login via remember_me cookie.
+        // Di sini cukup cek session saja.
         if (session()->get('logged_in')) {
             return redirect()->to('/beranda');
         }
 
-        helper('cookie');
-        $token = get_cookie('remember_me');
-        if ($token) {
-            $userModel = new \App\Models\UserModel();
-            $user = $userModel->where('remember_token', $token)->first();
-            if ($user) {
-                $sesData = [
-                    'user_id'         => $user['id'],
-                    'nama_panggilan' => $user['nama_panggilan'],
-                    'email'          => $user['email'],
-                    'logged_in'      => TRUE
-                ];
-                session()->set($sesData);
-                return redirect()->to('/beranda');
-            }
-        }
-
-        // Tampilkan halaman Login/Register yang berdesain Glassmorphism
         return view('auth/login'); 
     }
 
@@ -87,7 +71,11 @@ class AuthController extends BaseController
                 if ($remember) {
                     $token = bin2hex(random_bytes(32));
                     $userModel = new \App\Models\UserModel();
-                    $userModel->update($user['id'], ['remember_token' => $token]);
+                    $expiry = date('Y-m-d H:i:s', time() + (30 * 24 * 3600));
+                    $userModel->update($user['id'], [
+                        'remember_token' => $token,
+                        'remember_token_expires' => $expiry
+                    ]);
                     helper('cookie');
                     set_cookie([
                         'name'     => 'remember_me',
@@ -100,7 +88,7 @@ class AuthController extends BaseController
 
                 
                 // Tambahkan poin prestise untuk login harian
-                $gamificationService = new GamificationService();
+                $gamificationService = service('gamificationService');
                 $gamificationService->addPrestise($user['id'], 'LOGIN_DAILY', 5);
                 
                 // Lempar ke halaman Beranda!
@@ -171,7 +159,6 @@ class AuthController extends BaseController
                 'jenis_kelamin'        => $this->request->getPost('jenis_kelamin'),
                 'tempat_lahir'         => $this->request->getPost('tempat_lahir'),
                 'tanggal_lahir'        => $this->request->getPost('tanggal_lahir'),
-                'tempat_tanggal_lahir' => $this->request->getPost('tempat_lahir') . ', ' . date('d F Y', strtotime($this->request->getPost('tanggal_lahir'))),
                 'alamat_lengkap'       => $this->request->getPost('alamat_lengkap'),
                 'email'                => $this->request->getPost('email'),
                 'no_whatsapp'          => $this->request->getPost('no_whatsapp'),
@@ -180,23 +167,21 @@ class AuthController extends BaseController
                 'akun_ig'              => $this->request->getPost('akun_ig'),
                 'akun_tiktok'          => $this->request->getPost('akun_tiktok'),
                 'foto_profil'          => $namaFileFoto,
-                'face_data'            => $this->request->getPost('face_data') 
+                'face_data'            => !empty($this->request->getPost('face_data')) ? bin2hex(\Config\Services::encrypter()->encrypt($this->request->getPost('face_data'))) : null 
             ];
 
-            // Panggil service untuk handle register (sudah termasuk hash password & kirim email)
+            // Password hashing dilakukan di dalam AuthService (single source of truth)
             $password = $this->request->getPost('password');
-            $dataUser['password_hash'] = password_hash($password, PASSWORD_DEFAULT);
-            $this->authService->registerUser($dataUser);
+            $this->authService->registerUser($dataUser, $password);
 
             $db->transCommit();
                 
             return redirect()->to('/login')->with('success', 'Pendaftaran berhasil! Silakan cek kotak masuk email Anda untuk verifikasi.');
 
         } catch (\Exception $e) { 
-            // JIKA TERJADI ERROR FATAL: Pastikan rollback dilakukan jika transaksi aktif
-            if ($db->transStatus() === FALSE) {
-                $db->transRollback();
-            }
+            // Selalu rollback jika ada exception — jangan cek transStatus()
+            // karena status bisa masih TRUE meskipun ada error non-SQL (misal email)
+            $db->transRollback();
             log_message('critical', 'Sistem Crash di Register: ' . $e->getMessage() . ' di ' . $e->getFile() . ':' . $e->getLine());
             return redirect()->to('/auth/register')->with('error', 'Terjadi kesalahan sistem. Mungkin email gagal terkirim.');
         }
@@ -311,7 +296,7 @@ class AuthController extends BaseController
             // =========================================================
             // TRIGGER PUSHER: Kirim Notifikasi Real-time
             // =========================================================
-            $pusherService = new PusherService();
+            $pusherService = service('pusherService');
             $pusherService->notifyNewAlumni($user['nama_panggilan']);
             // =========================================================
 

@@ -66,17 +66,26 @@ class AuthService
      * Registrasi user baru.
      * 
      * @param array $data Data user dari form
+     * @param string|null $plainPassword Plain password (akan di-hash di sini)
      * @return int ID user yang baru dibuat
      * @throws \Exception Jika gagal
      */
-    public function registerUser(array $data): int
+    public function registerUser(array $data, ?string $plainPassword = null): int
     {
+        // Hash password di service (single source of truth)
+        if ($plainPassword !== null) {
+            $data['password_hash'] = password_hash($plainPassword, PASSWORD_DEFAULT);
+        }
+
         // Auto-generate birth_month_day untuk query birthday yang ter-index
         if (!empty($data['tanggal_lahir'])) {
             $data['birth_month_day'] = date('m-d', strtotime($data['tanggal_lahir']));
         }
 
-        // Generate token verifikasi
+        // Generate public_token untuk URL publik (anti-IDOR)
+        $data['public_token'] = bin2hex(random_bytes(16));
+
+        // Generate token verifikasi email
         $token = bin2hex(random_bytes(32));
         $data['email_verify_token'] = $token;
 

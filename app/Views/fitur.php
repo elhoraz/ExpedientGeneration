@@ -30,6 +30,16 @@ Expedient Vault - Koleksi Fitur Premium
                 </div>
             </a>
 
+            <a href="/scanner" class="premium-card js-tilt-card">
+                <div class="card-bg" style="background-image: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2670&auto=format&fit=crop'); filter: grayscale(50%) hue-rotate(90deg) brightness(0.4);"></div>
+                <i class="fa-solid fa-qrcode card-icon"></i>
+                <div class="card-content">
+                    <h3 class="card-title">Omni Scanner</h3>
+                    <p class="card-desc">Pemindai KTA in-app. Baca kode matriks entitas lain untuk langsung melompat ke bilik profil holografik mereka.</p>
+                    <div class="launch-btn">Buka Pemindai <i class="fa-solid fa-arrow-right-long"></i></div>
+                </div>
+            </a>
+
             <a href="/profil" class="premium-card js-tilt-card">
                 <div class="card-bg" style="background-image: url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2670&auto=format&fit=crop');"></div>
                 <i class="fa-solid fa-id-badge card-icon"></i>
@@ -169,6 +179,16 @@ Expedient Vault - Koleksi Fitur Premium
                     <div class="launch-btn">Lihat Jadwal <i class="fa-solid fa-arrow-right-long"></i></div>
                 </div>
             </a>
+
+            <a href="/wrapped" class="premium-card js-tilt-card" style="border-color: rgba(212,175,55,0.8); box-shadow: 0 0 30px rgba(212,175,55,0.2);">
+                <div class="card-bg" style="background-image: url('https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?q=80&w=2670&auto=format&fit=crop'); filter: grayscale(20%) brightness(0.6);"></div>
+                <i class="fa-solid fa-film card-icon" style="color: #fff; text-shadow: 0 0 10px #d4af37;"></i>
+                <div class="card-content">
+                    <h3 class="card-title" style="color: #fff; text-shadow: 0 0 10px #d4af37;">Expedient Wrapped</h3>
+                    <p class="card-desc">Kilas balik interaktif perjalanan digital Anda di The Vault sepanjang tahun ini.</p>
+                    <div class="launch-btn" style="color: #fff; border-color: #d4af37;">Lihat Kilas Balik <i class="fa-solid fa-arrow-right-long"></i></div>
+                </div>
+            </a>
         </div>
     </div>
 
@@ -176,7 +196,7 @@ Expedient Vault - Koleksi Fitur Premium
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="/vendor/gsap/gsap.min.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
     // === MAGNETIC 3D TILT EFFECT (AWWWARDS JS) ===

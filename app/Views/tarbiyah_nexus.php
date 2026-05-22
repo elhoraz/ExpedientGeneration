@@ -345,7 +345,7 @@ Tarbiyah Nexus - Mentorship & B2B Halal Ecosystem
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="/vendor/gsap/gsap.min.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
     // Intro Animation

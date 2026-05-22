@@ -9,7 +9,7 @@ class BerandaController extends BaseController
 {
     public function index()
     {
-        $berandaService = new BerandaService();
+        $berandaService = service('berandaService');
         $data = $berandaService->getDashboardData();
 
         return view('beranda', $data);
@@ -32,11 +32,11 @@ class BerandaController extends BaseController
         $pesan = $this->request->getPost('pesan');
 
         // Simpan ke tabel buku_tamu menggunakan service
-        $berandaService = new BerandaService();
+        $berandaService = service('berandaService');
         $berandaService->saveGuestBookMessage($nama, $pesan);
 
         if (session()->has('user_id')) {
-            $gamificationService = new GamificationService();
+            $gamificationService = service('gamificationService');
             $gamificationService->addPrestise(session()->get('user_id'), 'GUESTBOOK_ENTRY', 10);
         }
 
@@ -47,6 +47,6 @@ class BerandaController extends BaseController
             '/beranda'
         );
 
-        return redirect()->to('/beranda')->with('pesan', 'Transmisi pesan Anda telah diukir di pameran ini.');
+        return redirect()->to('/beranda')->with('success', 'Transmisi pesan Anda telah diukir di pameran ini.');
     }
 }

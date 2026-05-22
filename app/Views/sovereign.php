@@ -67,6 +67,19 @@
         }
         .theme-toggle:hover { transform: scale(1.1) rotate(15deg); box-shadow: 0 0 20px rgba(212,175,55,0.5); }
 
+        /* TOMBOL EXPORT (DOWNLOAD) */
+        .btn-export {
+            position: absolute; top: 90px; right: 30px; z-index: 100;
+            width: 45px; height: 45px; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            background: rgba(0,0,0,0.6); border: 1px solid rgba(212,175,55,0.3);
+            color: #d4af37; font-size: 16px; cursor: pointer;
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .btn-export:hover { transform: scale(1.1) translateY(5px); box-shadow: 0 0 20px rgba(212,175,55,0.5); }
+        body[data-theme='light'] .btn-export { background: #fff; color: #b48600; border-color: #d4af37; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+
         /* TACTICAL HUD */
         .tactical-hud {
             position: absolute; bottom: 30px; left: 30px; z-index: 15;
@@ -132,6 +145,10 @@
         <i class="fa-solid fa-sun"></i>
     </button>
 
+    <button class="btn-export" id="btnExportId" title="Simpan Kartu ID (PNG)">
+        <i class="fa-solid fa-download"></i>
+    </button>
+
     <div class="tactical-hud">
         SYS_VER: 4.0.4_SOVEREIGN<br>
         ENVIRONMENT: <span id="envStatus">NOIR_VAULT_ACTIVE</span><br>
@@ -161,7 +178,7 @@
             nomor_id: "EXP-<?= sprintf('%03d', $user['id']) ?>",
             exp: "VALID THRU FOREVER",
             foto_url: "<?= $foto_profil ?>",
-            qr_url: "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=<?= urlencode(base_url('scan/') . esc($user['id'])) ?>"
+            qr_url: "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=<?= urlencode(base_url('scan/') . esc($user['public_token'])) ?>"
         };
     </script>
     <script type="module" src="/assets/js/sovereign.js"></script>

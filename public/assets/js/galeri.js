@@ -172,17 +172,39 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             updateVisibility() {
-                if(this.isIndexMode) { this.sheets.forEach(sheet => { sheet.style.display = 'block'; const imgs = sheet.querySelectorAll('img'); imgs.forEach(img => { if(img.hasAttribute('loading')) img.removeAttribute('loading'); }); }); return; }
+                if(this.isIndexMode) return; // In index mode, visibility is handled by scroll
                 this.sheets.forEach((sheet, index) => {
                     if (Math.abs(index - this.currentSheet) <= 3) sheet.style.display = 'block'; else sheet.style.display = 'none';
                     if(index >= this.currentSheet - 2 && index <= this.currentSheet + 3) { 
                         const imgs = sheet.querySelectorAll('img'); 
                         imgs.forEach(img => { 
-                            if(img.hasAttribute('loading')) { 
-                                img.removeAttribute('loading'); 
-                                const memImg = new Image(); memImg.src = img.src; // Force memory cache
+                            if(img.hasAttribute('data-src')) { 
+                                img.src = img.getAttribute('data-src'); 
+                                img.removeAttribute('data-src');
                             } 
                         }); 
+                    }
+                });
+            }
+
+            checkVisibilityInIndex(scrollY) {
+                // Calculate which row is visible based on scrollY
+                // y position of sheet = startY + row * gapY
+                // dimCore y = scrollY. Total Y = sheet.y + dimCore.y
+                const viewportTop = -window.innerHeight / 2;
+                const viewportBottom = window.innerHeight / 2;
+                
+                this.sheets.forEach(sheet => {
+                    const sheetY = parseFloat(gsap.getProperty(sheet, "y")) + scrollY;
+                    // If sheet is within 1 screen height above or below
+                    if (sheetY > viewportTop - window.innerHeight && sheetY < viewportBottom + window.innerHeight) {
+                        const imgs = sheet.querySelectorAll('img');
+                        imgs.forEach(img => {
+                            if(img.hasAttribute('data-src')) {
+                                img.src = img.getAttribute('data-src');
+                                img.removeAttribute('data-src');
+                            }
+                        });
                     }
                 });
             }
@@ -309,16 +331,47 @@ document.addEventListener("DOMContentLoaded", () => {
             toggleIndexMode(indicatorEl, btnPrev, btnNext) {
                 if(this.isAnimating) return; this.isIndexMode = !this.isIndexMode;
                 if(this.isIndexMode) {
-                    this.updateVisibility(); this.book.classList.add('index-mode'); indicatorEl.innerText = "INDEX MODE"; gsap.to(document.getElementById('etherealText'), { opacity: 0, duration: 0.5 }); btnWhisper.classList.remove('is-visible');
-                    const isMobile = window.innerWidth <= 768; const aspect = window.innerWidth / window.innerHeight;
-                    let cols = Math.ceil(Math.sqrt(this.totalSheets * aspect)); if (isMobile) cols = Math.max(4, Math.floor(cols * 0.8));
-                    const totalRows = Math.ceil(this.totalSheets / cols); const gapX = isMobile ? 100 : 160; const gapY = isMobile ? 130 : 200; const scale = isMobile ? 0.35 : 0.45;
-                    const maxGridDim = Math.max(cols * gapX, totalRows * gapY); let pushBack = isMobile ? -(maxGridDim * 2.2) : -(maxGridDim * 1.0); if(pushBack > -1500) pushBack = -1500;
-                    gsap.to(this.book, { xPercent: 0, duration: 1.5, ease: "power3.inOut" }); gsap.to(dimCore, { z: pushBack, duration: 2, ease: "expo.inOut" });
-                    const startX = -(cols - 1) * gapX / 2; const startY = -(totalRows - 1) * gapY / 2;
-                    this.sheets.forEach((sheet, i) => { const row = Math.floor(i / cols); const col = i % cols; gsap.to(sheet, { x: startX + col * gapX, y: startY + row * gapY, z: (Math.random() - 0.5) * 300, rotationX: (Math.random() - 0.5) * 15, rotationY: 0, rotationZ: (Math.random() - 0.5) * 10, scale: scale, duration: 1.5 + Math.random() * 0.5, ease: "expo.inOut", overwrite: "auto" }); });
+                    this.book.classList.add('index-mode'); indicatorEl.innerText = "INDEX MODE"; gsap.to(document.getElementById('etherealText'), { opacity: 0, duration: 0.5 }); btnWhisper.classList.remove('is-visible');
+                    
+                    const isMobile = window.innerWidth <= 768; 
+                    const cols = isMobile ? 2 : 4; 
+                    const gapX = isMobile ? window.innerWidth / 2.2 : 320; 
+                    const gapY = isMobile ? window.innerWidth / 1.5 : 450; 
+                    const scale = isMobile ? 0.35 : 0.65;
+                    
+                    const totalRows = Math.ceil(this.totalSheets / cols); 
+                    this.maxGridHeight = totalRows * gapY;
+                    window.indexScrollY = 0; // Reset scroll
+                    
+                    gsap.to(this.book, { xPercent: 0, duration: 1.5, ease: "power3.inOut" }); 
+                    gsap.to(dimCore, { z: 0, y: 0, duration: 1.5, ease: "power3.inOut" });
+                    
+                    const startX = -(cols - 1) * gapX / 2; 
+                    const startY = -(totalRows - 1) * gapY / 2;
+                    
+                    this.sheets.forEach((sheet, i) => { 
+                        sheet.style.display = 'block'; // Make all visible for grid
+                        const row = Math.floor(i / cols); const col = i % cols; 
+                        gsap.to(sheet, { 
+                            x: startX + col * gapX, 
+                            y: startY + row * gapY, 
+                            z: 0, 
+                            rotationX: 0, 
+                            rotationY: 0, 
+                            rotationZ: 0, 
+                            scale: scale, 
+                            duration: 1.5 + Math.random() * 0.5, 
+                            ease: "expo.inOut", 
+                            overwrite: "auto" 
+                        }); 
+                    });
+                    
+                    // Initial visibility check after animation
+                    setTimeout(() => { this.checkVisibilityInIndex(window.indexScrollY); }, 1500);
                 } else {
-                    this.book.classList.remove('index-mode'); gsap.to(dimCore, { z: 0, duration: 1.5, ease: "power3.inOut" });
+                    this.book.classList.remove('index-mode'); 
+                    gsap.to(dimCore, { z: 0, y: 0, duration: 1.5, ease: "power3.inOut" });
+                    
                     this.sheets.forEach((sheet, index) => {
                         const targetRotY = index < this.currentSheet ? -180 : 0; 
                         let targetZ = 0; if (index < this.currentSheet) targetZ = -((this.currentSheet - 1) - index) * this.Z_SPACE; else targetZ = -(index - this.currentSheet) * this.Z_SPACE;
@@ -444,11 +497,26 @@ document.addEventListener("DOMContentLoaded", () => {
             if (e.key === 'ArrowLeft') activeEngine.flipPrev(indicator, btnPrev, btnNext);
         });
 
-        let scrollTimeout = null;
+        window.indexScrollY = 0;
         window.addEventListener('wheel', (e) => {
             if(isShifting || isAutoPlaying || isSwiping || isIdle) return;
             let activeEngine = (activeDim === 'putra') ? bookPutra : bookPutri;
-            if(activeEngine.isIndexMode) return;
+            
+            if(activeEngine.isIndexMode) {
+                // Custom scroll for Index Mode
+                window.indexScrollY -= e.deltaY * 0.8; // Adjust speed
+                const maxScroll = Math.max(0, activeEngine.maxGridHeight - window.innerHeight);
+                const boundTop = maxScroll / 2;
+                const boundBottom = -maxScroll / 2;
+                
+                if(window.indexScrollY > boundTop) window.indexScrollY = boundTop;
+                if(window.indexScrollY < boundBottom) window.indexScrollY = boundBottom;
+                
+                gsap.to(dimCore, { y: window.indexScrollY, duration: 0.5, ease: "power2.out" });
+                activeEngine.checkVisibilityInIndex(window.indexScrollY);
+                return;
+            }
+            
             if(scrollTimeout) return; 
             
             if (e.deltaY > 50) {
@@ -519,11 +587,33 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById('bookPutra').addEventListener('click', (e) => handleBookTap(e, bookPutra, document.getElementById('bookPutra')));
         document.getElementById('bookPutri').addEventListener('click', (e) => handleBookTap(e, bookPutri, document.getElementById('bookPutri')));
 
-        let touchStartX = 0; let touchEndX = 0;
-        stage.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; isSwiping = false; }, {passive: true});
+        let touchStartY = 0; let touchEndY = 0;
+        stage.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; touchStartY = e.changedTouches[0].screenY; isSwiping = false; }, {passive: true});
+        stage.addEventListener('touchmove', e => {
+            let activeEngine = (activeDim === 'putra') ? bookPutra : bookPutri;
+            if(activeEngine.isIndexMode) {
+                const currentY = e.changedTouches[0].screenY;
+                const deltaY = currentY - touchStartY;
+                window.indexScrollY += deltaY;
+                
+                const maxScroll = Math.max(0, activeEngine.maxGridHeight - window.innerHeight);
+                const boundTop = maxScroll / 2;
+                const boundBottom = -maxScroll / 2;
+                
+                if(window.indexScrollY > boundTop) window.indexScrollY = boundTop;
+                if(window.indexScrollY < boundBottom) window.indexScrollY = boundBottom;
+                
+                gsap.to(dimCore, { y: window.indexScrollY, duration: 0.1 });
+                touchStartY = currentY; // reset for next move event
+            }
+        }, {passive: true});
+        
         stage.addEventListener('touchend', e => {
             if(isShifting) return; touchEndX = e.changedTouches[0].screenX; const distance = touchStartX - touchEndX; let activeEngine = (activeDim === 'putra') ? bookPutra : bookPutri;
-            if(activeEngine.isIndexMode) return; 
+            if(activeEngine.isIndexMode) {
+                activeEngine.checkVisibilityInIndex(window.indexScrollY);
+                return; 
+            }
             if (Math.abs(distance) > 50) { isSwiping = true; stopAutoPlay(); if (distance > 50) activeEngine.flipNext(indicator, btnPrev, btnNext); if (distance < -50) activeEngine.flipPrev(indicator, btnPrev, btnNext); }
         }, {passive: true});
 

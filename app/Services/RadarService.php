@@ -29,7 +29,7 @@ class RadarService
 
         // Ambil data alumni yang memiliki koordinat
         $users = $this->userModel
-            ->select('id, nama_lengkap, nama_panggilan, jenis_kelamin, tempat_tanggal_lahir, tempat_lahir, alamat_lengkap, lat, lng, foto_profil, no_whatsapp')
+            ->select('id, nama_lengkap, nama_panggilan, jenis_kelamin, tempat_lahir, alamat_lengkap, lat, lng, foto_profil, no_whatsapp')
             ->where('lat IS NOT NULL')
             ->where('lng IS NOT NULL')
             ->findAll();
@@ -57,9 +57,6 @@ class RadarService
                 $city = $user['alamat_lengkap']; 
             } else if (!empty($user['tempat_lahir'])) {
                 $city = $user['tempat_lahir'];
-            } else if (!empty($user['tempat_tanggal_lahir'])) {
-                $parts = explode(',', $user['tempat_tanggal_lahir']);
-                $city = trim($parts[0]);
             }
 
             $nodes[] = [

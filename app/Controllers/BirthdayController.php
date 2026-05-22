@@ -39,7 +39,7 @@ class BirthdayController extends BaseController
         $user = $userModel->find($userId);
 
         if (!$user || empty($user['tanggal_lahir'])) {
-            return redirect()->to('/beranda')->with('pesan', 'Data ulang tahun entitas belum tersedia.');
+            return redirect()->to('/beranda')->with('error', 'Data ulang tahun entitas belum tersedia.');
         }
 
         // Hitung usia

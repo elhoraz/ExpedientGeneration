@@ -10,7 +10,7 @@ class RadarController extends BaseController
 
     public function __construct()
     {
-        $this->radarService = new RadarService();
+        $this->radarService = service('radarService');
     }
 
     public function index()
@@ -22,37 +22,148 @@ class RadarController extends BaseController
     public function flatMap()
     {
         $data['alumni_nodes'] = $this->radarService->getMapNodes();
-        return view('radar_flat', $data);
+        $data['mapStyle'] = 'minimalist';
+        return view('radar_2d', $data);
     }
 
     public function satelliteMap()
     {
         $data['alumni_nodes'] = $this->radarService->getMapNodes();
-        return view('radar_satellite', $data);
+        $data['mapStyle'] = 'satellite';
+        return view('radar_2d', $data);
     }
 
     public function terrainMap()
     {
         $data['alumni_nodes'] = $this->radarService->getMapNodes();
-        return view('radar_terrain', $data);
+        $data['mapStyle'] = 'terrain';
+        return view('radar_2d', $data);
     }
 
     public function darkMap()
     {
         $data['alumni_nodes'] = $this->radarService->getMapNodes();
-        return view('radar_dark', $data);
+        $data['mapStyle'] = 'dark';
+        return view('radar_2d', $data);
     }
 
-    public function watercolorMap()
+    public function watercolorMap() // Route is watercolor, but it renders Google Maps
     {
         $data['alumni_nodes'] = $this->radarService->getMapNodes();
-        return view('radar_watercolor', $data);
+        $data['mapStyle'] = 'google';
+        return view('radar_2d', $data);
     }
 
     public function classicMap()
     {
         $data['alumni_nodes'] = $this->radarService->getMapNodes();
-        return view('radar_classic', $data);
+        $data['mapStyle'] = 'classic';
+        return view('radar_2d', $data);
+    }
+
+    public function natgeoMap()
+    {
+        $data['alumni_nodes'] = $this->radarService->getMapNodes();
+        $data['mapStyle'] = 'natgeo';
+        return view('radar_2d', $data);
+    }
+
+    public function voyagerMap()
+    {
+        $data['alumni_nodes'] = $this->radarService->getMapNodes();
+        $data['mapStyle'] = 'voyager';
+        return view('radar_2d', $data);
+    }
+
+    public function hybridMap()
+    {
+        $data['alumni_nodes'] = $this->radarService->getMapNodes();
+        $data['mapStyle'] = 'hybrid';
+        return view('radar_2d', $data);
+    }
+
+    public function graycanvasMap()
+    {
+        $data['alumni_nodes'] = $this->radarService->getMapNodes();
+        $data['mapStyle'] = 'graycanvas';
+        return view('radar_2d', $data);
+    }
+
+    public function hotMap()
+    {
+        $data['alumni_nodes'] = $this->radarService->getMapNodes();
+        $data['mapStyle'] = 'hot';
+        return view('radar_2d', $data);
+    }
+
+    public function googleterrainMap()
+    {
+        $data['alumni_nodes'] = $this->radarService->getMapNodes();
+        $data['mapStyle'] = 'googleterrain';
+        return view('radar_2d', $data);
+    }
+
+    public function esriclarityMap()
+    {
+        $data['alumni_nodes'] = $this->radarService->getMapNodes();
+        $data['mapStyle'] = 'esriclarity';
+        return view('radar_2d', $data);
+    }
+
+    public function nightnavMap()
+    {
+        $data['alumni_nodes'] = $this->radarService->getMapNodes();
+        $data['mapStyle'] = 'nightnav';
+        return view('radar_2d', $data);
+    }
+
+    public function googletransitMap()
+    {
+        $data['alumni_nodes'] = $this->radarService->getMapNodes();
+        $data['mapStyle'] = 'googletransit';
+        return view('radar_2d', $data);
+    }
+
+    public function physicalMap()
+    {
+        $data['alumni_nodes'] = $this->radarService->getMapNodes();
+        $data['mapStyle'] = 'physical';
+        return view('radar_2d', $data);
+    }
+
+    public function nasamarbleMap()
+    {
+        $data['alumni_nodes'] = $this->radarService->getMapNodes();
+        $data['mapStyle'] = 'nasamarble';
+        return view('radar_2d', $data);
+    }
+
+    public function googletrafficMap()
+    {
+        $data['alumni_nodes'] = $this->radarService->getMapNodes();
+        $data['mapStyle'] = 'googletraffic';
+        return view('radar_2d', $data);
+    }
+
+    public function navigationMap()
+    {
+        $data['alumni_nodes'] = $this->radarService->getMapNodes();
+        $data['mapStyle'] = 'navigation';
+        return view('radar_2d', $data);
+    }
+
+    public function esristreetMap()
+    {
+        $data['alumni_nodes'] = $this->radarService->getMapNodes();
+        $data['mapStyle'] = 'esristreet';
+        return view('radar_2d', $data);
+    }
+
+    public function tonerMap()
+    {
+        $data['alumni_nodes'] = $this->radarService->getMapNodes();
+        $data['mapStyle'] = 'toner';
+        return view('radar_2d', $data);
     }
 
     public function updateLocation()

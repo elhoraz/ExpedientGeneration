@@ -19,14 +19,83 @@ use CodeIgniter\Config\BaseService;
  */
 class Services extends BaseService
 {
-    /*
-     * public static function example($getShared = true)
-     * {
-     *     if ($getShared) {
-     *         return static::getSharedInstance('example');
-     *     }
-     *
-     *     return new \CodeIgniter\Example();
-     * }
-     */
+    public static function authService($getShared = true)
+    {
+        if ($getShared) {
+            return static::getSharedInstance('authService');
+        }
+        return new \App\Services\AuthService();
+    }
+
+    public static function profileService($getShared = true)
+    {
+        if ($getShared) {
+            return static::getSharedInstance('profileService');
+        }
+        return new \App\Services\ProfileService();
+    }
+
+    public static function radarService($getShared = true)
+    {
+        if ($getShared) {
+            return static::getSharedInstance('radarService');
+        }
+        return new \App\Services\RadarService();
+    }
+
+    public static function gamificationService($getShared = true)
+    {
+        if ($getShared) {
+            return static::getSharedInstance('gamificationService');
+        }
+        return new \App\Services\GamificationService();
+    }
+
+    public static function nexusService($getShared = true)
+    {
+        if ($getShared) {
+            return static::getSharedInstance('nexusService');
+        }
+        return new \App\Services\NexusService();
+    }
+
+    public static function berandaService($getShared = true)
+    {
+        if ($getShared) {
+            return static::getSharedInstance('berandaService');
+        }
+        return new \App\Services\BerandaService();
+    }
+
+    public static function pusherService($getShared = true)
+    {
+        if ($getShared) {
+            return static::getSharedInstance('pusherService');
+        }
+        return new \App\Services\PusherService();
+    }
+
+    public static function wasiatService($getShared = true)
+    {
+        if ($getShared) {
+            return static::getSharedInstance('wasiatService');
+        }
+        return new \App\Services\WasiatService();
+    }
+
+    public static function syndicateService($getShared = true)
+    {
+        if ($getShared) {
+            return static::getSharedInstance('syndicateService');
+        }
+        return new \App\Services\SyndicateService();
+    }
+
+    public static function analyticsService($getShared = true)
+    {
+        if ($getShared) {
+            return static::getSharedInstance('analyticsService');
+        }
+        return new \App\Services\AnalyticsService();
+    }
 }

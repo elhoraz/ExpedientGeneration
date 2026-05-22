@@ -89,7 +89,7 @@
         <button class="btn-new" id="btnNew">Terima Kalam Lain</button>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="/vendor/gsap/gsap.min.js"></script>
     <script>
     document.addEventListener("DOMContentLoaded", () => {
         const verses = <?= json_encode($verses) ?>;

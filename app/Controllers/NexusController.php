@@ -24,7 +24,7 @@ class NexusController extends BaseController
         $userId = session()->get('user_id');
         if (!$userId) return $this->response->setJSON(['status' => 'error', 'message' => 'Unauthorized']);
 
-        $nexusService = new NexusService();
+        $nexusService = service('nexusService');
         $matches = $nexusService->findTopMatches($userId, 5);
 
         return $this->response->setJSON([

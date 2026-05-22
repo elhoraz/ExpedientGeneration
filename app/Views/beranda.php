@@ -147,19 +147,19 @@ Museum Utama Expedient
     <?php if (!empty($leaderboard)): ?>
     <section class="hall-section" style="padding-top: 0;">
         <h2 class="section-title reveal-up" style="font-size: clamp(1.5rem, 4vw, 2.5rem);">Jajaran Kehormatan</h2>
-        <div style="max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px;">
+        <div class="leaderboard-container">
             <?php $rank = 1; foreach ($leaderboard as $l): ?>
-            <div class="glass-panel reveal-up" style="display: flex; align-items: center; justify-content: space-between; padding: 20px 30px; border-left: 4px solid <?= $rank == 1 ? '#FFD700' : ($rank == 2 ? '#E5E4E2' : ($rank == 3 ? '#cd7f32' : 'var(--glass-border)')) ?>; transition: 0.3s; cursor: default;" onmouseover="this.style.transform='translateX(10px)'" onmouseout="this.style.transform='translateX(0)'">
-                <div style="display: flex; align-items: center; gap: 20px;">
-                    <div style="font-family: 'Playfair Display', serif; font-size: 2rem; color: #d4af37; font-weight: 900; width: 40px;">#<?= $rank ?></div>
+            <div class="glass-panel reveal-up leaderboard-item" style="border-left: 4px solid <?= $rank == 1 ? '#FFD700' : ($rank == 2 ? '#E5E4E2' : ($rank == 3 ? '#cd7f32' : 'var(--glass-border)')) ?>;">
+                <div class="leaderboard-info">
+                    <div class="leaderboard-rank">#<?= $rank ?></div>
                     <?php $foto_profil = $l['foto_profil'] ?? 'default.webp'; ?>
-                    <img src="<?= $foto_profil !== 'default.webp' ? '/uploads/profiles/'.$foto_profil : 'https://ui-avatars.com/api/?name='.urlencode($l['nama_panggilan'] ?: $l['nama_lengkap']).'&background=d4af37&color=000' ?>" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(212,175,55,0.4);" alt="Avatar">
+                    <img src="<?= $foto_profil !== 'default.webp' ? '/uploads/profiles/'.$foto_profil : 'https://ui-avatars.com/api/?name='.urlencode($l['nama_panggilan'] ?: $l['nama_lengkap']).'&background=d4af37&color=000' ?>" class="leaderboard-avatar" alt="Avatar">
                     <div>
-                        <div style="font-size: 1.2rem; font-family: 'Playfair Display', serif; color: var(--text-primary);"><?= esc($l['nama_panggilan'] ?: $l['nama_lengkap']) ?></div>
-                        <div style="font-size: 0.8rem; font-family: 'Courier New', monospace; color: var(--text-secondary); letter-spacing: 2px;">POIN TERAKUMULASI</div>
+                        <div class="leaderboard-name"><?= esc($l['nama_panggilan'] ?: $l['nama_lengkap']) ?></div>
+                        <div class="leaderboard-label">POIN TERAKUMULASI</div>
                     </div>
                 </div>
-                <div style="font-size: 1.8rem; color: #d4af37; font-weight: 700; font-family: 'Inter', sans-serif;">
+                <div class="leaderboard-score">
                     <?= number_format($l['prestise_points']) ?>
                 </div>
             </div>
@@ -232,27 +232,27 @@ Museum Utama Expedient
             </div>
         </form>
         <?php else: ?>
-        <div style="text-align:center; padding:40px 20px; background:var(--glass-bg); backdrop-filter:blur(20px); border:1px solid var(--glass-border); border-radius:16px;">
-            <i class="fa-solid fa-lock" style="font-size:2rem; color:rgba(212,175,55,0.4); margin-bottom:15px;"></i>
-            <p style="color:var(--text-secondary); margin-bottom:20px;">Masuk ke portal untuk menandatangani buku tamu.</p>
-            <a href="/login" style="color:#d4af37; text-decoration:none; font-weight:700; letter-spacing:2px; text-transform:uppercase; font-size:0.85rem;"><i class="fa-solid fa-right-to-bracket"></i> Masuk Sekarang</a>
+        <div class="guestbook-empty">
+            <i class="fa-solid fa-lock guestbook-empty-icon"></i>
+            <p class="guestbook-empty-text">Masuk ke portal untuk menandatangani buku tamu.</p>
+            <a href="/login" class="guestbook-login-link"><i class="fa-solid fa-right-to-bracket"></i> Masuk Sekarang</a>
         </div>
         <?php endif; ?>
 
         <?php if(!empty($buku_tamu)): ?>
-        <div style="margin-top: 50px;">
-            <h3 style="font-family:'Playfair Display', serif; color:var(--gold-main, #d4af37); margin-bottom:20px; font-size:1.2rem; letter-spacing:2px; text-align:center;">Jejak Terkini</h3>
-            <div style="display:flex; flex-direction:column; gap:15px; max-width:600px; margin:0 auto;">
+        <div class="guestbook-list">
+            <h3 class="guestbook-title">Jejak Terkini</h3>
+            <div class="guestbook-items">
                 <?php foreach($buku_tamu as $bt): ?>
-                    <div style="background:rgba(255,255,255,0.03); border-left:3px solid var(--gold-main, #d4af37); padding:15px 20px; border-radius:4px; position:relative;">
-                        <div style="font-family:'Playfair Display', serif; color:#fff; font-weight:bold; font-size:1.1rem; margin-bottom:5px;"><?= esc($bt['nama']) ?></div>
-                        <div style="color:var(--text-primary, #ccc); font-size:0.9rem; font-style:italic; line-height:1.5;">"<?= esc($bt['pesan']) ?>"</div>
-                        <div style="position:absolute; top:15px; right:20px; font-size:0.7rem; color:var(--text-muted, #5e7a6b);"><?= date('d M Y, H:i', strtotime($bt['created_at'])) ?></div>
+                    <div class="guestbook-item">
+                        <div class="guestbook-name"><?= esc($bt['nama']) ?></div>
+                        <div class="guestbook-msg">"<?= esc($bt['pesan']) ?>"</div>
+                        <div class="guestbook-date"><?= date('d M Y, H:i', strtotime($bt['created_at'])) ?></div>
                     </div>
                 <?php endforeach; ?>
             </div>
-            <div style="text-align:center; margin-top:20px;">
-                <a href="/buku-tamu" style="color:var(--text-secondary, #8899a6); text-decoration:none; font-size:0.8rem; letter-spacing:1px; text-transform:uppercase; transition:0.3s;" onmouseover="this.style.color='#d4af37'" onmouseout="this.style.color='var(--text-secondary)'">Lihat Seluruh Catatan <i class="fa-solid fa-arrow-right"></i></a>
+            <div class="guestbook-footer">
+                <a href="/buku-tamu" class="guestbook-more-link">Lihat Seluruh Catatan <i class="fa-solid fa-arrow-right"></i></a>
             </div>
         </div>
         <?php endif; ?>
@@ -281,8 +281,8 @@ Museum Utama Expedient
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script src="/vendor/gsap/gsap.min.js"></script>
+<script src="/vendor/gsap/ScrollTrigger.min.js"></script>
 
 <script src="/assets/js/beranda.js" defer></script>
 <?= $this->endSection() ?>

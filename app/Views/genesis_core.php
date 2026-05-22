@@ -197,7 +197,7 @@
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="/vendor/gsap/gsap.min.js"></script>
     <script>
     document.addEventListener("DOMContentLoaded", () => {
         const canvas = document.getElementById('canvas1');

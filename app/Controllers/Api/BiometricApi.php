@@ -39,6 +39,7 @@ class BiometricApi extends BaseApiController
         $challenge = bin2hex(random_bytes(32));
         session()->set('biometric_challenge', $challenge);
         session()->set('biometric_user_id', $user['id']);
+        session()->set('biometric_challenge_time', time());
 
         return $this->jsonSuccess([
             'challenge'    => $challenge,
@@ -56,9 +57,16 @@ class BiometricApi extends BaseApiController
         $json = $this->request->getJSON();
         $challenge = session()->get('biometric_challenge');
         $userId = session()->get('biometric_user_id');
+        $challengeTime = session()->get('biometric_challenge_time');
 
         if (!$challenge || !$userId) {
             return $this->jsonError('Sesi challenge tidak ditemukan. Silakan ulang.', 401);
+        }
+
+        // Validasi challenge expiry (maks 5 menit)
+        if (!$challengeTime || (time() - $challengeTime) > 300) {
+            session()->remove(['biometric_challenge', 'biometric_user_id', 'biometric_challenge_time']);
+            return $this->jsonError('Challenge sudah kedaluwarsa. Silakan ulang.', 401);
         }
 
         $user = $this->userModel->find($userId);
@@ -66,9 +74,17 @@ class BiometricApi extends BaseApiController
             return $this->jsonError('User tidak ditemukan.', 404);
         }
 
-        // Verifikasi sederhana (signature matching)
-        // Di production, gunakan library WebAuthn lengkap
-        if (isset($json->credential_id) && $json->credential_id === $user['webauthn_credential_id']) {
+        // Verifikasi credential_id + challenge response hash
+        // Client harus mengirimkan HMAC(challenge, credential_id) sebagai bukti
+        // bahwa mereka benar-benar memiliki credential, bukan hanya tahu ID-nya
+        if (
+            isset($json->credential_id, $json->challenge_response) &&
+            $json->credential_id === $user['webauthn_credential_id'] &&
+            hash_equals(
+                hash('sha256', $challenge . $json->credential_id),
+                $json->challenge_response
+            )
+        ) {
             session()->set([
                 'user_id'        => $user['id'],
                 'nama_panggilan' => $user['nama_panggilan'],
@@ -76,7 +92,7 @@ class BiometricApi extends BaseApiController
                 'logged_in'      => true
             ]);
 
-            session()->remove(['biometric_challenge', 'biometric_user_id']);
+            session()->remove(['biometric_challenge', 'biometric_user_id', 'biometric_challenge_time']);
             ActivityLogger::log('BIOMETRIC_LOGIN', "Login biometric berhasil", $user['id']);
 
             return $this->jsonSuccess(null, 'Login biometric berhasil.');
