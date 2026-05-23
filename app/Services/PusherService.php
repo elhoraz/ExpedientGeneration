@@ -20,30 +20,20 @@ class PusherService
     protected ?Pusher $pusher = null;
 
     /**
-     * Mendapatkan instance Pusher (lazy-loaded).
-     * Mendukung Pusher Cloud dan Soketi self-hosted.
+     * Mendapatkan instance Pusher Cloud (lazy-loaded).
+     * Kredensial dibaca dari file .env
      */
     protected function getPusher(): Pusher
     {
         if ($this->pusher === null) {
-            $options = [
-                'cluster' => env('PUSHER_APP_CLUSTER', 'ap1'),
-                'useTLS'  => env('PUSHER_USE_TLS', 'true') === 'true',
-            ];
-
-            // Soketi self-hosted: tambahkan host/port/scheme
-            $host = env('PUSHER_HOST');
-            if (!empty($host)) {
-                $options['host']   = $host;
-                $options['port']   = (int) env('PUSHER_PORT', 6001);
-                $options['scheme'] = env('PUSHER_SCHEME', 'https');
-            }
-
             $this->pusher = new Pusher(
-                env('PUSHER_APP_KEY', 'app-key'),
-                env('PUSHER_APP_SECRET', 'app-secret'),
-                env('PUSHER_APP_ID', 'app-id'),
-                $options
+                env('PUSHER_APP_KEY'),
+                env('PUSHER_APP_SECRET'),
+                env('PUSHER_APP_ID'),
+                [
+                    'cluster' => env('PUSHER_APP_CLUSTER', 'ap1'),
+                    'useTLS'  => true,
+                ]
             );
         }
 

@@ -221,7 +221,7 @@ Profil Eksklusif - Expedient
 
                 <div style="margin-top: 50px; padding-top: 30px; border-top: 1px solid rgba(255, 51, 102, 0.2); text-align: center;">
                     <div style="font-size: 0.75rem; color: #ff3366; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px;"><i class="fa-solid fa-triangle-exclamation" style="margin-right: 8px;"></i>Zona Berbahaya</div>
-                    <form action="/profil/delete-account" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menonaktifkan akun ini selamanya? Proses ini tidak dapat dibatalkan dengan mudah.');">
+                    <form action="/profil/delete-account" method="POST" onsubmit="event.preventDefault(); window.showConfirm('Konfirmasi', 'Apakah Anda yakin ingin menonaktifkan akun ini selamanya? Proses ini tidak dapat dibatalkan dengan mudah.').then(res => { if(res) this.submit(); });">
                         <?= csrf_field() ?>
                         <div class="form-group" style="margin-bottom: 15px;">
                             <input type="password" name="password_delete" class="form-input" id="inp_delpass" placeholder=" " required style="border-color: rgba(255, 51, 102, 0.3);">

@@ -44,7 +44,7 @@ $routes->get('/direktori', 'DirektoriController::index');
 
 // Interaksi ANGGOTA (tetap butuh login)
 $routes->post('/beranda/simpan_pesan', 'BerandaController::simpan_pesan', ['filter' => 'auth']);
-$routes->get('/buku-tamu', 'BukuTamuController::index');
+$routes->get('/buku-tamu', 'BukuTamuController::index', ['filter' => 'auth']);
 $routes->get('/fitur', 'FiturController::index', ['filter' => 'auth']);
 $routes->get('/oracle', 'OracleController::index', ['filter' => 'auth']);
 $routes->post('/oracle/store', 'OracleController::store', ['filter' => 'auth']);

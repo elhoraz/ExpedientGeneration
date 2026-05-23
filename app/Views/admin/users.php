@@ -126,7 +126,7 @@ Manajemen Entitas
                     </form>
                 </td>
                 <td data-label="Aksi">
-                    <form action="/admin/users/toggle/<?= $u['id'] ?>" method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin mengubah status akun ini?')">
+                    <form action="/admin/users/toggle/<?= $u['id'] ?>" method="POST" style="display:inline;" onsubmit="event.preventDefault(); window.showConfirm('Konfirmasi', 'Yakin ingin mengubah status akun ini?').then(res => { if(res) this.submit(); });">
                         <?= csrf_field() ?>
                         <?php if(($u['is_active'] ?? 1) == 1): ?>
                             <button type="submit" class="btn-sm btn-danger-sm"><i class="fa-solid fa-ban"></i> Nonaktifkan</button>

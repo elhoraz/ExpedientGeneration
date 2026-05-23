@@ -143,7 +143,7 @@ class ChatController extends BaseController
 
         // Trigger Pusher
         $pusherService = service('pusherService');
-        $pusherService->sendChatMessage([
+        $pusherPayload = [
             'id'            => $chatId,
             'sender_id'     => $userId,
             'receiver_id'   => $receiverId,
@@ -152,7 +152,10 @@ class ChatController extends BaseController
             'message'       => esc($message),
             'image_path'    => $imagePath,
             'created_at'    => $chatData['created_at']
-        ]);
+        ];
+        
+        $pusherResult = $pusherService->sendChatMessage($pusherPayload);
+        log_message('info', '[ChatController::send] Pusher trigger result: ' . ($pusherResult ? 'SUCCESS' : 'FAILED') . ' | chatId=' . $chatId);
 
         return $this->response->setJSON(['status' => 'success', 'csrf_hash' => csrf_hash()]);
     }

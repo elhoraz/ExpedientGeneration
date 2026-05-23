@@ -426,7 +426,7 @@ The Lounge - Expedient
                             <?= nl2br(esc($msg['message'])) ?>
                         <?php endif; ?>
                         <?php if(!empty($msg['image_path'])): ?>
-                            <img src="/uploads/chat/<?= esc($msg['image_path']) ?>" class="message-img" onclick="openImgModal(this.src)" alt="Gambar">
+                            <img src="/uploads/chat/<?= esc($msg['image_path']) ?>" class="message-img" onload="scrollToBottom()" onclick="openImgModal(this.src)" alt="Gambar">
                         <?php endif; ?>
                         <span class="message-time"><?= date('H:i', strtotime($msg['created_at'])) ?></span>
                     </div>
@@ -517,7 +517,7 @@ The Lounge - Expedient
     chatImageInput.addEventListener('change', function() {
         const file = this.files[0];
         if (!file) return;
-        if (file.size > 3 * 1024 * 1024) { alert('Ukuran gambar maks 3MB.'); this.value = ''; return; }
+        if (file.size > 3 * 1024 * 1024) { window.showToast('Peringatan', 'Ukuran gambar maks 3MB.', true); this.value = ''; return; }
         selectedImageFile = file;
         const reader = new FileReader();
         reader.onload = (e) => { imgPreview.src = e.target.result; imgPreviewWrap.style.display = 'block'; };
@@ -548,40 +548,111 @@ The Lounge - Expedient
     scrollToBottom();
 
     // ============ PUSHER ============
+    if (!window.pusher) {
+        console.error('[Chat] ❌ window.pusher is UNDEFINED! Real-time will NOT work.');
+    } else {
+        console.log('[Chat] ✅ window.pusher found, state:', window.pusher.connection.state);
+    }
     const chatChannel = window.pusher.subscribe('chat-channel');
     chatChannel.bind('new-message', function(data) {
+        console.log('[Chat] 📩 new-message event received:', data);
+        
+        const isMine = data.sender_id == myId;
+        if (isMine && !data.image_path) {
+            // Content-aware matching for pending bubbles to prevent hijacking
+            const pendingBubbles = document.querySelectorAll('[data-msg-id^="pending-"]');
+            let matchedPending = null;
+            
+            // Queue-based sequential matching (safest)
+            // Since messages are pushed sequentially, the oldest pending bubble corresponds to the incoming Pusher event.
+            if (pendingBubbles.length > 0) {
+                matchedPending = pendingBubbles[0];
+            }
+            
+            if (matchedPending && data.id) {
+                matchedPending.setAttribute('data-msg-id', data.id);
+                const content = matchedPending.querySelector('.message-content');
+                if (content && !content.querySelector('.btn-delete-msg')) {
+                    content.insertAdjacentHTML('afterbegin', 
+                        `<button class="btn-delete-msg" onclick="deleteMsg(${data.id})" title="Hapus"><i class="fa-solid fa-trash"></i></button>`
+                    );
+                }
+                return; // Already displayed optimistically
+            }
+        }
+        
+        // Filter: only show messages relevant to this conversation
         if (currentReceiverId === null) {
+            // Lounge — only show lounge messages (receiver_id = null)
             if (data.receiver_id !== null) return;
         } else {
+            // Personal chat — only show messages from/to the current conversation partner
             const isRelevant = (data.sender_id == currentReceiverId && data.receiver_id == myId) ||
                                (data.sender_id == myId && data.receiver_id == currentReceiverId);
             if (!isRelevant) return;
             if (data.sender_id == currentReceiverId) markRead(data.sender_id);
         }
 
+        appendMessageToUI(data, isMine);
+    });
+
+    // ============ SEND ============
+    const sentMessageIds = new Set(); // Track messages we've already shown optimistically
+
+    function appendMessageToUI(data, isMine) {
+        // Deduplication check
+        if (document.querySelector(`[data-msg-id="${data.id}"]`)) return;
+
         if(emptyMsg) emptyMsg.style.display = 'none';
 
-        const isMine = data.sender_id == myId;
+        const escapeHTML = (str) => {
+            if (!str) return '';
+            return str.replace(/[&<>'"]/g, tag => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+            }[tag] || tag));
+        };
+
+        const safeSenderName = escapeHTML(data.sender_name);
+        
         let avatarHtml = '', senderHtml = '', deleteHtml = '';
         if(!isMine) {
             const avatarUrl = data.sender_avatar && data.sender_avatar !== 'default.webp' 
                 ? '/uploads/profiles/' + data.sender_avatar 
                 : 'https://ui-avatars.com/api/?name=' + encodeURIComponent(data.sender_name) + '&background=d4af37&color=000';
             avatarHtml = `<img src="${avatarUrl}" class="message-avatar">`;
-            senderHtml = `<span class="message-sender">${data.sender_name}</span>`;
+            senderHtml = `<span class="message-sender">${safeSenderName}</span>`;
         } else {
-            deleteHtml = `<button class="btn-delete-msg" onclick="deleteMsg(${data.id})" title="Hapus"><i class="fa-solid fa-trash"></i></button>`;
+            deleteHtml = data.id ? `<button class="btn-delete-msg" onclick="deleteMsg(${data.id})" title="Hapus"><i class="fa-solid fa-trash"></i></button>` : '';
         }
 
-        const timeString = new Date(data.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        // Robust date parser to prevent JS crashes (especially on Safari / mobile devices)
+        let timeString = '';
+        try {
+            if (data.created_at) {
+                const dateStr = data.created_at.includes(' ') ? data.created_at.replace(' ', 'T') : data.created_at;
+                const d = new Date(dateStr);
+                if (!isNaN(d.getTime())) {
+                    timeString = d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                } else {
+                    timeString = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                }
+            } else {
+                timeString = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            }
+        } catch (e) {
+            timeString = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        }
+
         let imageHtml = '';
         if (data.image_path) {
-            imageHtml = `<img src="/uploads/chat/${data.image_path}" class="message-img" onclick="openImgModal(this.src)" alt="Gambar">`;
+            imageHtml = `<img src="/uploads/chat/${data.image_path}" class="message-img" onload="scrollToBottom()" onclick="openImgModal(this.src)" alt="Gambar">`;
         }
-        const msgText = data.message ? data.message.replace(/\n/g, '<br>') : '';
+        
+        const safeMessage = escapeHTML(data.message);
+        const msgText = safeMessage ? safeMessage.replace(/\n/g, '<br>') : '';
 
         const html = `
-            <div class="message-bubble ${isMine ? 'mine' : ''}" data-msg-id="${data.id}">
+            <div class="message-bubble ${isMine ? 'mine' : ''}" data-msg-id="${data.id || 'pending-' + Date.now()}">
                 ${avatarHtml}
                 <div class="message-content">
                     ${deleteHtml}
@@ -596,14 +667,28 @@ The Lounge - Expedient
         chatContainer.insertAdjacentHTML('beforeend', html);
         scrollToBottom();
         if(!isMine && navigator.vibrate) navigator.vibrate([30]);
-    });
+    }
 
-    // ============ SEND ============
     async function sendChat() {
         const message = input.value;
         const csrfHash = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
         if(!message.trim() && !selectedImageFile) return;
+
+        // Optimistic UI: show text-only messages immediately
+        // Image messages wait for server response (needs server-generated filename)
+        if (!selectedImageFile && message.trim()) {
+            const optimisticData = {
+                id: null,
+                sender_id: myId,
+                receiver_id: currentReceiverId,
+                sender_name: 'Anda',
+                message: message,
+                image_path: null,
+                created_at: new Date().toISOString()
+            };
+            appendMessageToUI(optimisticData, true);
+        }
 
         const formData = new FormData();
         formData.append('message', message);
@@ -628,13 +713,13 @@ The Lounge - Expedient
             });
             const result = await resp.json();
             if(result.csrf_hash) document.querySelector('meta[name="csrf-token"]').setAttribute('content', result.csrf_hash);
-            if(result.status === 'error' && result.message) alert(result.message);
+            if(result.status === 'error' && result.message) window.showToast('Gagal', result.message, true);
         } catch(e) { console.error('Failed to send message', e); }
     }
 
     // ============ DELETE MESSAGE ============
     async function deleteMsg(msgId) {
-        if (!confirm('Hapus pesan ini?')) return;
+        if (!(await window.showConfirm('Konfirmasi', 'Hapus pesan ini?'))) return;
         const csrfHash = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         try {
             const resp = await fetch('/chat/delete/' + msgId, {

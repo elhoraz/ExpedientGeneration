@@ -93,6 +93,11 @@ class EventController extends BaseController
         }
 
         $userId = session()->get('user_id');
+        $eventModel = new EventModel();
+        if (!$eventModel->find($eventId)) {
+            return redirect()->to('/event')->with('error', 'Agenda tidak ditemukan.');
+        }
+
         $rsvpModel = new EventRsvpModel();
 
         // Check if RSVP exists

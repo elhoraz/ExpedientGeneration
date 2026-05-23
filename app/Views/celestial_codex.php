@@ -373,7 +373,7 @@
     document.addEventListener("DOMContentLoaded", () => {
 
         // === KARTU TAKDIR DATABASE — Mengambil dari PHP Backend ===
-        const codex = <?= json_encode($cards) ?>;
+        const codex = <?= json_encode($cards, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
 
         let drawnCards = [];
         let flippedCount = 0;
@@ -407,14 +407,31 @@
             // Isi konten masing-masing kartu
             drawnCards.forEach((card, i) => {
                 const front = document.getElementById('front' + i);
-                front.innerHTML = `
-                    <div class="card-numeral">${card.numeral}</div>
-                    <div class="card-symbol">${card.symbol}</div>
-                    <div class="card-line"></div>
-                    <div class="card-name">${card.name}</div>
-                    <div class="card-line"></div>
-                    <div class="card-meaning">${card.meaning}</div>
-                `;
+                front.textContent = ''; // Kosongkan elemen secara aman
+                
+                const divNumeral = document.createElement('div');
+                divNumeral.className = 'card-numeral';
+                divNumeral.textContent = card.numeral;
+                
+                const divSymbol = document.createElement('div');
+                divSymbol.className = 'card-symbol';
+                divSymbol.textContent = card.symbol;
+                
+                const divLine1 = document.createElement('div');
+                divLine1.className = 'card-line';
+                
+                const divName = document.createElement('div');
+                divName.className = 'card-name';
+                divName.textContent = card.name;
+                
+                const divLine2 = document.createElement('div');
+                divLine2.className = 'card-line';
+                
+                const divMeaning = document.createElement('div');
+                divMeaning.className = 'card-meaning';
+                divMeaning.textContent = card.meaning;
+                
+                front.append(divNumeral, divSymbol, divLine1, divName, divLine2, divMeaning);
             });
 
             // Sembunyikan tombol draw

@@ -37,7 +37,7 @@ class MajlisController extends BaseController
 
         $userInfo = [
             'name' => $user['nama_panggilan'] ?? $user['nama_lengkap'],
-            'avatar' => $user['foto_profil'] ? base_url('uploads/profil/' . $user['foto_profil']) : 'https://ui-avatars.com/api/?name=' . urlencode($user['nama_panggilan'] ?? 'User') . '&background=random',
+            'avatar' => $user['foto_profil'] ? base_url('uploads/profiles/' . $user['foto_profil']) : 'https://ui-avatars.com/api/?name=' . urlencode($user['nama_panggilan'] ?? 'User') . '&background=random',
             'role' => $user['role'] ?? 'member'
         ];
 
@@ -77,7 +77,8 @@ class MajlisController extends BaseController
             'status' => 'success',
             'topics' => $topics,
             'active_speaker' => $activeSpeaker,
-            'requests' => array_values($requests)
+            'requests' => array_values($requests),
+            'csrf_hash' => csrf_hash()
         ]);
     }
 
@@ -91,7 +92,7 @@ class MajlisController extends BaseController
         $requests[$userId] = [
             'user_id' => $userId,
             'name' => $user['nama_panggilan'] ?? $user['nama_lengkap'],
-            'avatar' => $user['foto_profil'] ? base_url('uploads/profil/' . $user['foto_profil']) : 'https://ui-avatars.com/api/?name=' . urlencode($user['nama_panggilan'] ?? 'User') . '&background=random',
+            'avatar' => $user['foto_profil'] ? base_url('uploads/profiles/' . $user['foto_profil']) : 'https://ui-avatars.com/api/?name=' . urlencode($user['nama_panggilan'] ?? 'User') . '&background=random',
             'role' => $user['role'] ?? 'member'
         ];
 
@@ -100,7 +101,7 @@ class MajlisController extends BaseController
         $pusher = new PusherService();
         $pusher->trigger('presence-majlis', 'hand-raised', ['requests' => array_values($requests)]);
 
-        return $this->response->setJSON(['status' => 'success', 'message' => 'Permintaan berbicara dikirim.']);
+        return $this->response->setJSON(['status' => 'success', 'message' => 'Permintaan berbicara dikirim.', 'csrf_hash' => csrf_hash()]);
     }
 
     public function approveSpeaker()
@@ -109,7 +110,7 @@ class MajlisController extends BaseController
         $userModel = new UserModel();
         $admin = $userModel->find($adminId);
         if (($admin['role'] ?? '') !== 'admin') {
-            return $this->response->setJSON(['status' => 'error', 'message' => 'Unauthorized']);
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Unauthorized', 'csrf_hash' => csrf_hash()]);
         }
 
         $approvedUserId = $this->request->getPost('user_id');
@@ -127,10 +128,10 @@ class MajlisController extends BaseController
                 'requests' => array_values($requests)
             ]);
 
-            return $this->response->setJSON(['status' => 'success', 'message' => 'Pembicara disetujui.']);
+            return $this->response->setJSON(['status' => 'success', 'message' => 'Pembicara disetujui.', 'csrf_hash' => csrf_hash()]);
         }
 
-        return $this->response->setJSON(['status' => 'error', 'message' => 'Permintaan tidak ditemukan.']);
+        return $this->response->setJSON(['status' => 'error', 'message' => 'Permintaan tidak ditemukan.', 'csrf_hash' => csrf_hash()]);
     }
 
     public function stopSpeaker()
@@ -139,7 +140,7 @@ class MajlisController extends BaseController
         $userModel = new UserModel();
         $admin = $userModel->find($adminId);
         if (($admin['role'] ?? '') !== 'admin') {
-            return $this->response->setJSON(['status' => 'error', 'message' => 'Unauthorized']);
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Unauthorized', 'csrf_hash' => csrf_hash()]);
         }
 
         cache()->delete('majlis_active_speaker');
@@ -147,7 +148,7 @@ class MajlisController extends BaseController
         $pusher = new PusherService();
         $pusher->trigger('presence-majlis', 'speaker-changed', ['speaker' => null, 'requests' => array_values(cache('majlis_speaker_requests') ?: [])]);
 
-        return $this->response->setJSON(['status' => 'success']);
+        return $this->response->setJSON(['status' => 'success', 'csrf_hash' => csrf_hash()]);
     }
 
     public function store()
@@ -159,7 +160,7 @@ class MajlisController extends BaseController
         ];
 
         if (!$this->validate($rules)) {
-            return $this->response->setJSON(['status' => 'error', 'message' => 'Validasi gagal.']);
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Validasi gagal.', 'csrf_hash' => csrf_hash()]);
         }
 
         $topicModel = new MajlisTopicModel();
@@ -174,26 +175,31 @@ class MajlisController extends BaseController
         $pusher = new PusherService();
         $pusher->trigger('presence-majlis', 'majlis-update', []);
 
-        return $this->response->setJSON(['status' => 'success', 'message' => 'Mosi musyawarah berhasil diajukan.']);
+        return $this->response->setJSON(['status' => 'success', 'message' => 'Mosi musyawarah berhasil diajukan.', 'csrf_hash' => csrf_hash()]);
     }
 
     public function vote($topicId)
     {
         $userId = session()->get('user_id');
         $choice = $this->request->getPost('choice'); 
+        
+        $allowedChoices = ['Setuju', 'Tidak Setuju'];
+        if (!in_array($choice, $allowedChoices)) {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Pilihan tidak valid.', 'csrf_hash' => csrf_hash()]);
+        }
 
         $topicModel = new MajlisTopicModel();
         $topic = $topicModel->find($topicId);
 
         if (!$topic || $topic['status'] !== 'Open') {
-            return $this->response->setJSON(['status' => 'error', 'message' => 'Sesi pemungutan suara telah ditutup.']);
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Sesi pemungutan suara telah ditutup.', 'csrf_hash' => csrf_hash()]);
         }
 
         $voteModel = new MajlisVoteModel();
         $hasVoted = $voteModel->where('topic_id', $topicId)->where('user_id', $userId)->first();
 
         if ($hasVoted) {
-            return $this->response->setJSON(['status' => 'error', 'message' => 'Anda sudah memberikan suara.']);
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Anda sudah memberikan suara.', 'csrf_hash' => csrf_hash()]);
         }
 
         $voteModel->insert([
@@ -206,7 +212,7 @@ class MajlisController extends BaseController
         $pusher = new PusherService();
         $pusher->trigger('presence-majlis', 'majlis-update', []);
 
-        return $this->response->setJSON(['status' => 'success', 'message' => 'Suara Anda telah direkam.']);
+        return $this->response->setJSON(['status' => 'success', 'message' => 'Suara Anda telah direkam.', 'csrf_hash' => csrf_hash()]);
     }
 
     public function close($topicId)
@@ -216,7 +222,7 @@ class MajlisController extends BaseController
         $topic = $topicModel->find($topicId);
 
         if (!$topic) {
-            return $this->response->setJSON(['status' => 'error', 'message' => 'Mosi tidak ditemukan.']);
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Mosi tidak ditemukan.', 'csrf_hash' => csrf_hash()]);
         }
 
         $userModel = new UserModel();
@@ -225,7 +231,7 @@ class MajlisController extends BaseController
         $isAdmin = $user && ($user['role'] ?? '') === 'admin';
 
         if (!$isCreator && !$isAdmin) {
-            return $this->response->setJSON(['status' => 'error', 'message' => 'Hanya pembuat mosi atau admin yang dapat menutup voting.']);
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Hanya pembuat mosi atau admin yang dapat menutup voting.', 'csrf_hash' => csrf_hash()]);
         }
 
         $topicModel->update($topicId, ['status' => 'Closed']);
@@ -233,6 +239,6 @@ class MajlisController extends BaseController
         $pusher = new PusherService();
         $pusher->trigger('presence-majlis', 'majlis-update', []);
 
-        return $this->response->setJSON(['status' => 'success', 'message' => 'Sesi voting telah ditutup.']);
+        return $this->response->setJSON(['status' => 'success', 'message' => 'Sesi voting telah ditutup.', 'csrf_hash' => csrf_hash()]);
     }
 }

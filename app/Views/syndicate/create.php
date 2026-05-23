@@ -213,14 +213,14 @@ Registrasi Jaringan Bisnis - The Syndicate
             if (file) {
                 // Pastikan file adalah gambar
                 if (!file.type.match('image.*')) {
-                    alert("Maaf Kapten, hanya file gambar yang diizinkan!");
+                    window.showToast("Akses Ditolak", "Maaf Kapten, hanya file gambar yang diizinkan!", true);
                     this.value = '';
                     return;
                 }
 
                 // Cek ukuran (Max 2MB = 2 * 1024 * 1024)
                 if (file.size > 2 * 1024 * 1024) {
-                    alert("Akses Ditolak: File terlalu besar (Maksimal 2MB).");
+                    window.showToast("Akses Ditolak", "File terlalu besar (Maksimal 2MB).", true);
                     this.value = '';
                     return;
                 }

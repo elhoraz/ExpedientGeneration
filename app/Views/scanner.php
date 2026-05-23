@@ -195,7 +195,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (decodedText.startsWith('http://') || decodedText.startsWith('https://')) {
             window.location.href = decodedText;
         } else {
-            alert('Format KTA tidak dikenali: ' + decodedText);
+            window.showToast('Error KTA', 'Format KTA tidak dikenali: ' + decodedText, true);
             setTimeout(() => { 
                 isScanning = false; 
                 document.getElementById('scannerOverlay').classList.remove('active');

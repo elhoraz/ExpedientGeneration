@@ -201,7 +201,7 @@
                             <a href="/admin/announcements/edit/<?= $a['id'] ?>" class="btn-action btn-edit hover-trigger">
                                 <i class="fa-solid fa-pen"></i> Edit
                             </a>
-                            <form action="/admin/announcements/delete/<?= $a['id'] ?>" method="POST" onsubmit="return confirm('Hapus pengumuman ini?');" style="display:inline;">
+                            <form action="/admin/announcements/delete/<?= $a['id'] ?>" method="POST" onsubmit="event.preventDefault(); window.showConfirm('Konfirmasi', 'Hapus pengumuman ini?').then(res => { if(res) this.submit(); });" style="display:inline;">
                                 <?= csrf_field() ?>
                                 <button type="submit" class="btn-action btn-delete hover-trigger">
                                     <i class="fa-solid fa-trash"></i> Hapus

@@ -1,6 +1,141 @@
 function hapticNav() { if (navigator.vibrate) navigator.vibrate(20); }
 window.hapticNav = hapticNav;
 
+window.showToast = function(title, message, isError = false) {
+    const aegisToastSys = document.getElementById('aegisToast');
+    const radarNameSys = document.getElementById('radarName');
+    if(aegisToastSys && radarNameSys) {
+        document.querySelector('.aegis-title').innerText = title;
+        radarNameSys.innerText = message;
+        if(isError) {
+            aegisToastSys.style.borderLeft = "4px solid #8b0000";
+            document.querySelector('.aegis-title').style.color = "#8b0000";
+            document.querySelector('.aegis-icon').style.color = "#8b0000";
+        } else {
+            aegisToastSys.style.borderLeft = "4px solid #d4af37";
+            document.querySelector('.aegis-title').style.color = "var(--text-secondary)";
+            document.querySelector('.aegis-icon').style.color = "#d4af37";
+        }
+        aegisToastSys.classList.add('show');
+        if (navigator.vibrate) navigator.vibrate([50, 50, 50]);
+        setTimeout(() => aegisToastSys.classList.remove('show'), 6000);
+    }
+};
+
+window.showConfirm = function(title, text) {
+    return new Promise((resolve) => {
+        if (navigator.vibrate) navigator.vibrate(50);
+        const overlay = document.createElement('div');
+        overlay.style.position = 'fixed';
+        overlay.style.inset = '0';
+        overlay.style.background = 'rgba(0,0,0,0.85)';
+        overlay.style.backdropFilter = 'blur(10px)';
+        overlay.style.zIndex = '100000';
+        overlay.style.display = 'flex';
+        overlay.style.alignItems = 'center';
+        overlay.style.justifyContent = 'center';
+        overlay.style.opacity = '0';
+        overlay.style.transition = 'opacity 0.3s ease';
+
+        const box = document.createElement('div');
+        box.style.background = 'rgba(15, 18, 16, 0.9)';
+        box.style.border = '1px solid rgba(212, 175, 55, 0.4)';
+        box.style.borderRadius = '20px';
+        box.style.padding = '35px 30px';
+        box.style.maxWidth = '400px';
+        box.style.width = '90%';
+        box.style.textAlign = 'center';
+        box.style.transform = 'translateY(30px)';
+        box.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.2)';
+        box.style.boxShadow = '0 20px 50px rgba(0,0,0,0.8)';
+        box.style.fontFamily = "'Inter', sans-serif";
+
+        const iconEl = document.createElement('div');
+        iconEl.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i>';
+        iconEl.style.fontSize = '3rem';
+        iconEl.style.color = '#d4af37';
+        iconEl.style.marginBottom = '15px';
+
+        const titleEl = document.createElement('h3');
+        titleEl.textContent = title;
+        titleEl.style.color = '#d4af37';
+        titleEl.style.fontFamily = "'Playfair Display', serif";
+        titleEl.style.marginTop = '0';
+        titleEl.style.marginBottom = '15px';
+        titleEl.style.fontSize = '1.5rem';
+
+        const textEl = document.createElement('p');
+        textEl.textContent = text;
+        textEl.style.color = '#ccc';
+        textEl.style.fontSize = '0.95rem';
+        textEl.style.marginBottom = '30px';
+        textEl.style.lineHeight = '1.5';
+
+        const btnContainer = document.createElement('div');
+        btnContainer.style.display = 'flex';
+        btnContainer.style.gap = '15px';
+        btnContainer.style.justifyContent = 'center';
+
+        const btnCancel = document.createElement('button');
+        btnCancel.textContent = 'BATAL';
+        btnCancel.style.flex = '1';
+        btnCancel.style.padding = '12px 15px';
+        btnCancel.style.border = '1px solid rgba(255, 255, 255, 0.2)';
+        btnCancel.style.background = 'rgba(255, 255, 255, 0.05)';
+        btnCancel.style.color = '#fff';
+        btnCancel.style.borderRadius = '50px';
+        btnCancel.style.cursor = 'pointer';
+        btnCancel.style.fontWeight = 'bold';
+        btnCancel.style.letterSpacing = '1px';
+        btnCancel.style.transition = '0.3s';
+        btnCancel.onmouseover = () => btnCancel.style.background = 'rgba(255,255,255,0.1)';
+        btnCancel.onmouseout = () => btnCancel.style.background = 'rgba(255,255,255,0.05)';
+
+        const btnOk = document.createElement('button');
+        btnOk.textContent = 'YA, LANJUTKAN';
+        btnOk.style.flex = '1';
+        btnOk.style.padding = '12px 15px';
+        btnOk.style.border = 'none';
+        btnOk.style.background = 'linear-gradient(135deg, #d4af37, #aa8529)';
+        btnOk.style.color = '#000';
+        btnOk.style.borderRadius = '50px';
+        btnOk.style.cursor = 'pointer';
+        btnOk.style.fontWeight = 'bold';
+        btnOk.style.letterSpacing = '1px';
+        btnOk.style.transition = '0.3s';
+        btnOk.style.boxShadow = '0 5px 15px rgba(212, 175, 55, 0.3)';
+        btnOk.onmouseover = () => btnOk.style.transform = 'translateY(-2px)';
+        btnOk.onmouseout = () => btnOk.style.transform = 'translateY(0)';
+
+        btnContainer.appendChild(btnCancel);
+        btnContainer.appendChild(btnOk);
+
+        box.appendChild(iconEl);
+        box.appendChild(titleEl);
+        box.appendChild(textEl);
+        box.appendChild(btnContainer);
+        overlay.appendChild(box);
+        document.body.appendChild(overlay);
+
+        setTimeout(() => {
+            overlay.style.opacity = '1';
+            box.style.transform = 'translateY(0)';
+        }, 10);
+
+        function close(result) {
+            overlay.style.opacity = '0';
+            box.style.transform = 'translateY(30px)';
+            setTimeout(() => {
+                overlay.remove();
+                resolve(result);
+            }, 300);
+        }
+
+        btnCancel.onclick = () => { if (navigator.vibrate) navigator.vibrate(20); close(false); };
+        btnOk.onclick = () => { if (navigator.vibrate) navigator.vibrate(20); close(true); };
+    });
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     // SIDEBAR TOGGLE LOGIC
     const btnMenuOpen = document.getElementById('btnMenuOpen');

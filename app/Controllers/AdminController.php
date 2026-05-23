@@ -90,8 +90,8 @@ class AdminController extends BaseController
             return redirect()->to('/admin/users')->with('error', 'Anda tidak bisa mengubah role diri sendiri.');
         }
 
-        $userModel = new UserModel();
-        $userModel->update($userId, ['role' => $newRole]);
+        $db = \Config\Database::connect();
+        $db->table('users')->where('id', $userId)->update(['role' => $newRole]);
 
         return redirect()->to('/admin/users')->with('success', 'Role berhasil diperbarui.');
     }

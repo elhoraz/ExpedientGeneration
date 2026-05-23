@@ -226,7 +226,7 @@ The Syndicate - Ruang Eksekutif 42nd Expedient
                         <a href="<?= base_url('syndicate/edit/' . $biz['id']) ?>" class="bc-btn" style="color: #00ff88; border-right: 1px solid rgba(255,255,255,0.05);">
                             <i class="fa-solid fa-pen-to-square"></i> Ubah
                         </a>
-                        <form action="<?= base_url('syndicate/delete/' . $biz['id']) ?>" method="POST" style="flex: 1; display: flex;" onsubmit="return confirm('Apakah Anda yakin ingin menghapus arsip bisnis ini?');">
+                        <form action="<?= base_url('syndicate/delete/' . $biz['id']) ?>" method="POST" style="flex: 1; display: flex;" onsubmit="event.preventDefault(); window.showConfirm('Konfirmasi', 'Apakah Anda yakin ingin menghapus arsip bisnis ini?').then(res => { if(res) this.submit(); });">
                             <?= csrf_field() ?>
                             <button type="submit" class="bc-btn" style="color: #ff3366; width: 100%; border: none; background: transparent;">
                                 <i class="fa-solid fa-trash"></i> Hapus

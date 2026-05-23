@@ -674,7 +674,7 @@
                 
                 const res = await fetch('/api/biometric/login-options');
                 const opt = await res.json();
-                if (opt.error) { alert(opt.error); btn.innerHTML = originalText; return; }
+                if (opt.error) { window.showToast('Gagal', opt.error, true); btn.innerHTML = originalText; return; }
 
                 opt.challenge = base64urlToBuffer(opt.challenge);
                 const assertion = await navigator.credentials.get({ publicKey: opt });
@@ -692,10 +692,10 @@
                 const result = await verifyRes.json();
                 
                 if (result.status === 'success') { window.location.href = result.redirect; } 
-                else { alert(result.error); btn.innerHTML = originalText; }
+                else { window.showToast('Gagal', result.error, true); btn.innerHTML = originalText; }
             } catch (err) {
                 console.error(err);
-                alert('Otentikasi biometrik dibatalkan atau perangkat tidak didukung.');
+                window.showToast('Peringatan', 'Otentikasi biometrik dibatalkan atau perangkat tidak didukung.', true);
                 document.getElementById('btnBiometricLogin').innerHTML = '<i class="fa-solid fa-fingerprint"></i> Pemindaian Biometrik';
             }
         });

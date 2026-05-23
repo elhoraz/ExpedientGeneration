@@ -59,7 +59,7 @@ Moderasi Konten
                         <div class="mod-date"><?= $c['created_at'] ?></div>
                     </div>
                     <?php if(!($c['is_deleted'] ?? 0)): ?>
-                    <form action="/admin/delete/chat/<?= $c['id'] ?>" method="POST" onsubmit="return confirm('Hapus pesan chat ini?')">
+                    <form action="/admin/delete/chat/<?= $c['id'] ?>" method="POST" onsubmit="event.preventDefault(); window.showConfirm('Konfirmasi', 'Hapus pesan chat ini?').then(res => { if(res) this.submit(); });">
                         <?= csrf_field() ?>
                         <button type="submit" class="btn-del"><i class="fa-solid fa-trash"></i> Hapus</button>
                     </form>
@@ -84,7 +84,7 @@ Moderasi Konten
                         <div class="mod-text"><?= esc($t['title']) ?></div>
                         <div class="mod-date"><?= $t['created_at'] ?> <span class="mod-badge <?= $t['status'] === 'Open' ? 'mod-badge-open' : 'mod-badge-closed' ?>"><?= esc($t['status']) ?></span></div>
                     </div>
-                    <form action="/admin/delete/majlis/<?= $t['id'] ?>" method="POST" onsubmit="return confirm('Hapus mosi ini beserta semua suaranya?')">
+                    <form action="/admin/delete/majlis/<?= $t['id'] ?>" method="POST" onsubmit="event.preventDefault(); window.showConfirm('Konfirmasi', 'Hapus mosi ini beserta semua suaranya?').then(res => { if(res) this.submit(); });">
                         <?= csrf_field() ?>
                         <button type="submit" class="btn-del"><i class="fa-solid fa-trash"></i> Hapus</button>
                     </form>
@@ -106,7 +106,7 @@ Moderasi Konten
                         <div class="mod-text"><?= esc($b['nama_bisnis']) ?> — <span style="color:var(--text-secondary);"><?= esc($b['kategori']) ?></span></div>
                         <div class="mod-date"><?= $b['created_at'] ?></div>
                     </div>
-                    <form action="/admin/delete/syndicate/<?= $b['id'] ?>" method="POST" onsubmit="return confirm('Hapus bisnis ini?')">
+                    <form action="/admin/delete/syndicate/<?= $b['id'] ?>" method="POST" onsubmit="event.preventDefault(); window.showConfirm('Konfirmasi', 'Hapus bisnis ini?').then(res => { if(res) this.submit(); });">
                         <?= csrf_field() ?>
                         <button type="submit" class="btn-del"><i class="fa-solid fa-trash"></i> Hapus</button>
                     </form>
@@ -128,7 +128,7 @@ Moderasi Konten
                         <div class="mod-text"><?= esc($bt['pesan']) ?></div>
                         <div class="mod-date"><?= $bt['created_at'] ?></div>
                     </div>
-                    <form action="/admin/delete/bukutamu/<?= $bt['id'] ?>" method="POST" onsubmit="return confirm('Hapus pesan buku tamu ini?')">
+                    <form action="/admin/delete/bukutamu/<?= $bt['id'] ?>" method="POST" onsubmit="event.preventDefault(); window.showConfirm('Konfirmasi', 'Hapus pesan buku tamu ini?').then(res => { if(res) this.submit(); });">
                         <?= csrf_field() ?>
                         <button type="submit" class="btn-del"><i class="fa-solid fa-trash"></i> Hapus</button>
                     </form>

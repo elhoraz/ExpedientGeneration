@@ -1,23 +1,21 @@
-// ================= PUSHER / SOKETI REAL-TIME (HANYA ANGGOTA) =================
+// ================= PUSHER CLOUD REAL-TIME (HANYA ANGGOTA) =================
 // Requires window.ExpedientConfig to be set in template.php
 if (window.ExpedientConfig && window.ExpedientConfig.userId !== null) {
     const config = window.ExpedientConfig.pusher;
     
-    const pusherConfig = { 
+    window.pusher = new Pusher(config.key, { 
         cluster: config.cluster, 
-        forceTLS: true
-    };
+        forceTLS: true 
+    });
     
-    if (config.host) {
-        // Soketi self-hosted mode
-        pusherConfig.wsHost = config.host;
-        pusherConfig.wsPort = config.port;
-        pusherConfig.wssPort = config.port;
-        pusherConfig.forceTLS = config.forceTLS;
-        pusherConfig.enabledTransports = ['ws', 'wss'];
-    }
+    // Monitor koneksi Pusher
+    window.pusher.connection.bind('state_change', function(states) {
+        console.log('[Pusher] State:', states.previous, '→', states.current);
+    });
+    window.pusher.connection.bind('error', function(err) {
+        console.error('[Pusher] Connection error:', err);
+    });
     
-    window.pusher = new Pusher(config.key, pusherConfig);
     const channel = window.pusher.subscribe('expedient-channel');
     const globalChatChannel = window.pusher.subscribe('chat-channel');
     

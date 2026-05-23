@@ -160,7 +160,8 @@ class ProfileController extends BaseController
         }
 
         // Soft delete: set is_active to 0
-        $userModel->update($userId, ['is_active' => 0]); 
+        $db = \Config\Database::connect();
+        $db->table('users')->where('id', $userId)->update(['is_active' => 0]); 
         
         session()->destroy();
         return redirect()->to('/login')->with('success', 'Akun Anda telah dinonaktifkan secara permanen dari sistem.');

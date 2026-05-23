@@ -22,7 +22,7 @@ class SecurityHeaders implements FilterInterface
             $csp .= "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; ";
             $csp .= "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; ";
             $csp .= "img-src 'self' data: https: blob:; ";
-            $csp .= "connect-src 'self' https://api.bigdatacloud.net https://cdn.jsdelivr.net https://unpkg.com https://*.tile.openstreetmap.org; ";
+            $csp .= "connect-src 'self' https://api.bigdatacloud.net https://cdn.jsdelivr.net https://unpkg.com https://*.tile.openstreetmap.org https://*.pusher.com wss://*.pusher.com; ";
             $csp .= "media-src 'self' blob:;";
 
             $response->setHeader('Content-Security-Policy', $csp);

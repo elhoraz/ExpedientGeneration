@@ -156,11 +156,8 @@
         window.ExpedientConfig = {
             userId: <?= session()->get('user_id') ?? 'null' ?>,
             pusher: {
-                key: '<?= getenv('PUSHER_APP_KEY') ?: 'app-key' ?>',
-                cluster: '<?= getenv('PUSHER_APP_CLUSTER') ?: 'mt1' ?>',
-                host: '<?= getenv('PUSHER_HOST') ?: '' ?>',
-                port: <?= getenv('PUSHER_PORT') ?: 6001 ?>,
-                forceTLS: <?= getenv('PUSHER_SCHEME') === 'https' ? 'true' : 'false' ?>
+                key: '<?= env('PUSHER_APP_KEY') ?>',
+                cluster: '<?= env('PUSHER_APP_CLUSTER', 'ap1') ?>'
             }
         };
 

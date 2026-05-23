@@ -423,13 +423,9 @@
                         const city = geo.city || geo.locality || geo.principalSubdivision || 'Lokasi Anda';
                         const fd = new FormData();
                         fd.append('latitude', lat); fd.append('longitude', lng); fd.append('city', city);
-                        fd.append('<?= csrf_token() ?>', getCsrf()); // Fallback manual
                         
-                        // Fix CSRF if token exists in meta tag
-                        const tokenEl = document.querySelector('meta[name="csrf-token"]');
-                        if(tokenEl) {
-                            fd.set('csrf_test_name', tokenEl.getAttribute('content'));
-                        }
+                        // Fix CSRF: gunakan nama field yang benar dari Security.php config
+                        fd.append('csrf_test_name', getCsrf());
 
                         return fetch('/radar/update-location', { method: 'POST', headers: { 'X-Requested-With': 'XMLHttpRequest' }, body: fd });
                     })

@@ -838,7 +838,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     window.closeTopic = async function(topicId) {
-        if(!confirm('Tutup sesi voting ini? Tindakan tidak dapat dibatalkan.')) return;
+        if(!(await window.showConfirm('Konfirmasi', 'Tutup sesi voting ini? Tindakan tidak dapat dibatalkan.'))) return;
         
         const formData = new FormData();
         formData.append('<?= csrf_token() ?>', getCsrfToken());
@@ -867,7 +867,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (navigator.vibrate) navigator.vibrate([50, 50]);
             setTimeout(() => aegisToast.classList.remove('show'), 6000);
         } else {
-            alert(title + ": " + message);
+            console.warn(title + ": " + message);
         }
     }
 
