@@ -142,13 +142,13 @@ The Syndicate - Ruang Eksekutif 42nd Expedient
 <div class="syndicate-container">
     
     <div class="syn-header">
-        <h1 class="syn-title">The Syndicate</h1>
-        <div class="syn-subtitle">Alumni Business & Professional Network</div>
+        <h1 class="syn-title"><?= cms_text('syn_title', 'The Syndicate') ?></h1>
+        <div class="syn-subtitle"><?= cms_text('syn_subtitle', 'Alumni Business & Professional Network') ?></div>
     </div>
 
     <div class="syn-toolbar">
         <div class="filter-group" id="filterGroup">
-            <button class="btn-filter active" data-filter="all">Semua</button>
+            <button class="btn-filter active" data-filter="all"><?= cms_text('syn_filter_all', 'Semua') ?></button>
             <button class="btn-filter" data-filter="F&B">Kuliner (F&B)</button>
             <button class="btn-filter" data-filter="Teknologi">Teknologi</button>
             <button class="btn-filter" data-filter="Jasa">Jasa & Agensi</button>
@@ -157,7 +157,7 @@ The Syndicate - Ruang Eksekutif 42nd Expedient
         </div>
 
         <a href="<?= base_url('syndicate/create') ?>" class="btn-add-biz">
-            <i class="fa-solid fa-plus"></i> Registrasi Bisnis Anda
+            <i class="fa-solid fa-plus"></i> <?= cms_text('syn_btn_register', 'Registrasi Bisnis Anda') ?>
         </a>
     </div>
 
@@ -166,8 +166,8 @@ The Syndicate - Ruang Eksekutif 42nd Expedient
         <?php if(empty($portofolio)): ?>
             <div class="empty-state">
                 <i class="fa-solid fa-vault"></i>
-                <h3>Brankas Masih Kosong</h3>
-                <p style="color:#aaa;">Jadilah agen pertama yang memamerkan kerajaan bisnis Anda di sini.</p>
+                <h3><?= cms_text('syn_empty_title', 'Brankas Masih Kosong') ?></h3>
+                <p style="color:#aaa;"><?= cms_text('syn_empty_desc', 'Jadilah agen pertama yang memamerkan kerajaan bisnis Anda di sini.') ?></p>
             </div>
         <?php else: ?>
 
@@ -207,12 +207,12 @@ The Syndicate - Ruang Eksekutif 42nd Expedient
                             $wa = preg_replace('/^0/', '62', preg_replace('/[^0-9]/', '', $biz['no_whatsapp']));
                         ?>
                         <a href="https://wa.me/<?= $wa ?>" target="_blank" class="bc-btn wa">
-                            <i class="fa-brands fa-whatsapp"></i> Hubungi
+                            <i class="fa-brands fa-whatsapp"></i> <?= cms_text('syn_btn_wa', 'Hubungi') ?>
                         </a>
                         
                         <?php if($biz['link_url']): ?>
                             <a href="<?= esc($biz['link_url']) ?>" target="_blank" class="bc-btn web">
-                                <i class="fa-solid fa-globe"></i> Kunjungi
+                                <i class="fa-solid fa-globe"></i> <?= cms_text('syn_btn_web', 'Kunjungi') ?>
                             </a>
                         <?php else: ?>
                             <a href="#" onclick="return false;" class="bc-btn web" style="opacity:0.3; cursor:not-allowed;">
@@ -224,12 +224,12 @@ The Syndicate - Ruang Eksekutif 42nd Expedient
                     <?php if($biz['user_id'] == session()->get('user_id')): ?>
                     <div class="bc-footer" style="border-top: none; background: rgba(0,0,0,0.5);">
                         <a href="<?= base_url('syndicate/edit/' . $biz['id']) ?>" class="bc-btn" style="color: #00ff88; border-right: 1px solid rgba(255,255,255,0.05);">
-                            <i class="fa-solid fa-pen-to-square"></i> Ubah
+                            <i class="fa-solid fa-pen-to-square"></i> <?= cms_text('syn_btn_edit', 'Ubah') ?>
                         </a>
-                        <form action="<?= base_url('syndicate/delete/' . $biz['id']) ?>" method="POST" style="flex: 1; display: flex;" onsubmit="event.preventDefault(); window.showConfirm('Konfirmasi', 'Apakah Anda yakin ingin menghapus arsip bisnis ini?').then(res => { if(res) this.submit(); });">
+                        <form action="<?= base_url('syndicate/delete/' . $biz['id']) ?>" method="POST" style="flex: 1; display: flex;" onsubmit="event.preventDefault(); window.showConfirm('<?= cms_raw('syn_confirm_title', 'Konfirmasi') ?>', '<?= cms_raw('syn_confirm_delete', 'Apakah Anda yakin ingin menghapus arsip bisnis ini?') ?>').then(res => { if(res) this.submit(); });">
                             <?= csrf_field() ?>
                             <button type="submit" class="bc-btn" style="color: #ff3366; width: 100%; border: none; background: transparent;">
-                                <i class="fa-solid fa-trash"></i> Hapus
+                                <i class="fa-solid fa-trash"></i> <?= cms_text('syn_btn_delete', 'Hapus') ?>
                             </button>
                         </form>
                     </div>

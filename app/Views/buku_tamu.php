@@ -85,16 +85,16 @@ Arsip Kehadiran - 42nd Expedient
 <?= $this->section('content') ?>
 <div class="archive-container">
     <div class="archive-header">
-        <h1 class="archive-title">Arsip Kehadiran</h1>
-        <p class="archive-subtitle">Jejak sejarah yang ditinggalkan oleh entitas Expedient</p>
+        <h1 class="archive-title"><?= cms_text('buku_tamu_title', 'Arsip Kehadiran') ?></h1>
+        <p class="archive-subtitle"><?= cms_text('buku_tamu_subtitle', 'Jejak sejarah yang ditinggalkan oleh entitas Expedient') ?></p>
     </div>
 
     <div style="margin-bottom: 30px;">
-        <a href="/#loader" style="color:var(--text-secondary); text-decoration:none; font-size:0.9rem; transition:0.3s;"><i class="fa-solid fa-arrow-left"></i> Kembali ke Beranda</a>
+        <a href="/#loader" style="color:var(--text-secondary); text-decoration:none; font-size:0.9rem; transition:0.3s;"><i class="fa-solid fa-arrow-left"></i> <?= cms_text('buku_tamu_back', 'Kembali ke Beranda') ?></a>
     </div>
 
     <?php if(empty($buku_tamu)): ?>
-        <div style="text-align:center; padding:50px; color:var(--text-secondary); font-style:italic;">Belum ada catatan kehadiran yang direkam.</div>
+        <div style="text-align:center; padding:50px; color:var(--text-secondary); font-style:italic;"><?= cms_text('buku_tamu_empty', 'Belum ada catatan kehadiran yang direkam.') ?></div>
     <?php else: ?>
         <div class="messages-list">
             <?php foreach($buku_tamu as $msg): ?>

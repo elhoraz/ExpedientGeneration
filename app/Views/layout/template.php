@@ -35,6 +35,7 @@
 
     <link rel="stylesheet" href="/css/template.css">
     <?= $this->renderSection('styles') ?>
+
 </head>
 <body>
 
@@ -58,9 +59,9 @@
             <?php elseif($selectedLoader == 'v9'): ?><div class="flowing-veils"><div class="veil"></div><div class="veil"></div><div class="veil"></div><div class="veil"></div><div class="veil"></div></div>
             <?php elseif($selectedLoader == 'v10'): ?><div class="stellar-orbit"><div class="stellar-dot"></div></div><div class="stellar-orbit reverse"><div class="stellar-dot"></div></div>
             <?php endif; ?>
-            <img src="/images/logo-utuh.png" class="loader-logo" alt="Loading Expedient">
+            <?= cms_image('global_loader_logo', '/images/logo-utuh.png', 'loader-logo', 'alt="Loading Expedient"') ?>
         </div>
-        <?php if($selectedLoader == 'v3'): ?><div class="gilded-reveal">EXPEDIENT GENERATION</div><?php endif; ?>
+        <?php if($selectedLoader == 'v3'): ?><div class="gilded-reveal"><?= cms_text('global_loader_text', 'EXPEDIENT GENERATION') ?></div><?php endif; ?>
     </div>
 
     <div class="aurora-container">
@@ -202,5 +203,6 @@
     <script src="/js/pusher-client.js"></script>
     <?php endif; ?>
     <?= $this->renderSection('scripts') ?>
+
 </body>
 </html>

@@ -15,30 +15,30 @@
 <body>
 
     <a href="/fitur" class="btn-back-vault">
-        <i class="fa-solid fa-chevron-left"></i> Exit Vision
+        <i class="fa-solid fa-chevron-left"></i> <?= cms_text('oracle_btn_exit', 'Exit Vision') ?>
     </a>
 
     <button class="btn-time-capsule" id="btnToggleCapsule">
-        <i class="fa-solid fa-hourglass-half"></i> Pesan Masa Depan
+        <i class="fa-solid fa-hourglass-half"></i> <?= cms_text('oracle_btn_capsule', 'Pesan Masa Depan') ?>
     </button>
 
     <div class="time-capsule-panel" id="capsulePanel">
-        <div class="capsule-title">Tulis Pesan Masa Depan</div>
+        <div class="capsule-title"><?= cms_text('oracle_capsule_title_write', 'Tulis Pesan Masa Depan') ?></div>
         <form action="/oracle/store" method="POST" class="capsule-form">
             <?= csrf_field() ?>
-            <textarea name="vision_text" rows="4" placeholder="Tuliskan visi atau pesan rahasia untuk diri Anda di masa depan..." required></textarea>
-            <label style="font-size:0.8rem; color:#888; margin-bottom:5px; display:block;">Tanggal Dibuka:</label>
+            <textarea name="vision_text" rows="4" placeholder="<?= cms_raw('oracle_capsule_placeholder', 'Tuliskan visi atau pesan rahasia untuk diri Anda di masa depan...') ?>" required></textarea>
+            <label style="font-size:0.8rem; color:#888; margin-bottom:5px; display:block;"><?= cms_text('oracle_capsule_label_date', 'Tanggal Dibuka:') ?></label>
             <input type="date" name="unlock_date" required min="<?= date('Y-m-d', strtotime('+1 day')) ?>">
-            <button type="submit" class="capsule-btn">SEGEL PESAN</button>
+            <button type="submit" class="capsule-btn"><?= cms_text('oracle_capsule_btn_seal', 'SEGEL PESAN') ?></button>
         </form>
 
-        <div class="capsule-title" style="margin-top: 20px;">Arsip Pesan Anda</div>
+        <div class="capsule-title" style="margin-top: 20px;"><?= cms_text('oracle_capsule_title_archive', 'Arsip Pesan Anda') ?></div>
         <?php if(!empty($visions)): ?>
             <?php foreach($visions as $v): ?>
                 <div class="capsule-card <?= $v['is_unlocked'] ? 'unlocked' : '' ?>">
                     <div style="font-size:0.8rem; color:var(--oracle-gold); margin-bottom:10px;">
                         <i class="fa-solid fa-lock<?= $v['is_unlocked'] ? '-open' : '' ?>"></i> 
-                        Terjadwal: <?= date('d M Y', strtotime($v['unlock_date'])) ?>
+                        <?= cms_text('oracle_capsule_scheduled', 'Terjadwal:') ?> <?= date('d M Y', strtotime($v['unlock_date'])) ?>
                     </div>
                     
                     <?php if($v['is_unlocked']): ?>
@@ -47,16 +47,16 @@
                         <?php if(strtotime($v['unlock_date']) <= strtotime(date('Y-m-d'))): ?>
                             <form action="/oracle/unlock/<?= $v['id'] ?>" method="POST">
                                 <?= csrf_field() ?>
-                                <button type="submit" style="background:transparent; border:1px solid #d4af37; color:#d4af37; padding:5px 10px; cursor:pointer; font-size:0.8rem; border-radius:3px;">BUKA SEGEL</button>
+                                <button type="submit" style="background:transparent; border:1px solid #d4af37; color:#d4af37; padding:5px 10px; cursor:pointer; font-size:0.8rem; border-radius:3px;"><?= cms_text('oracle_capsule_btn_open', 'BUKA SEGEL') ?></button>
                             </form>
                         <?php else: ?>
-                            <div style="font-size:0.8rem; color:#888;">Segel Waktu Aktif. Menunggu takdir.</div>
+                            <div style="font-size:0.8rem; color:#888;"><?= cms_text('oracle_capsule_wait', 'Segel Waktu Aktif. Menunggu takdir.') ?></div>
                         <?php endif; ?>
                     <?php endif; ?>
                 </div>
             <?php endforeach; ?>
         <?php else: ?>
-            <div style="font-size:0.8rem; color:#777; font-style:italic;">Belum ada pesan yang tersegel.</div>
+            <div style="font-size:0.8rem; color:#777; font-style:italic;"><?= cms_text('oracle_capsule_empty', 'Belum ada pesan yang tersegel.') ?></div>
         <?php endif; ?>
     </div>
 
@@ -64,12 +64,12 @@
     <?php if(session()->getFlashdata('unlocked_vision')): ?>
     <div id="unsealModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; justify-content:center; align-items:center; flex-direction:column; padding:20px; backdrop-filter:blur(5px);">
         <div class="capsule-card" style="border-color:var(--oracle-gold); max-width:600px; width:100%; background:var(--oracle-dark);" id="unsealBox">
-            <h2 style="color:var(--oracle-gold); font-family:'Playfair Display'; margin-bottom:20px; text-shadow:0 0 15px rgba(212,175,55,0.5); text-transform:uppercase;"><i class="fa-solid fa-envelope-open-text"></i> PESAN MASA DEPAN TERBUKA</h2>
+            <h2 style="color:var(--oracle-gold); font-family:'Playfair Display'; margin-bottom:20px; text-shadow:0 0 15px rgba(212,175,55,0.5); text-transform:uppercase;"><i class="fa-solid fa-envelope-open-text"></i> <?= cms_text('oracle_modal_title', 'PESAN MASA DEPAN TERBUKA') ?></h2>
             <div style="font-family:'Courier New', monospace; font-size:1rem; line-height:1.6; color:#fff; word-break:break-word; background:rgba(0,0,0,0.5); padding:20px; border-radius:5px; border:1px dashed rgba(212,175,55,0.3);">
                 <?= nl2br(esc(session()->getFlashdata('unlocked_vision'))) ?>
             </div>
             <div style="margin-top:30px; text-align:right;">
-                <button onclick="closeUnsealModal()" style="background:transparent; color:var(--oracle-gold); border:1px solid var(--oracle-gold); padding:10px 25px; font-weight:bold; cursor:pointer; font-family:'Courier New'; letter-spacing:2px; transition:0.3s;" onmouseover="this.style.background='rgba(212,175,55,0.1)'" onmouseout="this.style.background='transparent'">TUTUP DOKUMEN</button>
+                <button onclick="closeUnsealModal()" style="background:transparent; color:var(--oracle-gold); border:1px solid var(--oracle-gold); padding:10px 25px; font-weight:bold; cursor:pointer; font-family:'Courier New'; letter-spacing:2px; transition:0.3s;" onmouseover="this.style.background='rgba(212,175,55,0.1)'" onmouseout="this.style.background='transparent'"><?= cms_text('oracle_modal_close', 'TUTUP DOKUMEN') ?></button>
             </div>
         </div>
     </div>
@@ -77,7 +77,7 @@
 
     <div class="oracle-wrapper">
         <div class="vision-container" id="visionContainer">
-            <div class="permission-notice" id="permNotice">Menunggu Izin Kamera...</div>
+            <div class="permission-notice" id="permNotice"><?= cms_text('oracle_notice_camera', 'Menunggu Izin Kamera...') ?></div>
             <video id="videoFeed" autoplay playsinline></video>
             <canvas id="captureCanvas"></canvas>
             
@@ -89,7 +89,7 @@
                 وُجُوهٌ يَوْمَئِذٍ مُّسْفِرَةٌ
             </div>
             
-            <div class="hud-text" id="hudText">SYSTEM STANDBY</div>
+            <div class="hud-text" id="hudText"><?= cms_text('oracle_hud_standby', 'SYSTEM STANDBY') ?></div>
             
             <!-- The Result Overlay -->
             <div class="result-overlay" id="resultOverlay">
@@ -101,9 +101,9 @@
 
         <div class="controls-panel">
             <button class="btn-initiate hover-trigger" id="btnScan" disabled>
-                <i class="fa-solid fa-eye"></i> Mulai Pemindaian
+                <i class="fa-solid fa-eye"></i> <?= cms_text('oracle_btn_scan', 'Mulai Pemindaian') ?>
             </button>
-            <button class="btn-reset hover-trigger" id="btnReset">Pindai Ulang</button>
+            <button class="btn-reset hover-trigger" id="btnReset"><?= cms_text('oracle_btn_reset', 'Pindai Ulang') ?></button>
         </div>
     </div>
 

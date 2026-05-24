@@ -210,57 +210,57 @@
         <!-- Slide 1: Intro -->
         <div class="slide active" style="background-image: url('https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=1000&auto=format&fit=crop');">
             <i class="fa-solid fa-gem slide-icon gs-anim"></i>
-            <h2 class="slide-title gs-anim">Tahun Ini...</h2>
-            <p class="slide-desc gs-anim">Anda telah melalui berbagai momen luar biasa bersama <strong>Expedient Generation</strong>.</p>
-            <p class="slide-desc gs-anim" style="margin-top:20px;">Mari kita lihat kembali jejak digital Anda di The Vault sepanjang <?= esc($year) ?>.</p>
+            <h2 class="slide-title gs-anim"><?= cms_text('wrapped_intro_title', 'Tahun Ini...') ?></h2>
+            <p class="slide-desc gs-anim"><?= cms_html('wrapped_intro_desc1', 'Anda telah melalui berbagai momen luar biasa bersama <strong>Expedient Generation</strong>.') ?></p>
+            <p class="slide-desc gs-anim" style="margin-top:20px;"><?= cms_text('wrapped_intro_desc2', 'Mari kita lihat kembali jejak digital Anda di The Vault sepanjang') ?> <?= esc($year) ?>.</p>
         </div>
 
         <!-- Slide 2: Kehadiran -->
         <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop');">
-            <h2 class="slide-title gs-anim">Loyalitas Tanpa Batas</h2>
+            <h2 class="slide-title gs-anim"><?= cms_text('wrapped_login_title', 'Loyalitas Tanpa Batas') ?></h2>
             <div class="slide-highlight gs-anim"><?= $loginCount ?></div>
-            <p class="slide-desc gs-anim">Kali Anda mengunjungi The Vault tahun ini.</p>
-            <p class="slide-desc gs-anim" style="margin-top:20px; font-size:0.9rem; color:#aaa;">Anda mengumpulkan <strong><?= number_format($totalPrestise) ?></strong> poin prestise.</p>
+            <p class="slide-desc gs-anim"><?= cms_text('wrapped_login_desc1', 'Kali Anda mengunjungi The Vault tahun ini.') ?></p>
+            <p class="slide-desc gs-anim" style="margin-top:20px; font-size:0.9rem; color:#aaa;"><?= cms_text('wrapped_login_desc2', 'Anda mengumpulkan') ?> <strong><?= number_format($totalPrestise) ?></strong> <?= cms_text('wrapped_login_desc3', 'poin prestise.') ?></p>
         </div>
 
         <!-- Slide 3: Baitul Maal -->
         <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1579621970795-87facc2f976d?q=80&w=1000&auto=format&fit=crop'); filter: grayscale(50%) hue-rotate(20deg);">
             <i class="fa-solid fa-coins slide-icon gs-anim"></i>
-            <h2 class="slide-title gs-anim">Jariyah Abadi</h2>
+            <h2 class="slide-title gs-anim"><?= cms_text('wrapped_sedekah_title', 'Jariyah Abadi') ?></h2>
             <div class="slide-highlight gs-anim">Rp <?= number_format($totalSedekah, 0, ',', '.') ?></div>
-            <p class="slide-desc gs-anim">Total kontribusi Anda di Baitul Maal.</p>
-            <p class="slide-desc gs-anim" style="margin-top:20px; font-size:0.9rem; color:#aaa;">Terima kasih telah menanam benih kebaikan bersama.</p>
+            <p class="slide-desc gs-anim"><?= cms_text('wrapped_sedekah_desc1', 'Total kontribusi Anda di Baitul Maal.') ?></p>
+            <p class="slide-desc gs-anim" style="margin-top:20px; font-size:0.9rem; color:#aaa;"><?= cms_text('wrapped_sedekah_desc2', 'Terima kasih telah menanam benih kebaikan bersama.') ?></p>
         </div>
 
         <!-- Slide 4: Interaksi -->
         <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1594954002661-8f55fc15d7de?q=80&w=1000&auto=format&fit=crop');">
-            <h2 class="slide-title gs-anim">Sang Visioner</h2>
-            <p class="slide-desc gs-anim">Anda telah menanam <strong><?= $oracleCount ?></strong> pesan rahasia di Oracle,</p>
-            <p class="slide-desc gs-anim" style="margin-top:10px;">dan menyumbangkan suara di <strong><?= $majlisVotes ?></strong> topik Majlis Syura.</p>
+            <h2 class="slide-title gs-anim"><?= cms_text('wrapped_interact_title', 'Sang Visioner') ?></h2>
+            <p class="slide-desc gs-anim"><?= cms_text('wrapped_interact_desc1', 'Anda telah menanam') ?> <strong><?= $oracleCount ?></strong> <?= cms_text('wrapped_interact_desc2', 'pesan rahasia di Oracle,') ?></p>
+            <p class="slide-desc gs-anim" style="margin-top:10px;"><?= cms_text('wrapped_interact_desc3', 'dan menyumbangkan suara di') ?> <strong><?= $majlisVotes ?></strong> <?= cms_text('wrapped_interact_desc4', 'topik Majlis Syura.') ?></p>
             <i class="fa-solid fa-bullhorn slide-icon gs-anim" style="margin-top:30px;"></i>
         </div>
 
         <!-- Slide 5: Summary -->
         <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?q=80&w=1000&auto=format&fit=crop');">
-            <h2 class="slide-title gs-anim" style="font-size:2rem;">Expedient <?= esc($year) ?></h2>
-            <div class="gs-anim" style="font-size:1.5rem; font-weight:bold; margin-bottom:20px;">Entitas: <?= esc($user['nama_panggilan']) ?></div>
+            <h2 class="slide-title gs-anim" style="font-size:2rem;"><?= cms_text('wrapped_summary_title', 'Expedient') ?> <?= esc($year) ?></h2>
+            <div class="gs-anim" style="font-size:1.5rem; font-weight:bold; margin-bottom:20px;"><?= cms_text('wrapped_summary_entity', 'Entitas:') ?> <?= esc($user['nama_panggilan']) ?></div>
             
             <div class="final-grid gs-anim">
                 <div class="final-stat">
                     <div class="final-stat-val"><?= $loginCount ?></div>
-                    <div class="final-stat-label">Kunjungan</div>
+                    <div class="final-stat-label"><?= cms_text('wrapped_stat_visit', 'Kunjungan') ?></div>
                 </div>
                 <div class="final-stat">
                     <div class="final-stat-val"><?= number_format($totalPrestise) ?></div>
-                    <div class="final-stat-label">Poin Prestise</div>
+                    <div class="final-stat-label"><?= cms_text('wrapped_stat_poin', 'Poin Prestise') ?></div>
                 </div>
                 <div class="final-stat" style="grid-column: span 2;">
                     <div class="final-stat-val">Rp <?= number_format($totalSedekah, 0, ',', '.') ?></div>
-                    <div class="final-stat-label">Baitul Maal</div>
+                    <div class="final-stat-label"><?= cms_text('wrapped_stat_maal', 'Baitul Maal') ?></div>
                 </div>
             </div>
             
-            <button onclick="window.location.href='/fitur'" class="gs-anim" style="margin-top:40px; padding:15px 30px; background:var(--gold); color:#000; font-weight:bold; border:none; border-radius:30px; letter-spacing:2px; font-family:'Inter'; cursor:pointer;">KEMBALI KE VAULT</button>
+            <button onclick="window.location.href='/fitur'" class="gs-anim" style="margin-top:40px; padding:15px 30px; background:var(--gold); color:#000; font-weight:bold; border:none; border-radius:30px; letter-spacing:2px; font-family:'Inter'; cursor:pointer;"><?= cms_text('wrapped_btn_back', 'KEMBALI KE VAULT') ?></button>
             <canvas class="confetti-canvas" id="confettiCanvas"></canvas>
         </div>
 

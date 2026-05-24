@@ -255,8 +255,8 @@
                     <img src="/images/mahkota-emas.png" class="logo-part part-5" alt="Part">
                     <img src="/images/logo-utuh.png" class="logo-utuh" alt="Expedient Logo" id="logoUtuh">
                 </div>
-                <h1 class="title-holographic">Inisiasi Angkatan</h1>
-                <p class="subtitle-spec">Pahat identitas Anda dalam sejarah 42nd Arrisalah Expedient Generation.</p>
+                <h1 class="title-holographic"><?= cms_text('register_title', 'Inisiasi Angkatan') ?></h1>
+                <p class="subtitle-spec"><?= cms_text('register_subtitle', 'Pahat identitas Anda dalam sejarah 42nd Arrisalah Expedient Generation.') ?></p>
             </div>
 
             <form action="/auth/register" method="POST" id="registerForm" novalidate>
@@ -267,13 +267,13 @@
                     
                     <div class="input-group">
                         <input type="text" name="nama_lengkap" class="input-control" required minlength="3" placeholder=" " value="<?= old('nama_lengkap') ?>">
-                        <label class="input-label">Nama Lengkap (Sesuai Ijazah)</label>
+                        <label class="input-label"><?= cms_text('register_label_name', 'Nama Lengkap (Sesuai Ijazah)') ?></label>
                         <div class="input-neon-line"></div>
                         <div class="error-hint"></div> </div>
                     
                     <div class="input-group">
                         <input type="text" name="nama_panggilan" class="input-control" required minlength="2" placeholder=" " value="<?= old('nama_panggilan') ?>">
-                        <label class="input-label">Nama Panggilan</label>
+                        <label class="input-label"><?= cms_text('register_label_nickname', 'Nama Panggilan') ?></label>
                         <div class="input-neon-line"></div>
                         <div class="error-hint"></div>
                     </div>
@@ -284,49 +284,49 @@
                             <option value="Laki-laki" <?= old('jenis_kelamin') == 'Laki-laki' ? 'selected' : '' ?>>Laki-laki</option>
                             <option value="Perempuan" <?= old('jenis_kelamin') == 'Perempuan' ? 'selected' : '' ?>>Perempuan</option>
                         </select>
-                        <label class="input-label">Jenis Kelamin</label>
+                        <label class="input-label"><?= cms_text('register_label_gender', 'Jenis Kelamin') ?></label>
                         <div class="input-neon-line"></div>
                         <div class="error-hint"></div>
                     </div>
                     
                     <div class="input-group">
                         <input type="text" name="tempat_lahir" class="input-control" required placeholder=" " value="<?= old('tempat_lahir') ?>">
-                        <label class="input-label">Tempat Lahir</label>
+                        <label class="input-label"><?= cms_text('register_label_birthplace', 'Tempat Lahir') ?></label>
                         <div class="input-neon-line"></div>
                         <div class="error-hint"></div>
                     </div>
 
                     <div class="input-group">
                         <input type="date" name="tanggal_lahir" class="input-control" required placeholder=" " value="<?= old('tanggal_lahir') ?>" style="color-scheme: dark;">
-                        <label class="input-label" style="top:-20px; font-size:0.75rem; color:var(--text-secondary); letter-spacing:2px; font-weight:700;">Tanggal Lahir</label>
+                        <label class="input-label" style="top:-20px; font-size:0.75rem; color:var(--text-secondary); letter-spacing:2px; font-weight:700;"><?= cms_text('register_label_birthdate', 'Tanggal Lahir') ?></label>
                         <div class="input-neon-line"></div>
                         <div class="error-hint"></div>
                     </div>
 
                     <div class="input-group span-full">
                         <input type="text" name="alamat_lengkap" class="input-control" required minlength="10" placeholder=" " value="<?= old('alamat_lengkap') ?>">
-                        <label class="input-label">Alamat Lengkap Domisili</label>
+                        <label class="input-label"><?= cms_text('register_label_address', 'Alamat Lengkap Domisili') ?></label>
                         <div class="input-neon-line"></div>
                         <div class="error-hint"></div>
                     </div>
 
                     <div class="input-group">
                         <input type="email" name="email" class="input-control" required placeholder=" " value="<?= old('email') ?>">
-                        <label class="input-label">Surel Resmi (Email Aktif)</label>
+                        <label class="input-label"><?= cms_text('register_label_email', 'Surel Resmi (Email Aktif)') ?></label>
                         <div class="input-neon-line"></div>
                         <div class="error-hint"></div>
                     </div>
                     
                     <div class="input-group">
                         <input type="text" name="no_whatsapp" class="input-control" required minlength="10" pattern="[0-9]+" placeholder=" " value="<?= old('no_whatsapp') ?>">
-                        <label class="input-label">Nomor WhatsApp</label>
+                        <label class="input-label"><?= cms_text('register_label_phone', 'Nomor WhatsApp') ?></label>
                         <div class="input-neon-line"></div>
                         <div class="error-hint"></div>
                     </div>
 
                     <div class="input-group span-full">
                         <input type="password" id="inputRegPw" name="password" class="input-control" required minlength="8" placeholder=" ">
-                        <label class="input-label">Kata Sandi Akses</label>
+                        <label class="input-label"><?= cms_text('register_label_password', 'Kata Sandi Akses') ?></label>
                         <div class="input-neon-line"></div>
                         <div class="error-hint"></div>
                         <i class="fa-solid fa-eye icon-eye" id="toggleRegPw"></i>
@@ -334,51 +334,51 @@
 
                     <div class="input-group">
                         <input type="text" name="motivasi_hidup" class="input-control" placeholder=" " value="<?= old('motivasi_hidup') ?>">
-                        <label class="input-label">Motivasi & Filosofi Hidup</label>
+                        <label class="input-label"><?= cms_text('register_label_motivation', 'Motivasi & Filosofi Hidup') ?></label>
                         <div class="input-neon-line"></div>
                     </div>
                     
                     <div class="input-group">
                         <input type="text" name="cita_cita" class="input-control" placeholder=" " value="<?= old('cita_cita') ?>">
-                        <label class="input-label">Cita-Cita Terbesar</label>
+                        <label class="input-label"><?= cms_text('register_label_dreams', 'Cita-Cita Terbesar') ?></label>
                         <div class="input-neon-line"></div>
                     </div>
 
                     <div class="input-group">
                         <input type="text" name="akun_ig" class="input-control" placeholder=" " value="<?= old('akun_ig') ?>">
-                        <label class="input-label">Instagram (@username)</label>
+                        <label class="input-label"><?= cms_text('register_label_ig', 'Instagram (@username)') ?></label>
                         <div class="input-neon-line"></div>
                     </div>
                     
                     <div class="input-group">
                         <input type="text" name="akun_tiktok" class="input-control" placeholder=" " value="<?= old('akun_tiktok') ?>">
-                        <label class="input-label">TikTok (@username)</label>
+                        <label class="input-label"><?= cms_text('register_label_tiktok', 'TikTok (@username)') ?></label>
                         <div class="input-neon-line"></div>
                     </div>
 
                     <div class="input-group span-full">
-                        <label class="input-label" style="top:-20px; font-size:0.75rem; color:var(--text-secondary); letter-spacing:2px; font-weight:700;">Foto Profil Eksklusif</label>
+                        <label class="input-label" style="top:-20px; font-size:0.75rem; color:var(--text-secondary); letter-spacing:2px; font-weight:700;"><?= cms_text('register_label_photo', 'Foto Profil Eksklusif') ?></label>
                         <label class="upload-zone" id="uploadZone">
                             <i class="fa-solid fa-cloud-arrow-up"></i>
-                            <span style="color:var(--text-primary); font-weight:600; margin-bottom:5px;">Unggah Pasfoto Terbaik</span>
-                            <span style="color:var(--text-secondary); font-size:0.8rem;">Tap/Klik di area ini untuk menelusuri galeri</span>
+                            <span style="color:var(--text-primary); font-weight:600; margin-bottom:5px;"><?= cms_text('register_upload_title', 'Unggah Pasfoto Terbaik') ?></span>
+                            <span style="color:var(--text-secondary); font-size:0.8rem;"><?= cms_text('register_upload_desc', 'Tap/Klik di area ini untuk menelusuri galeri') ?></span>
                             <input type="file" id="imageInput" accept="image/*" style="display:none;">
                         </label>
                         <div class="preview-area" id="previewArea">
                             <img id="imgPreview" src="" alt="Pratinjau Foto"><br>
-                            <button type="button" class="btn-change-photo" onclick="document.getElementById('imageInput').click()">Ubah Pilihan Foto</button>
+                            <button type="button" class="btn-change-photo" onclick="document.getElementById('imageInput').click()"><?= cms_text('register_upload_change', 'Ubah Pilihan Foto') ?></button>
                         </div>
                         <input type="hidden" name="foto_profil_base64" id="fotoBase64">
                     </div>
 
                     <div class="input-group span-full checkbox-container" id="snkContainer">
                         <input type="checkbox" id="snk" name="snk" required>
-                        <label for="snk">Saya menyatakan dengan sadar bahwa data ini benar dan menyetujui penyimpanannya ke dalam direktori angkatan Expedient.</label>
+                        <label for="snk"><?= cms_text('register_label_snk', 'Saya menyatakan dengan sadar bahwa data ini benar dan menyetujui penyimpanannya ke dalam direktori angkatan Expedient.') ?></label>
                         <div class="error-hint" style="bottom:-15px;"></div>
                     </div>
 
                     <div class="span-full btn-magnetic-wrapper">
-                        <button type="submit" class="btn-prime magnetic-btn" id="btnSubmitForm">Selesaikan Inisiasi <i class="fa-solid fa-check"></i></button>
+                        <button type="submit" class="btn-prime magnetic-btn" id="btnSubmitForm"><?= cms_text('register_btn_submit', 'Selesaikan Inisiasi') ?> <i class="fa-solid fa-check"></i></button>
                     </div>
                 </div>
             </form>
@@ -387,11 +387,11 @@
 
     <div class="crop-modal" id="cropModal">
         <div class="crop-content">
-            <h3 style="color:var(--text-primary); text-align:center; margin-bottom:20px; font-weight:700;">Sesuaikan Presisi Foto</h3>
+            <h3 style="color:var(--text-primary); text-align:center; margin-bottom:20px; font-weight:700;"><?= cms_text('register_crop_title', 'Sesuaikan Presisi Foto') ?></h3>
             <div class="crop-img-wrap"><img id="cropTarget" src=""></div>
             <div class="crop-actions">
-                <button type="button" class="crop-btn-cancel" id="btnCancelCrop">Batalkan</button>
-                <button type="button" class="crop-btn-apply" id="btnApplyCrop">Terapkan Pemotongan</button>
+                <button type="button" class="crop-btn-cancel" id="btnCancelCrop"><?= cms_text('register_crop_cancel', 'Batalkan') ?></button>
+                <button type="button" class="crop-btn-apply" id="btnApplyCrop"><?= cms_text('register_crop_apply', 'Terapkan Pemotongan') ?></button>
             </div>
         </div>
     </div>
@@ -419,11 +419,11 @@
         </div>
 
         <div class="status-display" id="statusBadge">
-            <div class="status-title">Protokol Keamanan VVIP</div>
+            <div class="status-title"><?= cms_text('register_face_title', 'Protokol Keamanan VVIP') ?></div>
             <div class="status-value" id="faceStatus">Memuat Kalibrasi...</div>
         </div>
 
-        <button type="button" class="crop-btn-cancel" style="margin-top: 40px; font-size: 0.75rem;" onclick="closeFaceScanner()">BATALKAN INISIASI</button>
+        <button type="button" class="crop-btn-cancel" style="margin-top: 40px; font-size: 0.75rem;" onclick="closeFaceScanner()"><?= cms_text('register_face_cancel', 'BATALKAN INISIASI') ?></button>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>

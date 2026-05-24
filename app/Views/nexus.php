@@ -175,19 +175,19 @@ The Nexus - Prediksi Eksekutif
 <?= $this->section('content') ?>
 <div class="nexus-wrapper">
     <div class="nexus-header reveal-up">
-        <h1 class="nexus-title">The Nexus</h1>
-        <p class="nexus-subtitle">Algoritma Analitik Menghubungkan Visi, Merajut Jaringan Bisnis Eksekutif Masa Depan Anda.</p>
+        <h1 class="nexus-title"><?= cms_text('nexus_title', 'The Nexus') ?></h1>
+        <p class="nexus-subtitle"><?= cms_text('nexus_subtitle', 'Algoritma Analitik Menghubungkan Visi, Merajut Jaringan Bisnis Eksekutif Masa Depan Anda.') ?></p>
     </div>
 
     <div class="nexus-sphere reveal-up" id="btnAnalyze" onclick="startAnalysis()">
         <div class="scanning-line" id="scanLine"></div>
-        <div class="nexus-core-text" id="coreText">AKTIVASI<br>ANALISIS</div>
+        <div class="nexus-core-text" id="coreText"><?= cms_html('nexus_core', 'AKTIVASI<br>ANALISIS') ?></div>
     </div>
     
     <div id="statusText" style="color:var(--text-secondary); font-family:monospace; letter-spacing:2px; font-size:0.85rem; height:20px;"></div>
 
     <div class="match-results" id="matchResults">
-        <h3 style="font-family:'Playfair Display',serif; color:var(--text-primary); font-size:1.8rem; font-weight:normal; margin-bottom:10px;">Kolega Strategis Anda</h3>
+        <h3 style="font-family:'Playfair Display',serif; color:var(--text-primary); font-size:1.8rem; font-weight:normal; margin-bottom:10px;"><?= cms_text('nexus_results_title', 'Kolega Strategis Anda') ?></h3>
         <div style="width:50px; height:2px; background:#d4af37; margin:0 auto;"></div>
         
         <div class="match-grid" id="matchGrid">
@@ -218,16 +218,16 @@ The Nexus - Prediksi Eksekutif
         grid.innerHTML = '';
         
         // Animasi Scanning
-        coreText.innerHTML = "MENGANALISIS...";
+        coreText.innerHTML = "<?= cms_raw('nexus_core_analyzing', 'MENGANALISIS...') ?>";
         gsap.to(sphere, { scale: 1.1, duration: 0.5 });
         gsap.set(scanLine, { opacity: 1 });
         const scanAnim = gsap.to(scanLine, { top: "100%", duration: 1.5, repeat: -1, yoyo: true, ease: "sine.inOut" });
 
         const statuses = [
-            "Mengekstraksi jejak linguistik...",
-            "Membandingkan matriks kategori...",
-            "Mengkalkulasi irisan visi & cita-cita...",
-            "Menyinkronisasi konstelasi eksekutif..."
+            "<?= cms_raw('nexus_status_1', 'Mengekstraksi jejak linguistik...') ?>",
+            "<?= cms_raw('nexus_status_2', 'Membandingkan matriks kategori...') ?>",
+            "<?= cms_raw('nexus_status_3', 'Mengkalkulasi irisan visi & cita-cita...') ?>",
+            "<?= cms_raw('nexus_status_4', 'Menyinkronisasi konstelasi eksekutif...') ?>"
         ];
 
         let i = 0;
@@ -247,8 +247,8 @@ The Nexus - Prediksi Eksekutif
                 scanAnim.kill();
                 gsap.to(scanLine, { opacity: 0, duration: 0.3 });
                 gsap.to(sphere, { scale: 1, duration: 0.5, ease: "power2.out" });
-                coreText.innerHTML = "SELESAI";
-                statusText.innerText = "Sinkronisasi Berhasil. Memuat Hasil.";
+                coreText.innerHTML = "<?= cms_raw('nexus_core_done', 'SELESAI') ?>";
+                statusText.innerText = "<?= cms_raw('nexus_status_success', 'Sinkronisasi Berhasil. Memuat Hasil.') ?>";
                 
                 setTimeout(() => {
                     renderResults(data.data);
@@ -257,8 +257,8 @@ The Nexus - Prediksi Eksekutif
 
         } catch (e) {
             clearInterval(statusInterval);
-            statusText.innerText = "Koneksi Terputus.";
-            coreText.innerHTML = "GAGAL";
+            statusText.innerText = "<?= cms_raw('nexus_status_error', 'Koneksi Terputus.') ?>";
+            coreText.innerHTML = "<?= cms_raw('nexus_core_fail', 'GAGAL') ?>";
             scanAnim.kill();
             isAnalyzing = false;
         }
@@ -272,7 +272,7 @@ The Nexus - Prediksi Eksekutif
         document.getElementById('statusText').innerText = "";
         
         if (!matches || matches.length === 0) {
-            grid.innerHTML = '<div style="color:var(--text-secondary); width:100%; grid-column:1/-1;">Belum ada data kolega yang memadai untuk analisis saat ini.</div>';
+            grid.innerHTML = '<div style="color:var(--text-secondary); width:100%; grid-column:1/-1;"><?= cms_raw('nexus_empty_data', 'Belum ada data kolega yang memadai untuk analisis saat ini.') ?></div>';
             isAnalyzing = false;
             return;
         }
@@ -285,8 +285,8 @@ The Nexus - Prediksi Eksekutif
                     <div class="match-percentage">${m.match_score}<span>%</span></div>
                     <img src="${avatarUrl}" class="match-avatar" alt="${m.nama_panggilan}">
                     <div class="match-name">${m.nama_panggilan || m.nama_lengkap}</div>
-                    <div class="match-category">${m.syndicate_category || 'Independen'}</div>
-                    <a href="/profil/${m.id}" class="btn-connect">Lihat Profil Eksekutif</a>
+                    <div class="match-category">${m.syndicate_category || '<?= cms_raw('nexus_lbl_independen', 'Independen') ?>'}</div>
+                    <a href="/profil/${m.id}" class="btn-connect"><?= cms_raw('nexus_btn_profile', 'Lihat Profil Eksekutif') ?></a>
                 </div>
             `;
         });

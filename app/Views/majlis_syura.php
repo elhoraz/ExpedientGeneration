@@ -375,12 +375,12 @@ Majlis Syura Eksklusif - VVIP Audio Room
     <!-- Header -->
     <header class="majlis-header">
         <a href="/fitur" class="btn-back">
-            <i class="fa-solid fa-chevron-left"></i> Kembali ke Vault
+            <i class="fa-solid fa-chevron-left"></i> <?= cms_text('majlis_btn_back', 'Kembali ke Vault') ?>
         </a>
         <div class="room-info">
-            <h1 class="room-title">Majlis Syura Utama</h1>
+            <h1 class="room-title"><?= cms_text('majlis_room_title', 'Majlis Syura Utama') ?></h1>
             <div class="room-status">
-                <span class="status-dot"></span> <span id="onlineCount">1</span> Kolega Hadir
+                <span class="status-dot"></span> <span id="onlineCount">1</span> <?= cms_text('majlis_online_label', 'Kolega Hadir') ?>
             </div>
         </div>
     </header>
@@ -391,12 +391,12 @@ Majlis Syura Eksklusif - VVIP Audio Room
             <i class="fa-solid fa-microphone-slash"></i>
         </div>
         <div class="speaker-info">
-            <h2 class="speaker-name" id="speakerName">Ruangan Terbuka</h2>
-            <p class="speaker-role" id="speakerRole">Tidak ada pembicara saat ini</p>
+            <h2 class="speaker-name" id="speakerName"><?= cms_text('majlis_speaker_name', 'Ruangan Terbuka') ?></h2>
+            <p class="speaker-role" id="speakerRole"><?= cms_text('majlis_speaker_role', 'Tidak ada pembicara saat ini') ?></p>
         </div>
         <?php if($user_role === 'admin'): ?>
         <button id="btnStopSpeaker" onclick="stopSpeaker()" style="margin-top:15px; padding:5px 15px; background:rgba(255,51,102,0.2); border:1px solid #ff3366; color:#ff3366; border-radius:15px; cursor:pointer; font-size:0.7rem; font-weight:bold; letter-spacing:1px; text-transform:uppercase; display:none;">
-            Hentikan Pembicara
+            <?= cms_text('majlis_btn_stop', 'Hentikan Pembicara') ?>
         </button>
         <?php endif; ?>
     </div>
@@ -409,21 +409,21 @@ Majlis Syura Eksklusif - VVIP Audio Room
     <!-- Bottom Controls -->
     <div class="control-dock">
         <?php if($user_role === 'admin'): ?>
-        <button class="ctrl-btn" title="Daftar Permintaan Bicara" id="btnAdminRequests">
+        <button class="ctrl-btn" title="<?= cms_raw('majlis_tooltip_requests', 'Daftar Permintaan Bicara') ?>" id="btnAdminRequests">
             <i class="fa-solid fa-clipboard-list"></i>
             <span class="badge-count" id="requestsBadge">0</span>
         </button>
         <?php endif; ?>
-        <button class="ctrl-btn" title="Angkat Tangan (Request Speak)" id="btnHand" onclick="requestToSpeak()">
+        <button class="ctrl-btn" title="<?= cms_raw('majlis_tooltip_hand', 'Angkat Tangan (Request Speak)') ?>" id="btnHand" onclick="requestToSpeak()">
             <i class="fa-solid fa-hand"></i>
         </button>
-        <button class="ctrl-btn danger" title="Mute Microphone" id="btnMic">
+        <button class="ctrl-btn danger" title="<?= cms_raw('majlis_tooltip_mic', 'Mute Microphone') ?>" id="btnMic">
             <i class="fa-solid fa-microphone-slash"></i>
         </button>
-        <button class="ctrl-btn" title="Mosi & Voting" id="btnToggleMajlis">
+        <button class="ctrl-btn" title="<?= cms_raw('majlis_tooltip_vote', 'Mosi & Voting') ?>" id="btnToggleMajlis">
             <i class="fa-solid fa-gavel"></i>
         </button>
-        <button class="ctrl-btn danger" style="margin-left: 20px;" title="Keluar Majlis" onclick="window.location.href='/fitur'">
+        <button class="ctrl-btn danger" style="margin-left: 20px;" title="<?= cms_raw('majlis_tooltip_exit', 'Keluar Majlis') ?>" onclick="window.location.href='/fitur'">
             <i class="fa-solid fa-phone-slash"></i>
         </button>
     </div>
@@ -432,23 +432,23 @@ Majlis Syura Eksklusif - VVIP Audio Room
 <!-- PANEL PERMINTAAN BICARA (ADMIN ONLY) -->
 <?php if($user_role === 'admin'): ?>
 <div class="requests-panel" id="requestsPanel">
-    <div class="panel-title">Antrean Pembicara</div>
+    <div class="panel-title"><?= cms_text('majlis_panel_queue', 'Antrean Pembicara') ?></div>
     <div id="requestsList">
-        <div style="text-align:center; padding:20px; color:#555; font-size:0.8rem;">Belum ada permintaan.</div>
+        <div style="text-align:center; padding:20px; color:#555; font-size:0.8rem;"><?= cms_text('majlis_queue_empty', 'Belum ada permintaan.') ?></div>
     </div>
 </div>
 <?php endif; ?>
 
 <!-- PANEL MOSI & VOTING -->
 <div class="majlis-panel" id="majlisPanel">
-    <div class="panel-title">Ajukan Mosi Baru</div>
+    <div class="panel-title"><?= cms_text('majlis_panel_new_topic', 'Ajukan Mosi Baru') ?></div>
     <form id="formAddTopic" class="majlis-form">
-        <input type="text" name="title" id="topicTitle" placeholder="Judul Mosi (Singkat & Jelas)" required>
-        <textarea name="description" id="topicDesc" rows="3" placeholder="Deskripsi atau landasan masalah..." required></textarea>
-        <button type="submit" class="btn-submit-majlis" id="btnSubmitTopic">Ajukan ke Forum</button>
+        <input type="text" name="title" id="topicTitle" placeholder="<?= cms_raw('majlis_topic_title_ph', 'Judul Mosi (Singkat & Jelas)') ?>" required>
+        <textarea name="description" id="topicDesc" rows="3" placeholder="<?= cms_raw('majlis_topic_desc_ph', 'Deskripsi atau landasan masalah...') ?>" required></textarea>
+        <button type="submit" class="btn-submit-majlis" id="btnSubmitTopic"><?= cms_text('majlis_btn_submit_topic', 'Ajukan ke Forum') ?></button>
     </form>
 
-    <div class="panel-title" style="margin-top:20px;">Daftar Agenda (Voting)</div>
+    <div class="panel-title" style="margin-top:20px;"><?= cms_text('majlis_panel_topics', 'Daftar Agenda (Voting)') ?></div>
     <div id="topicsContainer">
         <!-- Rendered via JS -->
     </div>
@@ -622,7 +622,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (speaker) {
             window.currentActiveSpeakerId = speaker.user_id;
             document.getElementById('speakerName').innerText = speaker.name;
-            document.getElementById('speakerRole').innerText = speaker.role === 'admin' ? 'Pimpinan Sidang' : 'Peserta Majlis';
+            document.getElementById('speakerRole').innerText = speaker.role === 'admin' ? '<?= cms_raw('majlis_role_admin', 'Pimpinan Sidang') ?>' : '<?= cms_raw('majlis_role_user', 'Peserta Majlis') ?>';
             document.getElementById('activeSpeaker').style.backgroundImage = `url('${speaker.avatar}')`;
             document.getElementById('activeSpeaker').innerHTML = ''; // remove mic slash
             startRipples();
@@ -632,8 +632,8 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         } else {
             window.currentActiveSpeakerId = null;
-            document.getElementById('speakerName').innerText = "Ruangan Terbuka";
-            document.getElementById('speakerRole').innerText = "Tidak ada pembicara saat ini";
+            document.getElementById('speakerName').innerText = "<?= cms_raw('majlis_speaker_name', 'Ruangan Terbuka') ?>";
+            document.getElementById('speakerRole').innerText = "<?= cms_raw('majlis_speaker_role', 'Tidak ada pembicara saat ini') ?>";
             document.getElementById('activeSpeaker').style.backgroundImage = 'none';
             document.getElementById('activeSpeaker').innerHTML = '<i class="fa-solid fa-microphone-slash"></i>';
             stopRipples();

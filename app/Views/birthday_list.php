@@ -140,8 +140,8 @@ Ulang Tahun Hari Ini
 <?= $this->section('content') ?>
 <div class="bday-wrapper">
     <div class="bday-header reveal-up">
-        <h1>🎂 Ulang Tahun Hari Ini</h1>
-        <p>Kirim ucapan terbaik untuk kolega Anda</p>
+        <h1>🎂 <?= cms_text('bday_list_title', 'Ulang Tahun Hari Ini') ?></h1>
+        <p><?= cms_text('bday_list_subtitle', 'Kirim ucapan terbaik untuk kolega Anda') ?></p>
         <div class="bday-date-badge">
             <i class="fa-regular fa-calendar"></i> <?= date('d F Y') ?>
         </div>
@@ -163,7 +163,7 @@ Ulang Tahun Hari Ini
                     <div class="bday-fullname"><?= esc($u['nama_lengkap']) ?></div>
                     
                     <a href="/birthday/<?= $u['id'] ?>" class="bday-btn">
-                        <i class="fa-solid fa-gift" style="margin-right: 8px;"></i> Kirim Ucapan
+                        <i class="fa-solid fa-gift" style="margin-right: 8px;"></i> <?= cms_text('bday_list_btn', 'Kirim Ucapan') ?>
                     </a>
                 </div>
             <?php endforeach; ?>
@@ -171,10 +171,10 @@ Ulang Tahun Hari Ini
     <?php else: ?>
         <div class="bday-empty reveal-up">
             <i class="fa-regular fa-face-smile"></i>
-            <h3 style="color: var(--text-primary); margin-bottom: 10px; font-family: 'Playfair Display', serif;">Tidak Ada Ulang Tahun Hari Ini</h3>
-            <p>Belum ada kolega yang berulang tahun hari ini. Kembali lagi besok!</p>
+            <h3 style="color: var(--text-primary); margin-bottom: 10px; font-family: 'Playfair Display', serif;"><?= cms_text('bday_list_empty_title', 'Tidak Ada Ulang Tahun Hari Ini') ?></h3>
+            <p><?= cms_text('bday_list_empty_desc', 'Belum ada kolega yang berulang tahun hari ini. Kembali lagi besok!') ?></p>
             <a href="/beranda" class="bday-btn" style="margin-top: 20px;">
-                <i class="fa-solid fa-arrow-left" style="margin-right: 8px;"></i> Kembali
+                <i class="fa-solid fa-arrow-left" style="margin-right: 8px;"></i> <?= cms_text('bday_list_btn_back', 'Kembali') ?>
             </a>
         </div>
     <?php endif; ?>

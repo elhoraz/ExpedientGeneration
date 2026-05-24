@@ -51,6 +51,7 @@ $routes->post('/oracle/store', 'OracleController::store', ['filter' => 'auth']);
 $routes->post('/oracle/unlock/(:num)', 'OracleController::unlock/$1', ['filter' => 'auth']);
 $routes->get('/enigma', 'EnigmaController::index', ['filter' => 'auth']);
 $routes->post('/enigma/verify', 'EnigmaController::verify', ['filter' => 'auth']);
+$routes->get('/enigma/reset', 'EnigmaController::reset', ['filter' => 'auth']);
 $routes->get('/genesis', 'GenesisController::index', ['filter' => 'auth']);
 $routes->post('/genesis/log', 'GenesisController::log', ['filter' => 'auth']);
 $routes->get('/celestial', 'CelestialController::index', ['filter' => 'auth']);
@@ -187,6 +188,11 @@ $routes->get('/wrapped', 'WrappedController::index', ['filter' => 'auth']);
 // P4: ADMIN & OFFLINE
 // ====================================================================
 $routes->get('/offline', function() { return view('offline'); });
+
+// Admin Dashboard Unlock (Harus login, tapi tidak kena filter admin)
+$routes->get('/admin/unlock', 'Admin\UnlockController::index', ['filter' => 'auth']);
+$routes->post('/admin/unlock', 'Admin\UnlockController::process', ['filter' => 'auth']);
+
 $routes->get('/admin/dashboard', 'AdminController::index', ['filter' => 'admin']);
 
 // Admin: User Management
@@ -208,3 +214,10 @@ $routes->post('/admin/announcements/store', 'Admin\AnnouncementController::store
 $routes->get('/admin/announcements/edit/(:num)', 'Admin\AnnouncementController::edit/$1', ['filter' => 'admin']);
 $routes->post('/admin/announcements/update/(:num)', 'Admin\AnnouncementController::update/$1', ['filter' => 'admin']);
 $routes->post('/admin/announcements/delete/(:num)', 'Admin\AnnouncementController::delete/$1', ['filter' => 'admin']);
+
+// Admin: CMS Manager
+$routes->get('/admin/cms', 'Admin\CmsController::index', ['filter' => 'admin']);
+$routes->post('/admin/cms/update', 'Admin\CmsController::update', ['filter' => 'admin']);
+$routes->post('/admin/cms/save', 'Admin\CmsController::save_content', ['filter' => 'admin']);
+$routes->post('/admin/cms/gallery/add', 'Admin\CmsController::addGallery', ['filter' => 'admin']);
+$routes->post('/admin/cms/gallery/delete/(:num)', 'Admin\CmsController::deleteGallery/$1', ['filter' => 'admin']);

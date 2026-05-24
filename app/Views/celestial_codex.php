@@ -326,12 +326,12 @@
     <div id="particleField"></div>
 
     <a href="/fitur" class="btn-back">
-        <i class="fa-solid fa-chevron-left"></i> Exit Codex
+        <i class="fa-solid fa-chevron-left"></i> <?= cms_text('celestial_btn_exit', 'Exit Codex') ?>
     </a>
 
     <div class="codex-wrapper">
-        <h1 class="codex-title" id="codexTitle">The Celestial Codex</h1>
-        <p class="codex-subtitle" id="codexSubtitle">Tarik tiga kartu untuk mengungkap takdir Anda hari ini</p>
+        <h1 class="codex-title" id="codexTitle"><?= cms_text('celestial_title', 'The Celestial Codex') ?></h1>
+        <p class="codex-subtitle" id="codexSubtitle"><?= cms_text('celestial_subtitle', 'Tarik tiga kartu untuk mengungkap takdir Anda hari ini') ?></p>
 
         <div class="card-stage" id="cardStage">
             <div class="tarot-card" id="card0" data-index="0">
@@ -362,8 +362,8 @@
             </div>
         </div>
 
-        <button class="btn-draw" id="btnDraw">Tarik Kartu Takdir</button>
-        <button class="btn-reset" id="btnReset">Tarik Ulang</button>
+        <button class="btn-draw" id="btnDraw"><?= cms_text('celestial_btn_draw', 'Tarik Kartu Takdir') ?></button>
+        <button class="btn-reset" id="btnReset"><?= cms_text('celestial_btn_reset', 'Tarik Ulang') ?></button>
     </div>
 
     <div class="burst-container" id="burstContainer"></div>
@@ -436,7 +436,7 @@
 
             // Sembunyikan tombol draw
             document.getElementById('btnDraw').style.display = 'none';
-            document.getElementById('codexSubtitle').innerText = 'Sentuh setiap kartu untuk mengungkap takdir Anda';
+            document.getElementById('codexSubtitle').innerText = '<?= cms_raw('celestial_msg_touch', 'Sentuh setiap kartu untuk mengungkap takdir Anda') ?>';
 
             // Aktifkan klik pada kartu
             document.querySelectorAll('.tarot-card').forEach(card => {
@@ -464,7 +464,7 @@
                 // Jika semua 3 sudah terbuka
                 if (flippedCount >= 3) {
                     setTimeout(() => {
-                        document.getElementById('codexSubtitle').innerText = '"Takdir telah berbicara. Simpan kebijaksanaannya."';
+                        document.getElementById('codexSubtitle').innerText = '<?= cms_raw('celestial_msg_fate', '"Takdir telah berbicara. Simpan kebijaksanaannya."') ?>';
                         document.getElementById('codexSubtitle').style.color = '#d4af37';
                         document.getElementById('btnReset').style.display = 'inline-block';
                         gsap.from('#btnReset', { opacity: 0, y: 10, duration: 0.5 });
@@ -482,7 +482,7 @@
                 card.classList.remove('flipped');
             });
 
-            document.getElementById('codexSubtitle').innerText = 'Tarik tiga kartu untuk mengungkap takdir Anda hari ini';
+            document.getElementById('codexSubtitle').innerText = '<?= cms_raw('celestial_subtitle', 'Tarik tiga kartu untuk mengungkap takdir Anda hari ini') ?>';
             document.getElementById('codexSubtitle').style.color = '#7b8e9b';
 
             setTimeout(() => {

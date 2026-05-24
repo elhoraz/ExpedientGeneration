@@ -22,9 +22,10 @@
         body {
             margin: 0; padding: 0;
             background-color: var(--enigma-dark);
-            overflow: hidden;
             user-select: none;
             font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
         }
 
         .btn-back-vault {
@@ -246,13 +247,21 @@
 
         @media (max-width: 768px) {
             .btn-back-vault { top: 20px; left: 20px; padding: 8px 15px; font-size: 10px; }
+            .enigma-wrapper { height: auto; min-height: 100vh; padding: 80px 20px 40px 20px; justify-content: flex-start; }
+            .vault-container { width: clamp(280px, 90vw, 350px); margin-bottom: 20px; }
+        }
+        @media (min-width: 769px) {
+            .enigma-wrapper { flex-direction: row; gap: 60px; }
+            .riddle-box { text-align: left; }
+            .riddle-text { text-align: left !important; }
+            .vault-container { width: 450px; }
         }
     </style>
 </head>
 <body>
 
     <a href="/fitur" class="btn-back-vault">
-        <i class="fa-solid fa-chevron-left"></i> Exit Enigma
+        <i class="fa-solid fa-chevron-left"></i> <?= cms_text('enigma_btn_exit', 'Exit Enigma') ?>
     </a>
 
     <div class="enigma-wrapper">
@@ -269,36 +278,37 @@
         </div>
 
         <div class="riddle-box">
-            <div class="riddle-title">Tahap Refleksi <?= isset($progress) ? $progress['current_level'] : 1 ?></div>
-            <div class="riddle-text">
-                <?= isset($puzzle) ? $puzzle['question'] : "Identitas Sejati tersembunyi dalam struktur." ?>
-            </div>
+            <div class="riddle-title"><?= cms_text('enigma_riddle_title', 'The Grand Alignment') ?></div>
             
             <?php if(isset($progress) && $progress['is_completed']): ?>
                 <div style="margin-top: 20px; color: #00ff88; font-weight: bold; letter-spacing: 2px;">
-                    SIMPUL TELAH TERPECAHKAN.
+                    <?= cms_text('enigma_solved_msg', 'SIMPUL TELAH TERPECAHKAN.') ?>
+                </div>
+                <div style="margin-top: 20px;">
+                    <a href="/enigma/reset" class="btn-return" style="opacity: 1; transform: none; display: inline-block; padding: 10px 25px; margin-top: 0; background: transparent; border-color: #ff3366; color: #ff3366; font-size: 0.8rem;"><?= cms_text('enigma_btn_relock_main', 'KUNCI ULANG BRANKAS') ?></a>
                 </div>
             <?php else: ?>
-                <form action="/enigma/verify" method="POST" style="margin-top: 25px; display: flex; flex-direction: column; align-items: center; gap: 15px;">
-                    <?= csrf_field() ?>
-                    <input type="text" name="answer" placeholder="Tuliskan pemahaman Anda..." required 
-                        style="width: 100%; max-width: 300px; padding: 12px; background: rgba(0,0,0,0.5); border: 1px solid var(--enigma-gold); color: #fff; font-family: 'Courier New', monospace; text-align: center; border-radius: 8px;">
-                    <button type="submit" class="btn-return" style="opacity: 1; transform: none; display: inline-block; padding: 10px 25px; margin-top: 0;">Konfirmasi Kebijaksanaan</button>
-                </form>
-            <?php endif; ?>
-            
-            <?php if(session()->getFlashdata('error')): ?>
-                <div style="margin-top: 15px; color: #ff3366; font-size: 0.85rem; letter-spacing: 1px;"><?= session()->getFlashdata('error') ?></div>
-            <?php endif; ?>
-            <?php if(session()->getFlashdata('success')): ?>
-                <div style="margin-top: 15px; color: #00ff88; font-size: 0.85rem; letter-spacing: 1px;"><?= session()->getFlashdata('success') ?></div>
+                <div class="riddle-text" style="text-align: left; display: inline-block; margin-top: 15px;">
+                    <em><?= cms_text('enigma_riddle_intro', 'Selaraskan cincin untuk membuka gerbang:') ?></em><br><br>
+                    <strong><?= cms_text('enigma_riddle_lapis_luar', 'Lapis Luar:') ?></strong> <?= cms_text('enigma_riddle_clue_luar', 'Bintang kejayaan peradaban.') ?><br>
+                    <strong><?= cms_text('enigma_riddle_lapis_tengah', 'Lapis Tengah:') ?></strong> <?= cms_text('enigma_riddle_clue_tengah', 'Perisai waktu lima waktu.') ?><br>
+                    <strong><?= cms_text('enigma_riddle_lapis_dalam', 'Lapis Dalam:') ?></strong> <?= cms_text('enigma_riddle_clue_dalam', 'Yang Maha Esa.') ?><br>
+                </div>
+                
+                <div style="margin-top: 30px;">
+                    <button id="btnUnlock" class="btn-return" style="opacity: 1; transform: none; display: inline-block; padding: 12px 30px; margin-top: 0; background: var(--enigma-gold); color: #000; font-weight: bold;"><?= cms_text('enigma_btn_initiate', 'INISIASI PEMBUKAAN') ?></button>
+                </div>
+                <div id="errorMsg" style="margin-top: 15px; color: #ff3366; font-size: 0.85rem; letter-spacing: 1px; display: none;"><?= cms_text('enigma_error_msg', 'Kombinasi tidak selaras. Getaran ditolak.') ?></div>
             <?php endif; ?>
         </div>
 
         <div class="success-overlay" id="successOverlay">
-            <div class="clearance-title">Clearance: Apex</div>
-            <div class="secret-quote">"Intelijen sejati bukanlah mengetahui segalanya,<br>melainkan melihat apa yang disembunyikan oleh dunia."</div>
-            <a href="/fitur" class="btn-return">Kembali ke Vault</a>
+            <div class="clearance-title"><?= cms_text('enigma_clearance_title', 'Clearance: Apex') ?></div>
+            <div class="secret-quote"><?= cms_html('enigma_secret_quote', '"Intelijen sejati bukanlah mengetahui segalanya,<br>melainkan melihat apa yang disembunyikan oleh dunia."') ?></div>
+            <div style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;" class="action-buttons">
+                <a href="/fitur" class="btn-return"><?= cms_text('enigma_btn_return_vault', 'Kembali ke Vault') ?></a>
+                <a href="/enigma/reset" class="btn-return" style="background: transparent; border-color: #ff3366; color: #ff3366;"><?= cms_text('enigma_btn_relock', 'Kunci Ulang') ?></a>
+            </div>
         </div>
     </div>
 
@@ -361,8 +371,7 @@
 
         // Interaksi Drag/Putar
         let activeRing = null;
-        let startAngle = 0;
-        let initialRotation = 0;
+        let lastAngle = 0;
         let isUnlocked = false;
 
         function getAngle(x, y, rect) {
@@ -381,8 +390,7 @@
             const clientX = e.touches ? e.touches[0].clientX : e.clientX;
             const clientY = e.touches ? e.touches[0].clientY : e.clientY;
             
-            startAngle = getAngle(clientX, clientY, rect);
-            initialRotation = ringRotations[activeRing];
+            lastAngle = getAngle(clientX, clientY, rect);
             
             ring.style.cursor = 'grabbing';
             e.stopPropagation();
@@ -398,21 +406,25 @@
             const clientY = e.touches ? e.touches[0].clientY : e.clientY;
             
             const currentAngle = getAngle(clientX, clientY, rect);
-            let deltaAngle = currentAngle - startAngle;
+            let deltaAngle = currentAngle - lastAngle;
             
             // Memperbaiki lompatan kalkulasi sudut (saat melewati -180/180)
             if (deltaAngle > 180) deltaAngle -= 360;
             if (deltaAngle < -180) deltaAngle += 360;
 
-            let newRotation = initialRotation + deltaAngle;
+            let currentRot = gsap.getProperty(ringElement, "rotation");
+            let newRotation = currentRot + deltaAngle;
             
             gsap.set(ringElement, { rotation: newRotation });
+            
+            lastAngle = currentAngle; // Update untuk frame berikutnya
         }
 
         function onPointerUp(e) {
             if (activeRing === null || isUnlocked) return;
             
-            const ringElement = rings[activeRing];
+            const currentRingIndex = activeRing; // Capture block-scoped variable for closure
+            const ringElement = rings[currentRingIndex];
             ringElement.style.cursor = 'grab';
             
             // Dapatkan rotasi aktual dari GSAP (bisa jadi negatif atau >360)
@@ -421,14 +433,13 @@
             // Snap ke kelipatan 36 terdekat (efek mekanik)
             let snappedRot = Math.round(finalRot / 36) * 36;
             
+            // Perbarui state SEGERA agar tidak ada race condition jika di-klik cepat
+            ringRotations[currentRingIndex] = snappedRot;
+
             gsap.to(ringElement, { 
                 rotation: snappedRot, 
                 duration: 0.3, 
-                ease: "back.out(1.5)",
-                onComplete: () => {
-                    ringRotations[activeRing] = snappedRot;
-                    checkSolution();
-                }
+                ease: "back.out(1.5)"
             });
 
             // Haptic Audio Simulasi
@@ -459,8 +470,61 @@
             return (10 - steps) % 10;
         }
 
-        function checkSolution() {
-            // Evaluasi di backend, ring putar hanya interaksi visual haptic
+        const btnUnlock = document.getElementById('btnUnlock');
+        if (btnUnlock) {
+            btnUnlock.addEventListener('click', () => {
+                const errorMsg = document.getElementById('errorMsg');
+                errorMsg.style.display = 'none';
+
+                // Ambil rotasi aktual
+                let r0 = gsap.getProperty(rings[0], "rotation");
+                let r1 = gsap.getProperty(rings[1], "rotation");
+                let r2 = gsap.getProperty(rings[2], "rotation");
+
+                let combo = [getTopIndex(r0), getTopIndex(r1), getTopIndex(r2)];
+
+                // Animasi loading kecil
+                btnUnlock.innerText = "<?= cms_raw('enigma_btn_verify', 'MEMVERIFIKASI...') ?>";
+                btnUnlock.style.opacity = 0.5;
+                btnUnlock.style.pointerEvents = 'none';
+
+                fetch('/enigma/verify', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': '<?= csrf_hash() ?>'
+                    },
+                    body: JSON.stringify({ combination: combo })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        btnUnlock.innerText = "<?= cms_raw('enigma_btn_access', 'AKSES DIBERIKAN') ?>";
+                        btnUnlock.style.background = "#00ff88";
+                        triggerUnlock();
+                    } else {
+                        // Gagal
+                        btnUnlock.innerText = "<?= cms_raw('enigma_btn_initiate', 'INISIASI PEMBUKAAN') ?>";
+                        btnUnlock.style.opacity = 1;
+                        btnUnlock.style.pointerEvents = 'auto';
+                        errorMsg.style.display = 'block';
+
+                        // Shake animation
+                        gsap.to('#vaultContainer', {
+                            x: -10, duration: 0.1, yoyo: true, repeat: 5, ease: "linear",
+                            onComplete: () => { gsap.set('#vaultContainer', {x: 0}); }
+                        });
+                        if (navigator.vibrate) navigator.vibrate(200);
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    btnUnlock.innerText = "<?= cms_raw('enigma_btn_initiate', 'INISIASI PEMBUKAAN') ?>";
+                    btnUnlock.style.opacity = 1;
+                    btnUnlock.style.pointerEvents = 'auto';
+                });
+            });
         }
 
         function triggerUnlock() {
@@ -484,6 +548,12 @@
                 gsap.to('.btn-return', { opacity: 1, y: 0, duration: 1, ease: "power3.out", delay: 2.5 });
             }, 2000);
         }
+
+        <?php if(isset($progress) && $progress['is_completed']): ?>
+        setTimeout(() => {
+            triggerUnlock();
+        }, 500);
+        <?php endif; ?>
     });
     </script>
 </body>

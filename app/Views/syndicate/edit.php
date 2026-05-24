@@ -116,14 +116,14 @@ Ubah Data Bisnis - The Syndicate
 <div class="create-syndicate-container">
     
     <a href="<?= base_url('syndicate') ?>" class="btn-back-grid">
-        <i class="fa-solid fa-vault"></i> Kembali ke Jaringan
+        <i class="fa-solid fa-vault"></i> <?= cms_text('syn_create_btn_back', 'Kembali ke Jaringan') ?>
     </a>
 
     <div class="form-black-card" data-tilt data-tilt-glare data-tilt-max-glare="0.1" data-tilt-scale="1.01">
         
         <div class="form-header">
-            <h1 class="form-title">Perbarui Arsip</h1>
-            <div class="form-subtitle">The Syndicate Professional Ledger</div>
+            <h1 class="form-title"><?= cms_text('syn_edit_title', 'Perbarui Arsip') ?></h1>
+            <div class="form-subtitle"><?= cms_text('syn_create_subtitle', 'The Syndicate Professional Ledger') ?></div>
         </div>
 
         <?php if(session()->getFlashdata('validation_errors')): ?>
@@ -140,14 +140,14 @@ Ubah Data Bisnis - The Syndicate
             <?= csrf_field(); ?>
 
             <div class="form-group">
-                <label class="form-label" for="nama_bisnis">Nama Bisnis / Proyek</label>
-                <input type="text" class="form-input" id="nama_bisnis" name="nama_bisnis" placeholder="Contoh: Expedient Coffee Co." value="<?= old('nama_bisnis', $bisnis['nama_bisnis']) ?>" required>
+                <label class="form-label" for="nama_bisnis"><?= cms_text('syn_create_lbl_name', 'Nama Bisnis / Proyek') ?></label>
+                <input type="text" class="form-input" id="nama_bisnis" name="nama_bisnis" placeholder="<?= cms_raw('syn_create_ph_name', 'Contoh: Expedient Coffee Co.') ?>" value="<?= old('nama_bisnis', $bisnis['nama_bisnis']) ?>" required>
             </div>
 
             <div class="form-group">
-                <label class="form-label" for="kategori">Kategori Industri</label>
+                <label class="form-label" for="kategori"><?= cms_text('syn_create_lbl_cat', 'Kategori Industri') ?></label>
                 <select class="form-input" id="kategori" name="kategori" required>
-                    <option value="" disabled>Pilih Kategori...</option>
+                    <option value="" disabled><?= cms_text('syn_create_ph_cat', 'Pilih Kategori...') ?></option>
                     <option value="F&B" <?= old('kategori', $bisnis['kategori']) == 'F&B' ? 'selected' : '' ?>>Kuliner (F&B)</option>
                     <option value="Teknologi" <?= old('kategori', $bisnis['kategori']) == 'Teknologi' ? 'selected' : '' ?>>Teknologi</option>
                     <option value="Jasa" <?= old('kategori', $bisnis['kategori']) == 'Jasa' ? 'selected' : '' ?>>Jasa & Agensi</option>
@@ -157,17 +157,17 @@ Ubah Data Bisnis - The Syndicate
             </div>
 
             <div class="form-group">
-                <label class="form-label" for="deskripsi">Deskripsi Singkat (Max 200 karakter)</label>
-                <textarea class="form-input" id="deskripsi" name="deskripsi" maxlength="200" placeholder="Jelaskan apa yang Anda tawarkan kepada agen lain..." required><?= old('deskripsi', $bisnis['deskripsi']) ?></textarea>
+                <label class="form-label" for="deskripsi"><?= cms_text('syn_create_lbl_desc', 'Deskripsi Singkat (Max 200 karakter)') ?></label>
+                <textarea class="form-input" id="deskripsi" name="deskripsi" maxlength="200" placeholder="<?= cms_raw('syn_create_ph_desc', 'Jelaskan apa yang Anda tawarkan kepada agen lain...') ?>" required><?= old('deskripsi', $bisnis['deskripsi']) ?></textarea>
             </div>
 
             <div class="form-group">
-                <label class="form-label" for="link_url">Tautan Website / Portofolio (Opsional)</label>
+                <label class="form-label" for="link_url"><?= cms_text('syn_create_lbl_url', 'Tautan Website / Portofolio (Opsional)') ?></label>
                 <input type="url" class="form-input" id="link_url" name="link_url" placeholder="https://www.bisnisanda.com" value="<?= old('link_url', $bisnis['link_url']) ?>">
             </div>
 
             <div class="form-group">
-                <label class="form-label">Logo Bisnis (Biarkan kosong jika tidak ingin mengubah)</label>
+                <label class="form-label"><?= cms_text('syn_edit_lbl_logo', 'Logo Bisnis (Biarkan kosong jika tidak ingin mengubah)') ?></label>
                 <div class="file-upload-box" id="logoUploadBox">
                     <div class="logo-preview-box" id="logoPreviewBox" style="display: flex;">
                         <?php if (!empty($bisnis['logo_bisnis'])): ?>
@@ -178,13 +178,13 @@ Ubah Data Bisnis - The Syndicate
                         <?php endif; ?>
                     </div>
                     <i class="fa-solid fa-cloud-arrow-up upload-icon" id="uploadIcon" style="display: none;"></i>
-                    <p class="upload-text" id="uploadText">Klik untuk Mengganti Logo</p>
+                    <p class="upload-text" id="uploadText"><?= cms_text('syn_edit_ph_logo', 'Klik untuk Mengganti Logo') ?></p>
                     <input type="file" class="file-hidden" id="logo_bisnis" name="logo_bisnis" accept="image/jpeg,image/png">
                 </div>
             </div>
 
             <button type="submit" class="btn-submit-form hover-trigger">
-                <i class="fa-solid fa-save"></i> Perbarui Data Ledger
+                <i class="fa-solid fa-save"></i> <?= cms_text('syn_edit_btn_submit', 'Perbarui Data Ledger') ?>
             </button>
         </form>
     </div>

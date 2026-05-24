@@ -354,8 +354,8 @@
                     
                     <img src="/images/logo-utuh.png" class="logo-utuh" alt="Expedient Logo" id="logoUtuh">
                 </div>
-                <div class="subtitle-spec">Expedient Generation</div>
-                <h1 class="title-holo">Portal Utama</h1>
+                <div class="subtitle-spec"><?= cms_text('login_subtitle', 'Expedient Generation') ?></div>
+                <h1 class="title-holo"><?= cms_text('login_title', 'Portal Utama') ?></h1>
             </div>
 
             <form action="<?= base_url('auth/login') ?>" method="POST">
@@ -363,13 +363,13 @@
                 
                 <div class="input-group">
                     <input type="email" name="email" id="email" class="input-control" required placeholder=" ">
-                    <label for="email" class="input-label">Surel Resmi</label>
+                    <label for="email" class="input-label"><?= cms_text('login_label_email', 'Surel Resmi') ?></label>
                     <div class="input-neon-line"></div>
                 </div>
                 
                 <div class="input-group">
                     <input type="password" id="inputPw" name="password" class="input-control" required placeholder=" ">
-                    <label for="inputPw" class="input-label">Kata Sandi Akses</label>
+                    <label for="inputPw" class="input-label"><?= cms_text('login_label_password', 'Kata Sandi Akses') ?></label>
                     <div class="input-neon-line"></div>
                     <i class="fa-solid fa-eye icon-eye" id="togglePw"></i>
                 </div>
@@ -377,36 +377,36 @@
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-top:-10px; margin-bottom:15px; transform:translateZ(25px);">
                     <label style="color:var(--text-muted); font-size:clamp(0.7rem,1.3vh,0.8rem); display:flex; align-items:center; gap:5px; cursor:pointer;">
                         <input type="checkbox" name="remember" style="accent-color:#d4af37; cursor:pointer;">
-                        Ingat Saya
+                        <?= cms_text('login_label_remember', 'Ingat Saya') ?>
                     </label>
                     <a href="<?= base_url('auth/forgot-password') ?>" style="color:var(--text-muted);font-size:clamp(0.7rem,1.3vh,0.8rem);text-decoration:none;transition:0.3s;border-bottom:1px solid transparent;" onmouseover="this.style.color='#d4af37';this.style.borderColor='#d4af37'" onmouseout="this.style.color='var(--text-muted)';this.style.borderColor='transparent'">
-                        <i class="fa-solid fa-key" style="font-size:0.65rem;margin-right:4px;"></i>Lupa Sandi?
+                        <i class="fa-solid fa-key" style="font-size:0.65rem;margin-right:4px;"></i><?= cms_text('login_label_forgot', 'Lupa Sandi?') ?>
                     </a>
                 </div>
 
                 <div class="btn-rack">
                     <div class="magnetic-wrap">
                         <button type="submit" class="btn-prime magnetic-btn" id="btnPrime">
-                            Inisiasi Masuk <i class="fa-solid fa-arrow-right-long"></i>
+                            <?= cms_text('login_btn_submit', 'Inisiasi Masuk') ?> <i class="fa-solid fa-arrow-right-long"></i>
                         </button>
                     </div>
 
-                    <div class="divider"><hr><span>ALTERNATIF</span><hr></div>
+                    <div class="divider"><hr><span><?= cms_text('login_divider', 'ALTERNATIF') ?></span><hr></div>
                     
                     <div class="magnetic-wrap">
                         <button type="button" class="btn-bio magnetic-btn" id="btnBiometricLogin">
-                            <i class="fa-solid fa-fingerprint" style="font-size: 1.1rem;"></i> Pemindaian Biometrik
+                            <i class="fa-solid fa-fingerprint" style="font-size: 1.1rem;"></i> <?= cms_text('login_btn_bio', 'Pemindaian Biometrik') ?>
                         </button>
                     </div>
                 </div>
             </form>
 
             <div class="register-link">
-                Identitas belum terdaftar? <a href="<?= base_url('auth/register') ?>">Ajukan Registrasi</a>
+                <?= cms_text('login_reg_prompt', 'Identitas belum terdaftar?') ?> <a href="<?= base_url('auth/register') ?>"><?= cms_text('login_reg_link', 'Ajukan Registrasi') ?></a>
             </div>
             
             <div class="register-link" style="margin-top: 10px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.05);">
-                <a href="<?= base_url('/') ?>"><i class="fa-solid fa-arrow-left"></i> Kembali ke Gerbang Utama</a>
+                <a href="<?= base_url('/') ?>"><i class="fa-solid fa-arrow-left"></i> <?= cms_text('login_back_link', 'Kembali ke Gerbang Utama') ?></a>
             </div>
 
         </div>
@@ -415,7 +415,7 @@
     <!-- Modal Panduan Instalasi -->
     <div class="install-modal" id="installModal">
         <div class="install-content">
-            <h2 class="install-title">Instalasi VVIP App</h2>
+            <h2 class="install-title"><?= cms_text('install_modal_title', 'Instalasi VVIP App') ?></h2>
             
             <div class="install-step">
                 <div class="step-icon"><i class="fa-brands fa-android"></i></div>

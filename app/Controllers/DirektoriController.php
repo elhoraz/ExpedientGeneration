@@ -13,7 +13,7 @@ class DirektoriController extends BaseController
         $search = $this->request->getGet('q');
 
         if ($isLoggedIn) {
-            $builder = $userModel->orderBy('nama_lengkap', 'ASC');
+            $builder = $userModel->where('role !=', 'admin')->orderBy('nama_lengkap', 'ASC');
             if (!empty($search)) {
                 $builder->groupStart()
                     ->like('nama_lengkap', $search)
@@ -25,6 +25,7 @@ class DirektoriController extends BaseController
         } else {
             $builder = $userModel
                 ->select('id, nama_lengkap, nama_panggilan, foto_profil')
+                ->where('role !=', 'admin')
                 ->orderBy('nama_lengkap', 'ASC');
             if (!empty($search)) {
                 $builder->groupStart()

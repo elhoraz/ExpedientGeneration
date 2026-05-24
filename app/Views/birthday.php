@@ -281,14 +281,14 @@ $fontUrl = 'https://fonts.googleapis.com/css2?family=' . urlencode($f[0]) . ':wg
         </div>
 
         <!-- Pre-title -->
-        <div class="bday-pretitle bday-body bday-sub bday-anim-el">Selamat Ulang Tahun</div>
+        <div class="bday-pretitle bday-body bday-sub bday-anim-el"><?= cms_text('bday_pretitle', 'Selamat Ulang Tahun') ?></div>
 
         <!-- Name -->
         <h1 class="bday-name bday-heading bday-text bday-anim-el"><?= esc($user['nama_panggilan']) ?></h1>
 
         <!-- Age -->
         <div class="bday-age bday-body bday-text bday-anim-el">
-            Ke-<strong style="font-size: 1.4em;"><?= $usia ?></strong> Tahun
+            <?= cms_text('bday_age_prefix', 'Ke-') ?><strong style="font-size: 1.4em;"><?= $usia ?></strong> <?= cms_text('bday_age_suffix', 'Tahun') ?>
         </div>
 
         <!-- Zodiak -->
@@ -306,18 +306,18 @@ $fontUrl = 'https://fonts.googleapis.com/css2?family=' . urlencode($f[0]) . ':wg
 
         <!-- Wishes -->
         <p class="bday-wishes bday-body bday-sub bday-anim-el">
-            Semoga Allah SWT senantiasa melimpahkan keberkahan, kesehatan, dan kebahagiaan di setiap langkahmu. Barakallahu fiik! 🤲
+            <?= cms_text('bday_wishes', 'Semoga Allah SWT senantiasa melimpahkan keberkahan, kesehatan, dan kebahagiaan di setiap langkahmu. Barakallahu fiik! 🤲') ?>
         </p>
 
         <!-- Share Button -->
         <div class="bday-anim-el">
             <a href="https://wa.me/?text=🎂 Selamat Ulang Tahun <?= urlencode($user['nama_panggilan']) ?>! Lihat ucapannya di: <?= urlencode(base_url('birthday/' . $user['id'])) ?>" target="_blank" class="bday-share-btn bday-body">
-                <i class="fa-brands fa-whatsapp"></i> Kirim Ucapan
+                <i class="fa-brands fa-whatsapp"></i> <?= cms_text('bday_btn_share', 'Kirim Ucapan') ?>
             </a>
         </div>
     </div>
 
-    <div class="bday-watermark bday-body bday-text">Expedient Generation — 42nd Arrisalah</div>
+    <div class="bday-watermark bday-body bday-text"><?= cms_text('bday_watermark', 'Expedient Generation — 42nd Arrisalah') ?></div>
 </div>
 <?= $this->endSection() ?>
 

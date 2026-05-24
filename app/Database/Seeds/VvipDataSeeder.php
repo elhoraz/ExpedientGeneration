@@ -58,21 +58,21 @@ class VvipDataSeeder extends Seeder
 
         // 2. Divine Verses
         $verses = [
-            ['ar' => 'فَإِنَّ مَعَ الْعُسْرِ يُسْرًا', 'lt' => "Fa inna ma'al 'usri yusraa", 'mn' => 'Maka sesungguhnya bersama kesulitan ada kemudahan.', 'src' => 'QS. Al-Insyirah: 5'],
-            ['ar' => 'إِنَّ اللَّهَ مَعَ الصَّابِرِينَ', 'lt' => "Innallaha ma'as-shaabirin", 'mn' => 'Sesungguhnya Allah bersama orang-orang yang sabar.', 'src' => 'QS. Al-Baqarah: 153'],
-            ['ar' => 'وَتَوَكَّلْ عَلَى اللَّهِ ۚ وَكَفَىٰ بِاللَّهِ وَكِيلًا', 'lt' => "Wa tawakkal 'alallah, wa kafaa billahi wakeelaa", 'mn' => 'Dan bertawakallah kepada Allah. Dan cukuplah Allah sebagai pelindung.', 'src' => 'QS. Al-Ahzab: 3'],
-            ['ar' => 'وَمَن يَتَّقِ اللَّهَ يَجْعَل لَّهُ مَخْرَجًا', 'lt' => 'Wa man yattaqillaha yaj\'al lahu makhrajaa', 'mn' => 'Barangsiapa bertakwa kepada Allah, niscaya Dia akan membukakan jalan keluar baginya.', 'src' => 'QS. At-Talaq: 2'],
-            ['ar' => 'رَبِّ اشْرَحْ لِي صَدْرِي', 'lt' => 'Rabbisy-rahli shadri', 'mn' => 'Ya Tuhanku, lapangkanlah dadaku.', 'src' => 'QS. Taha: 25'],
-            ['ar' => 'وَلَسَوْفَ يُعْطِيكَ رَبُّكَ فَتَرْضَىٰ', 'lt' => 'Wa lasaufa yu\'tiika rabbuka fatardaa', 'mn' => 'Dan kelak Tuhanmu pasti memberikan karunia-Nya kepadamu, sehingga engkau menjadi puas.', 'src' => 'QS. Ad-Duha: 5'],
-            ['ar' => 'إِنَّ اللَّهَ لَا يُضِيعُ أَجْرَ الْمُحْسِنِينَ', 'lt' => 'Innallaha laa yudii\'u ajral muhsiniin', 'mn' => 'Sesungguhnya Allah tidak menyia-nyiakan pahala orang yang berbuat baik.', 'src' => 'QS. At-Taubah: 120'],
-            ['ar' => 'وَاللَّهُ خَيْرُ الرَّازِقِينَ', 'lt' => 'Wallahu khairur-raaziqiin', 'mn' => 'Dan Allah adalah sebaik-baik pemberi rezeki.', 'src' => 'QS. Al-Jumu\'ah: 11'],
-            ['ar' => 'لَا تَحْزَنْ إِنَّ اللَّهَ مَعَنَا', 'lt' => 'Laa tahzan innallaha ma\'anaa', 'mn' => 'Janganlah engkau bersedih, sesungguhnya Allah bersama kita.', 'src' => 'QS. At-Taubah: 40'],
-            ['ar' => 'وَنَحْنُ أَقْرَبُ إِلَيْهِ مِنْ حَبْلِ الْوَرِيدِ', 'lt' => 'Wa nahnu aqrabu ilaihi min hablil wariid', 'mn' => 'Dan Kami lebih dekat kepadanya daripada urat lehernya sendiri.', 'src' => 'QS. Qaf: 16'],
-            ['ar' => 'ادْعُونِي أَسْتَجِبْ لَكُمْ', 'lt' => 'Ud\'uunii astajib lakum', 'mn' => 'Berdoalah kepada-Ku, niscaya akan Aku perkenankan bagimu.', 'src' => 'QS. Ghafir: 60'],
-            ['ar' => 'إِنَّ اللَّهَ يُحِبُّ الْمُتَوَكِّلِينَ', 'lt' => 'Innallaha yuhibbul mutawakkiliin', 'mn' => 'Sesungguhnya Allah menyukai orang-orang yang bertawakal.', 'src' => 'QS. Ali Imran: 159'],
-            ['ar' => 'فَاذْكُرُونِي أَذْكُرْكُمْ', 'lt' => 'Fadzkuruunii adzkurkum', 'mn' => 'Maka ingatlah kepada-Ku, niscaya Aku akan mengingat kalian.', 'src' => 'QS. Al-Baqarah: 152'],
-            ['ar' => 'لَا يُكَلِّفُ اللَّهُ نَفْسًا إِلَّا وُسْعَهَا', 'lt' => 'Laa yukallifullaahu nafsan illaa wus\'ahaa', 'mn' => 'Allah tidak membebani seseorang melainkan sesuai kesanggupannya.', 'src' => 'QS. Al-Baqarah: 286'],
-            ['ar' => 'وَعَسَىٰ أَن تَكْرَهُوا شَيْئًا وَهُوَ خَيْرٌ لَّكُمْ', 'lt' => 'Wa \'asaa an takrahuu syai\'an wa huwa khairul lakum', 'mn' => 'Boleh jadi kamu membenci sesuatu padahal ia amat baik bagimu.', 'src' => 'QS. Al-Baqarah: 216'],
+            ['arabic' => 'فَإِنَّ مَعَ الْعُسْرِ يُسْرًا', 'latin' => "Fa inna ma'al 'usri yusraa", 'meaning' => 'Maka sesungguhnya bersama kesulitan ada kemudahan.', 'source' => 'QS. Al-Insyirah: 5'],
+            ['arabic' => 'إِنَّ اللَّهَ مَعَ الصَّابِرِينَ', 'latin' => "Innallaha ma'as-shaabirin", 'meaning' => 'Sesungguhnya Allah bersama orang-orang yang sabar.', 'source' => 'QS. Al-Baqarah: 153'],
+            ['arabic' => 'وَتَوَكَّلْ عَلَى اللَّهِ ۚ وَكَفَىٰ بِاللَّهِ وَكِيلًا', 'latin' => "Wa tawakkal 'alallah, wa kafaa billahi wakeelaa", 'meaning' => 'Dan bertawakallah kepada Allah. Dan cukuplah Allah sebagai pelindung.', 'source' => 'QS. Al-Ahzab: 3'],
+            ['arabic' => 'وَمَن يَتَّقِ اللَّهَ يَجْعَل لَّهُ مَخْرَجًا', 'latin' => 'Wa man yattaqillaha yaj\'al lahu makhrajaa', 'meaning' => 'Barangsiapa bertakwa kepada Allah, niscaya Dia akan membukakan jalan keluar baginya.', 'source' => 'QS. At-Talaq: 2'],
+            ['arabic' => 'رَبِّ اشْرَحْ لِي صَدْرِي', 'latin' => 'Rabbisy-rahli shadri', 'meaning' => 'Ya Tuhanku, lapangkanlah dadaku.', 'source' => 'QS. Taha: 25'],
+            ['arabic' => 'وَلَسَوْفَ يُعْطِيكَ رَبُّكَ فَتَرْضَىٰ', 'latin' => 'Wa lasaufa yu\'tiika rabbuka fatardaa', 'meaning' => 'Dan kelak Tuhanmu pasti memberikan karunia-Nya kepadamu, sehingga engkau menjadi puas.', 'source' => 'QS. Ad-Duha: 5'],
+            ['arabic' => 'إِنَّ اللَّهَ لَا يُضِيعُ أَجْرَ الْمُحْسِنِينَ', 'latin' => 'Innallaha laa yudii\'u ajral muhsiniin', 'meaning' => 'Sesungguhnya Allah tidak menyia-nyiakan pahala orang yang berbuat baik.', 'source' => 'QS. At-Taubah: 120'],
+            ['arabic' => 'وَاللَّهُ خَيْرُ الرَّازِقِينَ', 'latin' => 'Wallahu khairur-raaziqiin', 'meaning' => 'Dan Allah adalah sebaik-baik pemberi rezeki.', 'source' => 'QS. Al-Jumu\'ah: 11'],
+            ['arabic' => 'لَا تَحْزَنْ إِنَّ اللَّهَ مَعَنَا', 'latin' => 'Laa tahzan innallaha ma\'anaa', 'meaning' => 'Janganlah engkau bersedih, sesungguhnya Allah bersama kita.', 'source' => 'QS. At-Taubah: 40'],
+            ['arabic' => 'وَنَحْنُ أَقْرَبُ إِلَيْهِ مِنْ حَبْلِ الْوَرِيدِ', 'latin' => 'Wa nahnu aqrabu ilaihi min hablil wariid', 'meaning' => 'Dan Kami lebih dekat kepadanya daripada urat lehernya sendiri.', 'source' => 'QS. Qaf: 16'],
+            ['arabic' => 'ادْعُونِي أَسْتَجِبْ لَكُمْ', 'latin' => 'Ud\'uunii astajib lakum', 'meaning' => 'Berdoalah kepada-Ku, niscaya akan Aku perkenankan bagimu.', 'source' => 'QS. Ghafir: 60'],
+            ['arabic' => 'إِنَّ اللَّهَ يُحِبُّ الْمُتَوَكِّلِينَ', 'latin' => 'Innallaha yuhibbul mutawakkiliin', 'meaning' => 'Sesungguhnya Allah menyukai orang-orang yang bertawakal.', 'source' => 'QS. Ali Imran: 159'],
+            ['arabic' => 'فَاذْكُرُونِي أَذْكُرْكُمْ', 'latin' => 'Fadzkuruunii adzkurkum', 'meaning' => 'Maka ingatlah kepada-Ku, niscaya Aku akan mengingat kalian.', 'source' => 'QS. Al-Baqarah: 152'],
+            ['arabic' => 'لَا يُكَلِّفُ اللَّهُ نَفْسًا إِلَّا وُسْعَهَا', 'latin' => 'Laa yukallifullaahu nafsan illaa wus\'ahaa', 'meaning' => 'Allah tidak membebani seseorang melainkan sesuai kesanggupannya.', 'source' => 'QS. Al-Baqarah: 286'],
+            ['arabic' => 'وَعَسَىٰ أَن تَكْرَهُوا شَيْئًا وَهُوَ خَيْرٌ لَّكُمْ', 'latin' => 'Wa \'asaa an takrahuu syai\'an wa huwa khairul lakum', 'meaning' => 'Boleh jadi kamu membenci sesuatu padahal ia amat baik bagimu.', 'source' => 'QS. Al-Baqarah: 216'],
         ];
 
         $this->db->table('divine_verses')->insertBatch($verses);

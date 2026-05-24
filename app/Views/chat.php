@@ -396,9 +396,9 @@ The Lounge - Expedient
             <?= $receiver ? esc($receiver['nama_panggilan'] ?: $receiver['nama_lengkap']) : 'The Lounge' ?>
         </h2>
         <div style="font-size: 0.8rem; color: var(--text-secondary); letter-spacing: 2px;">
-            <?= $receiver ? 'OBROLAN EKSKLUSIF' : 'RUANG DISKUSI ANGKATAN' ?>
+            <?= $receiver ? cms_text('chat_lbl_private', 'OBROLAN EKSKLUSIF') : cms_text('chat_lbl_public', 'RUANG DISKUSI ANGKATAN') ?>
         </div>
-        <a href="/chat" style="position:absolute; left:10px; top:5px; color:var(--text-secondary); text-decoration:none; font-size:0.8rem;"><i class="fa-solid fa-arrow-left"></i> Inbox</a>
+        <a href="/chat" style="position:absolute; left:10px; top:5px; color:var(--text-secondary); text-decoration:none; font-size:0.8rem;"><i class="fa-solid fa-arrow-left"></i> <?= cms_text('chat_btn_inbox', 'Inbox') ?></a>
         <a href="/profil" style="position:absolute; right:10px; top:5px; color:var(--text-secondary); text-decoration:none;"><i class="fa-solid fa-times"></i></a>
     </div>
 
@@ -406,7 +406,7 @@ The Lounge - Expedient
         <div class="chat-messages" id="chatMessages">
             <!-- Load More Button -->
             <?php if(count($messages) >= 50): ?>
-            <button class="load-more-btn" id="btnLoadMore">Muat Pesan Sebelumnya</button>
+            <button class="load-more-btn" id="btnLoadMore"><?= cms_text('chat_btn_load_more', 'Muat Pesan Sebelumnya') ?></button>
             <?php endif; ?>
 
             <?php foreach($messages as $msg): ?>
@@ -434,7 +434,7 @@ The Lounge - Expedient
             <?php endforeach; ?>
             <?php if(empty($messages)): ?>
                 <div style="text-align:center; color:var(--text-secondary); font-style:italic; margin:auto;" id="emptyMsg">
-                    Belum ada diskusi. Jadilah yang pertama.
+                    <?= cms_text('chat_empty_msg', 'Belum ada diskusi. Jadilah yang pertama.') ?>
                 </div>
             <?php endif; ?>
         </div>
@@ -452,7 +452,7 @@ The Lounge - Expedient
                     <img id="imgPreview" src="" alt="Preview">
                     <button class="img-preview-close" id="imgPreviewClose">&times;</button>
                 </div>
-                <input type="text" id="chatInput" class="chat-input" placeholder="Tulis pesan..." autocomplete="off" maxlength="1000">
+                <input type="text" id="chatInput" class="chat-input" placeholder="<?= cms_raw('chat_ph_input', 'Tulis pesan...') ?>" autocomplete="off" maxlength="1000">
                 <div class="char-counter" id="charCounter">0 / 1000</div>
             </div>
             <button id="btnSendChat" class="btn-send"><i class="fa-solid fa-paper-plane"></i></button>

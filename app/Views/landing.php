@@ -256,22 +256,21 @@
     <section class="landing-content">
         <div class="logo-container">
             <div class="logo-ring"></div>
-            <img src="/images/logo-utuh.png" class="logo-img" alt="Expedient Generation">
+            <?= cms_image('landing_hero_logo', '/images/logo-utuh.png', 'logo-img', 'alt="Expedient Generation"') ?>
         </div>
 
-        <p class="landing-eyebrow">42nd Pondok Modern Arrisalah</p>
-        <h1 class="landing-title">Expedient<br>Generation</h1>
+        <p class="landing-eyebrow"><?= cms_text('landing_eyebrow', '42nd Pondok Modern Arrisalah') ?></p>
+        <h1 class="landing-title"><?= cms_html('landing_title', 'Expedient<br>Generation') ?></h1>
         <p class="landing-subtitle">
-            Museum digital eksklusif dan platform komunitas alumni angkatan ke-42.
-            Menjaga warisan, membangun masa depan, mempersatukan barisan.
+            <?= cms_html('landing_subtitle', 'Museum digital eksklusif dan platform komunitas alumni angkatan ke-42.<br>Menjaga warisan, membangun masa depan, mempersatukan barisan.') ?>
         </p>
 
         <div class="cta-group">
             <a href="/login" class="btn-primary" id="ctaLogin">
-                <i class="fa-solid fa-right-to-bracket"></i> Masuk ke Portal
+                <i class="fa-solid fa-right-to-bracket"></i> <?= cms_text('landing_btn_login', 'Masuk ke Portal') ?>
             </a>
             <a href="/beranda" class="btn-secondary" id="ctaExplore">
-                <i class="fa-solid fa-compass"></i> Jelajahi Museum
+                <i class="fa-solid fa-compass"></i> <?= cms_text('landing_btn_explore', 'Jelajahi Museum') ?>
             </a>
         </div>
 
@@ -282,11 +281,11 @@
             </div>
             <div class="stat-item">
                 <div class="stat-number">2025</div>
-                <div class="stat-label">Tahun Kebangkitan</div>
+                <div class="stat-label"><?= cms_text('landing_stat_2_label', 'Tahun Kebangkitan') ?></div>
             </div>
             <div class="stat-item">
                 <div class="stat-number">12</div>
-                <div class="stat-label">Modul VVIP</div>
+                <div class="stat-label"><?= cms_text('landing_stat_3_label', 'Modul VVIP') ?></div>
             </div>
         </div>
 
@@ -298,42 +297,39 @@
 
     <!-- ====== ABOUT SECTION ====== -->
     <section class="about-section">
-        <p class="about-eyebrow">Tentang Kami</p>
-        <h2 class="about-title">Kami Bukan Sekadar Angkatan</h2>
-        <p class="about-text">
-            Kami adalah barisan pelopor yang lahir dari rahim Arrisalah, 
-            dibentuk oleh waktu, dipersatukan oleh takdir. Platform ini adalah 
-            monumen digital untuk menjaga silaturahmi, mendokumentasikan jejak langkah,
-            dan membangun masa depan bersama.
-        </p>
+        <p class="about-eyebrow"><?= cms_text('landing_about_eyebrow', 'Tentang Kami') ?></p>
+        <h2 class="about-title"><?= cms_text('landing_about_title', 'Kami Bukan Sekadar Angkatan') ?></h2>
+        <div class="about-text">
+            <?= cms_html('landing_about_desc', 'Kami adalah barisan pelopor yang lahir dari rahim Arrisalah, dibentuk oleh waktu, dipersatukan oleh takdir. Platform ini adalah monumen digital untuk menjaga silaturahmi, mendokumentasikan jejak langkah, dan membangun masa depan bersama.') ?>
+        </div>
 
         <div class="about-features">
             <div class="feature-card">
                 <div class="feature-icon"><i class="fa-solid fa-landmark"></i></div>
-                <div class="feature-title">Museum Interaktif</div>
-                <div class="feature-desc">Beranda dengan galeri kenangan, timeline sejarah, dan arsip angkatan.</div>
+                <div class="feature-title"><?= cms_text('landing_feat1_title', 'Museum Interaktif') ?></div>
+                <div class="feature-desc"><?= cms_text('landing_feat1_desc', 'Beranda dengan galeri kenangan, timeline sejarah, dan arsip angkatan.') ?></div>
             </div>
             <div class="feature-card">
                 <div class="feature-icon"><i class="fa-solid fa-earth-americas"></i></div>
-                <div class="feature-title">Global Radar</div>
-                <div class="feature-desc">Peta 3D persebaran alumni di seluruh Indonesia dan dunia.</div>
+                <div class="feature-title"><?= cms_text('landing_feat2_title', 'Global Radar') ?></div>
+                <div class="feature-desc"><?= cms_text('landing_feat2_desc', 'Peta 3D persebaran alumni di seluruh Indonesia dan dunia.') ?></div>
             </div>
             <div class="feature-card">
                 <div class="feature-icon"><i class="fa-solid fa-id-card"></i></div>
-                <div class="feature-title">Sovereign ID</div>
-                <div class="feature-desc">Kartu identitas VVIP 3D dengan teknologi Three.js dan WebAuthn.</div>
+                <div class="feature-title"><?= cms_text('landing_feat3_title', 'Sovereign ID') ?></div>
+                <div class="feature-desc"><?= cms_text('landing_feat3_desc', 'Kartu identitas VVIP 3D dengan teknologi Three.js dan WebAuthn.') ?></div>
             </div>
             <div class="feature-card">
                 <div class="feature-icon"><i class="fa-solid fa-gem"></i></div>
-                <div class="feature-title">12 Modul VVIP</div>
-                <div class="feature-desc">Oracle Vision, Enigma Vault, Celestial Codex, dan banyak lagi.</div>
+                <div class="feature-title"><?= cms_text('landing_feat4_title', '12 Modul VVIP') ?></div>
+                <div class="feature-desc"><?= cms_text('landing_feat4_desc', 'Oracle Vision, Enigma Vault, Celestial Codex, dan banyak lagi.') ?></div>
             </div>
         </div>
     </section>
 
     <!-- ====== FOOTER ====== -->
     <footer class="landing-footer">
-        &copy; <?= date('Y') ?> Expedient Generation — 42nd Pondok Modern Arrisalah
+        &copy; <?= date('Y') ?> <?= cms_text('landing_footer_text', 'Expedient Generation — 42nd Pondok Modern Arrisalah') ?>
     </footer>
 
     <script>

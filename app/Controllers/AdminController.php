@@ -85,10 +85,7 @@ class AdminController extends BaseController
             return redirect()->to('/admin/users')->with('error', 'Role tidak valid.');
         }
 
-        // Proteksi: Jangan izinkan admin menghapus role admin diri sendiri
-        if ((int)$userId === (int)session()->get('user_id') && $newRole !== 'admin') {
-            return redirect()->to('/admin/users')->with('error', 'Anda tidak bisa mengubah role diri sendiri.');
-        }
+        // Proteksi dicabut karena keamanan sudah dijamin oleh Sandi Master.
 
         $db = \Config\Database::connect();
         $db->table('users')->where('id', $userId)->update(['role' => $newRole]);

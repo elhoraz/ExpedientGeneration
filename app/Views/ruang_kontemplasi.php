@@ -215,9 +215,9 @@ Ruang Kontemplasi - The Sanctuary
 
     <!-- Intro Overlay -->
     <div class="start-overlay" id="startOverlay">
-        <h1 class="start-title">Ruang Kontemplasi</h1>
-        <p class="start-desc">Tinggalkan sejenak urusan duniawi. Posisikan diri Anda dengan nyaman, aktifkan suara, dan ikuti ritme keheningan.</p>
-        <button class="btn-start" onclick="beginSanctuary()">Mulai Keheningan</button>
+        <h1 class="start-title"><?= cms_text('kontemplasi_title', 'Ruang Kontemplasi') ?></h1>
+        <p class="start-desc"><?= cms_text('kontemplasi_desc', 'Tinggalkan sejenak urusan duniawi. Posisikan diri Anda dengan nyaman, aktifkan suara, dan ikuti ritme keheningan.') ?></p>
+        <button class="btn-start" onclick="beginSanctuary()"><?= cms_text('kontemplasi_btn_start', 'Mulai Keheningan') ?></button>
     </div>
 
     <!-- Breathing Orb -->
@@ -231,43 +231,43 @@ Ruang Kontemplasi - The Sanctuary
     <div class="stealth-controls">
         <a href="/fitur" class="stealth-btn">
             <i class="fa-solid fa-person-walking-arrow-loop-left"></i>
-            <span>Kembali</span>
+            <span><?= cms_text('kontemplasi_btn_back', 'Kembali') ?></span>
         </a>
         <button class="stealth-btn" id="btnAudio" onclick="toggleAudio()">
             <i class="fa-solid fa-volume-xmark"></i>
-            <span>Audio Mati</span>
+            <span><?= cms_text('kontemplasi_btn_audio', 'Audio Mati') ?></span>
         </button>
         <button class="stealth-btn" id="btnToggleJournal">
             <i class="fa-solid fa-feather-pointed"></i>
-            <span>Jurnal</span>
+            <span><?= cms_text('kontemplasi_btn_journal', 'Jurnal') ?></span>
         </button>
     </div>
 
     <!-- Journal Panel -->
     <div class="journal-panel" id="journalPanel">
-        <div class="panel-title">Tulis Kontemplasi</div>
+        <div class="panel-title"><?= cms_text('kontemplasi_panel_title', 'Tulis Kontemplasi') ?></div>
         <form action="/kontemplasi/store" method="POST" class="journal-form">
             <?= csrf_field() ?>
-            <textarea name="content" rows="4" placeholder="Apa yang Anda renungkan hari ini? Tuliskan isi pikiran Anda dengan jujur..." required></textarea>
+            <textarea name="content" rows="4" placeholder="<?= cms_raw('kontemplasi_ph_journal', 'Apa yang Anda renungkan hari ini? Tuliskan isi pikiran Anda dengan jujur...') ?>" required></textarea>
             
             <div style="display:flex; gap:10px; margin-bottom:15px;">
                 <select name="mood" style="margin-bottom:0; flex:1;">
-                    <option value="Netral">Mood: Netral</option>
-                    <option value="Damai">Mood: Damai</option>
-                    <option value="Gelisah">Mood: Gelisah</option>
-                    <option value="Bersyukur">Mood: Bersyukur</option>
-                    <option value="Terbebani">Mood: Terbebani</option>
+                    <option value="Netral"><?= cms_text('kontemplasi_mood_netral', 'Mood: Netral') ?></option>
+                    <option value="Damai"><?= cms_text('kontemplasi_mood_damai', 'Mood: Damai') ?></option>
+                    <option value="Gelisah"><?= cms_text('kontemplasi_mood_gelisah', 'Mood: Gelisah') ?></option>
+                    <option value="Bersyukur"><?= cms_text('kontemplasi_mood_syukur', 'Mood: Bersyukur') ?></option>
+                    <option value="Terbebani"><?= cms_text('kontemplasi_mood_beban', 'Mood: Terbebani') ?></option>
                 </select>
             </div>
             
             <label style="display:flex; align-items:center; gap:10px; font-size:0.8rem; color:#888; margin-bottom:15px; cursor:pointer;">
-                <input type="checkbox" name="is_private" value="1" checked style="width:auto; margin:0;"> Kunci sebagai Jurnal Privat
+                <input type="checkbox" name="is_private" value="1" checked style="width:auto; margin:0;"> <?= cms_text('kontemplasi_label_private', 'Kunci sebagai Jurnal Privat') ?>
             </label>
             
-            <button type="submit" class="btn-submit-journal">Rekam Jejak</button>
+            <button type="submit" class="btn-submit-journal"><?= cms_text('kontemplasi_btn_submit', 'Rekam Jejak') ?></button>
         </form>
 
-        <div class="panel-title" style="margin-top:20px;">Catatan Refleksi Anda</div>
+        <div class="panel-title" style="margin-top:20px;"><?= cms_text('kontemplasi_history_title', 'Catatan Refleksi Anda') ?></div>
         <?php if(!empty($journals)): ?>
             <?php foreach($journals as $j): ?>
                 <div class="journal-card">
@@ -275,12 +275,12 @@ Ruang Kontemplasi - The Sanctuary
                     <div class="journal-date"><?= date('d M Y - H:i', strtotime($j['created_at'])) ?></div>
                     <div class="journal-content">"<?= esc($j['content']) ?>"</div>
                     <?php if($j['is_private']): ?>
-                        <div style="font-size:0.6rem; color:#888; margin-top:10px;"><i class="fa-solid fa-lock" style="font-size:0.5rem;"></i> Hanya Anda yang dapat melihat ini</div>
+                        <div style="font-size:0.6rem; color:#888; margin-top:10px;"><i class="fa-solid fa-lock" style="font-size:0.5rem;"></i> <?= cms_text('kontemplasi_private_notice', 'Hanya Anda yang dapat melihat ini') ?></div>
                     <?php endif; ?>
                 </div>
             <?php endforeach; ?>
         <?php else: ?>
-            <div style="text-align:center; padding:20px; color:#555; font-size:0.8rem; font-style:italic;">Belum ada jejak refleksi yang direkam.</div>
+            <div style="text-align:center; padding:20px; color:#555; font-size:0.8rem; font-style:italic;"><?= cms_text('kontemplasi_history_empty', 'Belum ada jejak refleksi yang direkam.') ?></div>
         <?php endif; ?>
     </div>
 
@@ -355,13 +355,13 @@ function breathCycle() {
 
     // Inhale (4s)
     text.style.opacity = 0;
-    setTimeout(() => { text.innerText = "Tarik Napas"; text.style.opacity = 1; }, 500);
+    setTimeout(() => { text.innerText = "<?= cms_raw('kontemplasi_breath_in', 'Tarik Napas') ?>"; text.style.opacity = 1; }, 500);
     orb.className = 'breathing-orb orb-inhale';
 
     // Hold (7s)
     setTimeout(() => {
         text.style.opacity = 0;
-        setTimeout(() => { text.innerText = "Tahan"; text.style.opacity = 1; }, 500);
+        setTimeout(() => { text.innerText = "<?= cms_raw('kontemplasi_breath_hold', 'Tahan') ?>"; text.style.opacity = 1; }, 500);
         orb.className = 'breathing-orb orb-hold';
         orb.style.transitionDuration = '7s';
     }, 4000);
@@ -369,7 +369,7 @@ function breathCycle() {
     // Exhale (8s)
     setTimeout(() => {
         text.style.opacity = 0;
-        setTimeout(() => { text.innerText = "Hembuskan"; text.style.opacity = 1; }, 500);
+        setTimeout(() => { text.innerText = "<?= cms_raw('kontemplasi_breath_out', 'Hembuskan') ?>"; text.style.opacity = 1; }, 500);
         orb.className = 'breathing-orb orb-exhale';
         orb.style.transitionDuration = '8s';
         
@@ -391,10 +391,10 @@ function toggleAudio() {
 function toggleAudioUI(playing) {
     const btn = document.getElementById('btnAudio');
     if(playing) {
-        btn.innerHTML = '<i class="fa-solid fa-volume-high"></i><span>Audio Aktif</span>';
+        btn.innerHTML = '<i class="fa-solid fa-volume-high"></i><span><?= cms_raw('kontemplasi_audio_on', 'Audio Aktif') ?></span>';
         btn.style.color = 'var(--gold-main)';
     } else {
-        btn.innerHTML = '<i class="fa-solid fa-volume-xmark"></i><span>Audio Mati</span>';
+        btn.innerHTML = '<i class="fa-solid fa-volume-xmark"></i><span><?= cms_raw('kontemplasi_audio_off', 'Audio Mati') ?></span>';
         btn.style.color = '#fff';
     }
 }

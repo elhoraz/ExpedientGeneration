@@ -35,8 +35,8 @@ Profil Eksklusif - Expedient
         </div>
 
         <div class="status-display" id="statusBadge">
-            <div class="status-title">Verifikasi Keamanan</div>
-            <div class="status-value" id="statusText">Mengkalibrasi optik...</div>
+            <div class="status-title"><?= cms_text('profil_scan_title', 'Verifikasi Keamanan') ?></div>
+            <div class="status-value" id="statusText"><?= cms_text('profil_scan_subtitle', 'Mengkalibrasi optik...') ?></div>
         </div>
     </div>
 
@@ -44,14 +44,14 @@ Profil Eksklusif - Expedient
     <div class="control-panel" id="controlPanel">
         
         <div class="nav-actions stagger-item">
-            <a href="/beranda" class="action-btn cursor-bind"><i class="fa-solid fa-arrow-left-long"></i> Kembali ke Beranda</a>
-            <a href="/chat" class="action-btn cursor-bind" style="background: rgba(212,175,55,0.1); border-color: rgba(212,175,55,0.3); color: #d4af37;"><i class="fa-solid fa-envelope"></i> Kotak Pesan</a>
-            <a href="/logout" class="action-btn btn-danger cursor-bind"><i class="fa-solid fa-power-off"></i> Keluar</a>
+            <a href="/beranda" class="action-btn cursor-bind"><i class="fa-solid fa-arrow-left-long"></i> <?= cms_text('profil_btn_back', 'Kembali ke Beranda') ?></a>
+            <a href="/chat" class="action-btn cursor-bind" style="background: rgba(212,175,55,0.1); border-color: rgba(212,175,55,0.3); color: #d4af37;"><i class="fa-solid fa-envelope"></i> <?= cms_text('profil_btn_msg', 'Kotak Pesan') ?></a>
+            <a href="/logout" class="action-btn btn-danger cursor-bind"><i class="fa-solid fa-power-off"></i> <?= cms_text('profil_btn_logout', 'Keluar') ?></a>
         </div>
 
         <div class="dashboard-header stagger-item">
-            <h1 class="dashboard-title">Profil Eksklusif</h1>
-            <p class="dashboard-subtitle">Kelola Data Pribadi Anda</p>
+            <h1 class="dashboard-title"><?= cms_text('profil_title', 'Profil Eksklusif') ?></h1>
+            <p class="dashboard-subtitle"><?= cms_text('profil_subtitle', 'Kelola Data Pribadi Anda') ?></p>
             
             <div style="margin-top: 20px; display: inline-flex; align-items: center; background: rgba(0,0,0,0.3); padding: 8px 20px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.05); box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);">
                 <div style="background: <?= $badge_color ?>; padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; color: #fff; text-transform: uppercase; letter-spacing: 1px; margin-right: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
@@ -80,7 +80,7 @@ Profil Eksklusif - Expedient
             
             <!-- KOLOM KIRI: EDIT PROFIL -->
             <div class="premium-panel stagger-item parallax-card">
-                <h2 class="panel-title"><i class="fa-regular fa-id-card"></i> Identitas Personal</h2>
+                <h2 class="panel-title"><i class="fa-regular fa-id-card"></i> <?= cms_text('profil_panel_id', 'Identitas Personal') ?></h2>
                 
                 <form action="/profil/update" method="POST" id="formUpdateProfile">
                     <?= csrf_field() ?>
@@ -92,147 +92,153 @@ Profil Eksklusif - Expedient
                             <img src="<?= !empty($user['foto_profil']) ? base_url('uploads/profiles/' . $user['foto_profil']) : 'https://ui-avatars.com/api/?name='.urlencode($user['nama_panggilan']).'&background=d4af37&color=000' ?>" class="avatar-preview" id="avatarPreview" alt="Profil">
                         </div>
                         <div>
-                            <div style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px;">Potret Resmi</div>
+                            <div style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px;"><?= cms_text('profil_lbl_potret', 'Potret Resmi') ?></div>
                             <div class="magnetic-btn-wrap" id="magBtnWrap">
                                 <label class="upload-btn-ui cursor-bind" id="magBtn" for="inputFileImg">
-                                    Pilih Potret
+                                    <?= cms_text('profil_btn_potret', 'Pilih Potret') ?>
                                 </label>
                             </div>
                             <input type="file" id="inputFileImg" accept="image/*" style="display:none;">
-                            <div style="font-size: 0.65rem; color: var(--text-secondary); margin-top: 5px;">Maksimum resolusi HD disarankan.</div>
+                            <div style="font-size: 0.65rem; color: var(--text-secondary); margin-top: 5px;"><?= cms_text('profil_desc_potret', 'Maksimum resolusi HD disarankan.') ?></div>
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
                             <input type="text" name="nama_panggilan" class="form-input" id="inp_panggilan" placeholder=" " value="<?= esc($user['nama_panggilan']) ?>" required>
-                            <label class="form-label" for="inp_panggilan">Nama Sandi / Panggilan</label>
+                            <label class="form-label" for="inp_panggilan"><?= cms_text('profil_lbl_panggilan', 'Nama Sandi / Panggilan') ?></label>
                             <div class="liquid-line"></div>
                         </div>
                         <div class="form-group">
                             <input type="number" name="no_whatsapp" class="form-input" id="inp_wa" placeholder=" " value="<?= esc($user['no_whatsapp']) ?>" required>
-                            <label class="form-label" for="inp_wa">Nomor Kontak (WhatsApp)</label>
+                            <label class="form-label" for="inp_wa"><?= cms_text('profil_lbl_wa', 'Nomor Kontak (WhatsApp)') ?></label>
                             <div class="liquid-line"></div>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <input type="text" name="nama_lengkap" class="form-input" id="inp_lengkap" placeholder=" " value="<?= esc($user['nama_lengkap']) ?>" required>
-                        <label class="form-label" for="inp_lengkap">Nama Lengkap Resmi</label>
+                        <label class="form-label" for="inp_lengkap"><?= cms_text('profil_lbl_lengkap', 'Nama Lengkap Resmi') ?></label>
                         <div class="liquid-line"></div>
                     </div>
 
                     <div class="form-group">
                         <input type="email" name="email" class="form-input" id="inp_email" placeholder=" " value="<?= esc($user['email']) ?>" required>
-                        <label class="form-label" for="inp_email">Alamat Surel Utama</label>
+                        <label class="form-label" for="inp_email"><?= cms_text('profil_lbl_email', 'Alamat Surel Utama') ?></label>
                         <div class="liquid-line"></div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
                             <input type="text" name="akun_ig" class="form-input" id="inp_ig" placeholder=" " value="<?= esc($user['akun_ig'] ?? '') ?>">
-                            <label class="form-label" for="inp_ig">Instagram (Opsional)</label>
+                            <label class="form-label" for="inp_ig"><?= cms_text('profil_lbl_ig', 'Instagram (Opsional)') ?></label>
                             <div class="liquid-line"></div>
                         </div>
                         <div class="form-group">
                             <input type="text" name="akun_tiktok" class="form-input" id="inp_tt" placeholder=" " value="<?= esc($user['akun_tiktok'] ?? '') ?>">
-                            <label class="form-label" for="inp_tt">TikTok (Opsional)</label>
+                            <label class="form-label" for="inp_tt"><?= cms_text('profil_lbl_tt', 'TikTok (Opsional)') ?></label>
                             <div class="liquid-line"></div>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <textarea name="motivasi_hidup" class="form-input" id="inp_motivasi" placeholder=" " oninput="this.style.height = '';this.style.height = this.scrollHeight + 'px'"><?= esc($user['motivasi_hidup'] ?? '') ?></textarea>
-                        <label class="form-label" for="inp_motivasi">Visi & Motivasi</label>
+                        <label class="form-label" for="inp_motivasi"><?= cms_text('profil_lbl_visi', 'Visi & Motivasi') ?></label>
                         <div class="liquid-line"></div>
                     </div>
                     
                     <div class="form-group">
                         <input type="text" name="cita_cita" class="form-input" id="inp_cita" placeholder=" " value="<?= esc($user['cita_cita'] ?? '') ?>">
-                        <label class="form-label" for="inp_cita">Target Pencapaian</label>
+                        <label class="form-label" for="inp_cita"><?= cms_text('profil_lbl_target', 'Target Pencapaian') ?></label>
                         <div class="liquid-line"></div>
                     </div>
 
                     <button type="submit" class="btn-submit cursor-bind">
-                        Simpan Perubahan
+                        <?= cms_text('profil_btn_save', 'Simpan Perubahan') ?>
                     </button>
                 </form>
             </div>
 
             <!-- KOLOM KANAN: PROTOKOL KEAMANAN -->
             <div class="premium-panel stagger-item parallax-card">
-                <h2 class="panel-title"><i class="fa-solid fa-fingerprint"></i> Akses & Keamanan</h2>
+                <h2 class="panel-title"><i class="fa-solid fa-fingerprint"></i> <?= cms_text('profil_panel_sec', 'Akses & Keamanan') ?></h2>
                 
                 <div class="bio-status-box cursor-bind">
                     <i class="fa-solid fa-shield-halved"></i>
-                    <div class="bio-status-title">Keamanan Visual Aktif</div>
-                    <div class="bio-status-desc">Wajah Anda menjadi kunci tunggal untuk membedah data Sovereign ini. Tingkat akurasi pemindaian telah dimaksimalkan.</div>
+                    <div class="bio-status-title"><?= cms_text('profil_sec_title', 'Keamanan Visual Aktif') ?></div>
+                    <div class="bio-status-desc"><?= cms_text('profil_sec_desc', 'Wajah Anda menjadi kunci tunggal untuk membedah data Sovereign ini. Tingkat akurasi pemindaian telah dimaksimalkan.') ?></div>
                 </div>
 
-                <div style="font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 2px; margin: 40px 0 20px 0;">Kredensial Fisik (Passkey)</div>
+                <div style="font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 2px; margin: 40px 0 20px 0;"><?= cms_text('profil_lbl_passkey', 'Kredensial Fisik (Passkey)') ?></div>
                 
                 <?php if(!empty($user['webauthn_credential_id'])): ?>
                     <div style="color: var(--text-primary); font-size: 0.8rem; padding: 25px; border: 1px solid var(--glass-border); border-radius: 20px; text-align: center; line-height: 1.6;">
                         <i class="fa-solid fa-lock" style="font-size:1.5rem; margin-bottom:15px; color: var(--success-elegant);"></i><br>
-                        Perangkat ini telah terkunci dan disahkan sebagai Token Keamanan Fisik.
+                        <?= cms_text('profil_msg_passkey', 'Perangkat ini telah terkunci dan disahkan sebagai Token Keamanan Fisik.') ?>
                     </div>
                 <?php else: ?>
                     <div id="bioOptionsBox">
                         <button class="btn-passkey cursor-bind" onclick="startBiometricEnrollment()">
-                            <i class="fa-solid fa-key" style="margin-right: 5px;"></i> Autentikasi Perangkat Ini
+                            <i class="fa-solid fa-key" style="margin-right: 5px;"></i> <?= cms_text('profil_btn_passkey', 'Autentikasi Perangkat Ini') ?>
                         </button>
                     </div>
                 <?php endif; ?>
                 
                 <div id="bioStatus" style="margin-top: 20px; font-size: 0.75rem; color: var(--text-secondary); text-align: center; line-height: 1.6;">
-                    Gunakan biometrik bawaan (Touch ID/Face ID) pada gawai Anda sebagai otentikasi lapis kedua tanpa sandi.
+                    <?= cms_text('profil_desc_bio', 'Gunakan biometrik bawaan (Touch ID/Face ID) pada gawai Anda sebagai otentikasi lapis kedua tanpa sandi.') ?>
                 </div>
                 
                 <div style="margin-top: 50px; padding-top: 30px; border-top: 1px solid var(--glass-border);">
-                    <div style="font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px;"><i class="fa-solid fa-key" style="margin-right: 8px;"></i>Ubah Kata Sandi</div>
+                    <div style="font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px;"><i class="fa-solid fa-key" style="margin-right: 8px;"></i><?= cms_text('profil_lbl_change_pw', 'Ubah Kata Sandi') ?></div>
                     
                     <form action="/profil/change-password" method="POST">
                         <?= csrf_field() ?>
                         <div class="form-group">
                             <input type="password" name="current_password" class="form-input" id="inp_curpass" placeholder=" " required>
-                            <label class="form-label" for="inp_curpass">Kata Sandi Lama</label>
+                            <label class="form-label" for="inp_curpass"><?= cms_text('profil_lbl_old_pw', 'Kata Sandi Lama') ?></label>
                             <div class="liquid-line"></div>
                         </div>
                         <div class="form-group">
                             <input type="password" name="new_password" class="form-input" id="inp_newpass" placeholder=" " required minlength="8">
-                            <label class="form-label" for="inp_newpass">Kata Sandi Baru (min. 8)</label>
+                            <label class="form-label" for="inp_newpass"><?= cms_text('profil_lbl_new_pw', 'Kata Sandi Baru (min. 8)') ?></label>
                             <div class="liquid-line"></div>
                         </div>
                         <div class="form-group">
                             <input type="password" name="confirm_password" class="form-input" id="inp_cfmpass" placeholder=" " required>
-                            <label class="form-label" for="inp_cfmpass">Konfirmasi Sandi Baru</label>
+                            <label class="form-label" for="inp_cfmpass"><?= cms_text('profil_lbl_confirm_pw', 'Konfirmasi Sandi Baru') ?></label>
                             <div class="liquid-line"></div>
                         </div>
                         <button type="submit" class="btn-submit cursor-bind" style="width: 100%; font-size: 0.8rem; padding: 12px;">
-                            <i class="fa-solid fa-shield-halved" style="margin-right: 8px;"></i> Perbarui Kata Sandi
+                            <i class="fa-solid fa-shield-halved" style="margin-right: 8px;"></i> <?= cms_text('profil_btn_update_pw', 'Perbarui Kata Sandi') ?>
                         </button>
                     </form>
                 </div>
 
                 <div style="margin-top: 50px; padding-top: 30px; border-top: 1px solid var(--glass-border); text-align: center;">
-                    <div style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 2px;">Identitas Eksekutif</div>
-                    <a href="/sovereign" class="cursor-bind" style="color:var(--gold-premium); text-decoration:none; font-size:0.85rem; display:inline-block; margin-top:15px; font-weight: 600; letter-spacing: 2px;"><i class="fa-solid fa-cube" style="margin-right: 8px;"></i> BUKA SOVEREIGN ID 5D</a>
+                    <div style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 2px;"><?= cms_text('profil_lbl_exec', 'Identitas Eksekutif') ?></div>
+                    <a href="/sovereign" class="cursor-bind" style="color:var(--gold-premium); text-decoration:none; font-size:0.85rem; display:inline-block; margin-top:15px; font-weight: 600; letter-spacing: 2px;"><i class="fa-solid fa-cube" style="margin-right: 8px;"></i> <?= cms_text('profil_btn_sov', 'BUKA SOVEREIGN ID 5D') ?></a>
                 </div>
 
                 <div style="margin-top: 50px; padding-top: 30px; border-top: 1px solid rgba(255, 51, 102, 0.2); text-align: center;">
-                    <div style="font-size: 0.75rem; color: #ff3366; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px;"><i class="fa-solid fa-triangle-exclamation" style="margin-right: 8px;"></i>Zona Berbahaya</div>
+                    <div style="font-size: 0.75rem; color: #ff3366; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px;"><i class="fa-solid fa-triangle-exclamation" style="margin-right: 8px;"></i><?= cms_text('profil_lbl_danger', 'Zona Berbahaya') ?></div>
                     <form action="/profil/delete-account" method="POST" onsubmit="event.preventDefault(); window.showConfirm('Konfirmasi', 'Apakah Anda yakin ingin menonaktifkan akun ini selamanya? Proses ini tidak dapat dibatalkan dengan mudah.').then(res => { if(res) this.submit(); });">
                         <?= csrf_field() ?>
                         <div class="form-group" style="margin-bottom: 15px;">
                             <input type="password" name="password_delete" class="form-input" id="inp_delpass" placeholder=" " required style="border-color: rgba(255, 51, 102, 0.3);">
-                            <label class="form-label" for="inp_delpass" style="color: #ff3366;">Konfirmasi Sandi untuk Hapus</label>
+                            <label class="form-label" for="inp_delpass" style="color: #ff3366;"><?= cms_text('profil_lbl_del_pw', 'Konfirmasi Sandi untuk Hapus') ?></label>
                             <div class="liquid-line" style="background: linear-gradient(90deg, transparent, #ff3366, transparent);"></div>
                         </div>
                         <button type="submit" class="btn-submit cursor-bind" style="background: rgba(255, 51, 102, 0.1); color: #ff3366; border: 1px solid #ff3366; width: 100%; font-size: 0.8rem; padding: 12px;">
-                            <i class="fa-solid fa-user-xmark" style="margin-right: 8px;"></i> Nonaktifkan Akun
+                            <i class="fa-solid fa-user-xmark" style="margin-right: 8px;"></i> <?= cms_text('profil_btn_del', 'Nonaktifkan Akun') ?>
                         </button>
                     </form>
                 </div>
+
+                <!-- Easter Egg / Hidden Admin Access -->
+                <div style="margin-top: 60px; font-size: 0.6rem; color: rgba(255,255,255,0.15); text-align: justify; line-height: 1.8; font-family: 'Inter', sans-serif;">
+                    Expedient bermakna kepraktisan dan ketepatan dalam bertindak. Ia adalah filosofi tentang bagaimana mencapai tujuan dengan cara yang paling efisien dan bijaksana. Generasi yang membawa nama ini tidak terjebak pada hal-hal yang rumit tanpa alasan; mereka berfokus pada apa yang benar-benar bermakna dan membawa kebaikan bersama. Kemampuan untuk menempatkan segala sesuatu pada proporsi yang tepat adalah bentuk kedewasaan. Pada akhirnya, keindahan dari sebuah perjalanan terletak pada kesederhanaan niat dan keyakinan <a href="/admin/dashboard" style="color: inherit; text-decoration: none; cursor: default; outline: none;" class="cursor-bind">utuh</a> untuk saling melengkapi di setiap langkah.
+                </div>
+
             </div>
 
         </div>
@@ -247,6 +253,7 @@ Profil Eksklusif - Expedient
 
 <script>
     window.dbFaceDataRaw = <?= empty($face_data_db) || $face_data_db === 'null' ? 'null' : $face_data_db ?>;
+    window.isAdmin = false;
 </script>
 <script src="/assets/js/profil.js"></script>
 <?= $this->endSection() ?>

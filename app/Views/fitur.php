@@ -15,8 +15,8 @@ Expedient Vault - Koleksi Fitur Premium
 
     <div class="features-dashboard" id="featuresDashboard" style="display:flex; opacity:1;">
         <div class="dashboard-header">
-            <h1 class="dashboard-title">The Sovereign Vault</h1>
-            <p class="dashboard-subtitle">Akses Eksklusif Entitas Expedient Terverifikasi</p>
+            <h1 class="dashboard-title"><?= cms_text('fitur_page_title', 'The Sovereign Vault') ?></h1>
+            <p class="dashboard-subtitle"><?= cms_text('fitur_page_subtitle', 'Akses Eksklusif Entitas Expedient Terverifikasi') ?></p>
         </div>
 
         <div class="cinematic-grid">
@@ -24,9 +24,9 @@ Expedient Vault - Koleksi Fitur Premium
                 <div class="card-bg" style="background-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop');"></div>
                 <i class="fa-solid fa-gem card-icon"></i>
                 <div class="card-content">
-                    <h3 class="card-title">Sovereign ID</h3>
-                    <p class="card-desc">Modul identitas 5D interaktif. Merender ulang data biometrik dan arsip Anda dalam bentuk holografik.</p>
-                    <div class="launch-btn">Jelajahi Sekarang <i class="fa-solid fa-arrow-right-long"></i></div>
+                    <h3 class="card-title"><?= cms_text('fitur_sovereign_title', 'Sovereign ID') ?></h3>
+                    <p class="card-desc"><?= cms_text('fitur_sovereign_desc', 'Modul identitas 5D interaktif. Merender ulang data biometrik dan arsip Anda dalam bentuk holografik.') ?></p>
+                    <div class="launch-btn"><?= cms_text('fitur_sovereign_btn', 'Jelajahi Sekarang') ?> <i class="fa-solid fa-arrow-right-long"></i></div>
                 </div>
             </a>
 
@@ -34,9 +34,9 @@ Expedient Vault - Koleksi Fitur Premium
                 <div class="card-bg" style="background-image: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2670&auto=format&fit=crop'); filter: grayscale(50%) hue-rotate(90deg) brightness(0.4);"></div>
                 <i class="fa-solid fa-qrcode card-icon"></i>
                 <div class="card-content">
-                    <h3 class="card-title">Omni Scanner</h3>
-                    <p class="card-desc">Pemindai KTA in-app. Baca kode matriks entitas lain untuk langsung melompat ke bilik profil holografik mereka.</p>
-                    <div class="launch-btn">Buka Pemindai <i class="fa-solid fa-arrow-right-long"></i></div>
+                    <h3 class="card-title"><?= cms_text('fitur_scanner_title', 'Omni Scanner') ?></h3>
+                    <p class="card-desc"><?= cms_text('fitur_scanner_desc', 'Pemindai KTA in-app. Baca kode matriks entitas lain untuk langsung melompat ke bilik profil holografik mereka.') ?></p>
+                    <div class="launch-btn"><?= cms_text('fitur_scanner_btn', 'Buka Pemindai') ?> <i class="fa-solid fa-arrow-right-long"></i></div>
                 </div>
             </a>
 
@@ -44,9 +44,9 @@ Expedient Vault - Koleksi Fitur Premium
                 <div class="card-bg" style="background-image: url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2670&auto=format&fit=crop');"></div>
                 <i class="fa-solid fa-id-badge card-icon"></i>
                 <div class="card-content">
-                    <h3 class="card-title">Profil Entitas</h3>
-                    <p class="card-desc">Pusat manajemen data pribadi dan pengaturan kunci keamanan fisik (Passkey).</p>
-                    <div class="launch-btn">Kelola Profil <i class="fa-solid fa-arrow-right-long"></i></div>
+                    <h3 class="card-title"><?= cms_text('fitur_profil_title', 'Profil Entitas') ?></h3>
+                    <p class="card-desc"><?= cms_text('fitur_profil_desc', 'Pusat manajemen data pribadi dan pengaturan kunci keamanan fisik (Passkey).') ?></p>
+                    <div class="launch-btn"><?= cms_text('fitur_profil_btn', 'Kelola Profil') ?> <i class="fa-solid fa-arrow-right-long"></i></div>
                 </div>
             </a>
 
@@ -54,9 +54,9 @@ Expedient Vault - Koleksi Fitur Premium
                 <div class="card-bg" style="background-image: url('https://images.unsplash.com/photo-1614064641913-a520f596a247?q=80&w=2574&auto=format&fit=crop'); filter: grayscale(80%) brightness(0.3);"></div>
                 <i class="fa-solid fa-vault card-icon"></i>
                 <div class="card-content">
-                    <h3 class="card-title">Amanah & Wasiat</h3>
-                    <p class="card-desc">Brankas pesan terenkripsi tingkat tinggi. Titipkan pesan rahasia, wasiat, atau data vital yang hanya terbuka dengan pemicu otentikasi spesifik.</p>
-                    <div class="launch-btn">Buka Brankas <i class="fa-solid fa-arrow-right-long"></i></div>
+                    <h3 class="card-title"><?= cms_text('fitur_wasiat_title', 'Amanah & Wasiat') ?></h3>
+                    <p class="card-desc"><?= cms_text('fitur_wasiat_desc', 'Brankas pesan terenkripsi tingkat tinggi. Titipkan pesan rahasia, wasiat, atau data vital yang hanya terbuka dengan pemicu otentikasi spesifik.') ?></p>
+                    <div class="launch-btn"><?= cms_text('fitur_wasiat_btn', 'Buka Brankas') ?> <i class="fa-solid fa-arrow-right-long"></i></div>
                 </div>
             </a>
 
@@ -64,9 +64,9 @@ Expedient Vault - Koleksi Fitur Premium
                 <div class="card-bg" style="background-image: url('https://images.unsplash.com/photo-1579621970795-87facc2f976d?q=80&w=2670&auto=format&fit=crop'); filter: grayscale(80%) brightness(0.4);"></div>
                 <i class="fa-solid fa-coins card-icon"></i>
                 <div class="card-content">
-                    <h3 class="card-title">Baitul Maal</h3>
-                    <p class="card-desc">Pusat kontribusi dan wakaf elit. Visualisasi rekam jejak sedekah jariyah angkatan dalam bentuk tabungan cahaya keabadian.</p>
-                    <div class="launch-btn">Buka Khasanah <i class="fa-solid fa-arrow-right-long"></i></div>
+                    <h3 class="card-title"><?= cms_text('fitur_maal_title', 'Baitul Maal') ?></h3>
+                    <p class="card-desc"><?= cms_text('fitur_maal_desc', 'Pusat kontribusi dan wakaf elit. Visualisasi rekam jejak sedekah jariyah angkatan dalam bentuk tabungan cahaya keabadian.') ?></p>
+                    <div class="launch-btn"><?= cms_text('fitur_maal_btn', 'Buka Khasanah') ?> <i class="fa-solid fa-arrow-right-long"></i></div>
                 </div>
             </a>
 
@@ -74,9 +74,9 @@ Expedient Vault - Koleksi Fitur Premium
                 <div class="card-bg" style="background-image: url('https://images.unsplash.com/photo-1594954002661-8f55fc15d7de?q=80&w=2670&auto=format&fit=crop'); filter: grayscale(80%) brightness(0.4);"></div>
                 <i class="fa-solid fa-microphone-lines card-icon"></i>
                 <div class="card-content">
-                    <h3 class="card-title">Majlis Syura</h3>
-                    <p class="card-desc">Bilik suara VVIP eksklusif. Dengarkan kajian, bertukar pikiran, dan jalin ukhuwah dalam keheningan yang elegan.</p>
-                    <div class="launch-btn">Masuk Ruang Majlis <i class="fa-solid fa-arrow-right-long"></i></div>
+                    <h3 class="card-title"><?= cms_text('fitur_majlis_title', 'Majlis Syura') ?></h3>
+                    <p class="card-desc"><?= cms_text('fitur_majlis_desc', 'Bilik suara VVIP eksklusif. Dengarkan kajian, bertukar pikiran, dan jalin ukhuwah dalam keheningan yang elegan.') ?></p>
+                    <div class="launch-btn"><?= cms_text('fitur_majlis_btn', 'Masuk Ruang Majlis') ?> <i class="fa-solid fa-arrow-right-long"></i></div>
                 </div>
             </a>
 
@@ -84,9 +84,9 @@ Expedient Vault - Koleksi Fitur Premium
                 <div class="card-bg" style="background-image: url('https://images.unsplash.com/photo-1556761175-5973dc0f32b7?q=80&w=2532&auto=format&fit=crop'); filter: grayscale(80%) brightness(0.4);"></div>
                 <i class="fa-solid fa-handshake-angle card-icon"></i>
                 <div class="card-content">
-                    <h3 class="card-title">Tarbiyah Nexus</h3>
-                    <p class="card-desc">Jaringan mentorship elit & ekosistem B2B Halal. Ruang kolaborasi profesional antar entitas untuk memperkuat muamalah dan karir.</p>
-                    <div class="launch-btn">Bergabung <i class="fa-solid fa-arrow-right-long"></i></div>
+                    <h3 class="card-title"><?= cms_text('fitur_tarbiyah_title', 'Tarbiyah Nexus') ?></h3>
+                    <p class="card-desc"><?= cms_text('fitur_tarbiyah_desc', 'Jaringan mentorship elit & ekosistem B2B Halal. Ruang kolaborasi profesional antar entitas untuk memperkuat muamalah dan karir.') ?></p>
+                    <div class="launch-btn"><?= cms_text('fitur_tarbiyah_btn', 'Bergabung') ?> <i class="fa-solid fa-arrow-right-long"></i></div>
                 </div>
             </a>
 
@@ -94,9 +94,9 @@ Expedient Vault - Koleksi Fitur Premium
                 <div class="card-bg" style="background-image: url('https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=2565&auto=format&fit=crop');"></div>
                 <i class="fa-solid fa-eye card-icon"></i>
                 <div class="card-content">
-                    <h3 class="card-title">The Oracle's Vision</h3>
-                    <p class="card-desc">Pemindai kamera interaktif untuk mengekstraksi dan membaca Aura Eksekutif Anda secara langsung.</p>
-                    <div class="launch-btn">Mulai Pemindaian <i class="fa-solid fa-arrow-right-long"></i></div>
+                    <h3 class="card-title"><?= cms_text('fitur_oracle_title', "The Oracle's Vision") ?></h3>
+                    <p class="card-desc"><?= cms_text('fitur_oracle_desc', 'Pemindai kamera interaktif untuk mengekstraksi dan membaca Aura Eksekutif Anda secara langsung.') ?></p>
+                    <div class="launch-btn"><?= cms_text('fitur_oracle_btn', 'Mulai Pemindaian') ?> <i class="fa-solid fa-arrow-right-long"></i></div>
                 </div>
             </a>
 
@@ -104,9 +104,9 @@ Expedient Vault - Koleksi Fitur Premium
                 <div class="card-bg" style="background-image: url('https://images.unsplash.com/photo-1542642510-48227b613eec?q=80&w=2670&auto=format&fit=crop'); filter: grayscale(80%) brightness(0.4);"></div>
                 <i class="fa-solid fa-ticket card-icon"></i>
                 <div class="card-content">
-                    <h3 class="card-title">Protokol Multazam</h3>
-                    <p class="card-desc">Sistem RSVP & Tiket Cerdas untuk acara VVIP. Hadiri kajian akbar dan gala diner angkatan dengan otorisasi pass digital eksklusif.</p>
-                    <div class="launch-btn">Lihat Jadwal Acara <i class="fa-solid fa-arrow-right-long"></i></div>
+                    <h3 class="card-title"><?= cms_text('fitur_multazam_title', 'Protokol Multazam') ?></h3>
+                    <p class="card-desc"><?= cms_text('fitur_multazam_desc', 'Sistem RSVP & Tiket Cerdas untuk acara VVIP. Hadiri kajian akbar dan gala diner angkatan dengan otorisasi pass digital eksklusif.') ?></p>
+                    <div class="launch-btn"><?= cms_text('fitur_multazam_btn', 'Lihat Jadwal Acara') ?> <i class="fa-solid fa-arrow-right-long"></i></div>
                 </div>
             </a>
 
@@ -114,9 +114,9 @@ Expedient Vault - Koleksi Fitur Premium
                 <div class="card-bg" style="background-image: url('https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?q=80&w=2574&auto=format&fit=crop'); filter: grayscale(80%) brightness(0.3);"></div>
                 <i class="fa-solid fa-peace card-icon"></i>
                 <div class="card-content">
-                    <h3 class="card-title">Ruang Kontemplasi</h3>
-                    <p class="card-desc">Mode sanctuary layar penuh. Temukan kedamaian dari bisingnya dunia dengan keheningan, tata napas, dan audio ambience Islami.</p>
-                    <div class="launch-btn">Masuki Keheningan <i class="fa-solid fa-arrow-right-long"></i></div>
+                    <h3 class="card-title"><?= cms_text('fitur_kontemplasi_title', 'Ruang Kontemplasi') ?></h3>
+                    <p class="card-desc"><?= cms_text('fitur_kontemplasi_desc', 'Mode sanctuary layar penuh. Temukan kedamaian dari bisingnya dunia dengan keheningan, tata napas, dan audio ambience Islami.') ?></p>
+                    <div class="launch-btn"><?= cms_text('fitur_kontemplasi_btn', 'Masuki Keheningan') ?> <i class="fa-solid fa-arrow-right-long"></i></div>
                 </div>
             </a>
 
@@ -124,9 +124,9 @@ Expedient Vault - Koleksi Fitur Premium
                 <div class="card-bg" style="background-image: url('https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?q=80&w=2670&auto=format&fit=crop');"></div>
                 <i class="fa-solid fa-star card-icon"></i>
                 <div class="card-content">
-                    <h3 class="card-title">The Celestial Codex</h3>
-                    <p class="card-desc">Tarik tiga kartu takdir dari dek misterius. Ungkap ramalan dan kebijaksanaan hari ini.</p>
-                    <div class="launch-btn">Buka Codex <i class="fa-solid fa-arrow-right-long"></i></div>
+                    <h3 class="card-title"><?= cms_text('fitur_celestial_title', 'The Celestial Codex') ?></h3>
+                    <p class="card-desc"><?= cms_text('fitur_celestial_desc', 'Tarik tiga kartu takdir dari dek misterius. Ungkap ramalan dan kebijaksanaan hari ini.') ?></p>
+                    <div class="launch-btn"><?= cms_text('fitur_celestial_btn', 'Buka Codex') ?> <i class="fa-solid fa-arrow-right-long"></i></div>
                 </div>
             </a>
 
@@ -134,9 +134,9 @@ Expedient Vault - Koleksi Fitur Premium
                 <div class="card-bg" style="background-image: url('https://images.unsplash.com/photo-1606836109968-3e4b37be8079?q=80&w=2574&auto=format&fit=crop'); filter: grayscale(50%) brightness(0.4);"></div>
                 <i class="fa-solid fa-book-open card-icon"></i>
                 <div class="card-content">
-                    <h3 class="card-title">Divine Verse</h3>
-                    <p class="card-desc">Jelajahi untaian ayat suci dan refleksi harian. Sentuhan spiritual dalam balutan teknologi tingkat tinggi.</p>
-                    <div class="launch-btn">Resapi Ayat <i class="fa-solid fa-arrow-right-long"></i></div>
+                    <h3 class="card-title"><?= cms_text('fitur_divine_title', 'Divine Verse') ?></h3>
+                    <p class="card-desc"><?= cms_text('fitur_divine_desc', 'Jelajahi untaian ayat suci dan refleksi harian. Sentuhan spiritual dalam balutan teknologi tingkat tinggi.') ?></p>
+                    <div class="launch-btn"><?= cms_text('fitur_divine_btn', 'Resapi Ayat') ?> <i class="fa-solid fa-arrow-right-long"></i></div>
                 </div>
             </a>
 
@@ -144,9 +144,9 @@ Expedient Vault - Koleksi Fitur Premium
                 <div class="card-bg" style="background-image: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2670&auto=format&fit=crop'); filter: grayscale(80%) brightness(0.4);"></div>
                 <i class="fa-solid fa-lock card-icon"></i>
                 <div class="card-content">
-                    <h3 class="card-title">Enigma Vault</h3>
-                    <p class="card-desc">Brankas digital terenkripsi. Simpan catatan rahasia, memori tersembunyi, dan arsip pribadi yang hanya Anda yang bisa membukanya.</p>
-                    <div class="launch-btn">Buka Brankas <i class="fa-solid fa-arrow-right-long"></i></div>
+                    <h3 class="card-title"><?= cms_text('fitur_enigma_title', 'Enigma Vault') ?></h3>
+                    <p class="card-desc"><?= cms_text('fitur_enigma_desc', 'Brankas digital terenkripsi. Simpan catatan rahasia, memori tersembunyi, dan arsip pribadi yang hanya Anda yang bisa membukanya.') ?></p>
+                    <div class="launch-btn"><?= cms_text('fitur_enigma_btn', 'Buka Brankas') ?> <i class="fa-solid fa-arrow-right-long"></i></div>
                 </div>
             </a>
 
@@ -154,9 +154,9 @@ Expedient Vault - Koleksi Fitur Premium
                 <div class="card-bg" style="background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2672&auto=format&fit=crop'); filter: grayscale(50%) brightness(0.4);"></div>
                 <i class="fa-solid fa-atom card-icon"></i>
                 <div class="card-content">
-                    <h3 class="card-title">Genesis Core</h3>
-                    <p class="card-desc">Inti dari segalanya. Jelajahi asal-usul, filosofi, dan fondasi spiritual yang membangun identitas Expedient Generation.</p>
-                    <div class="launch-btn">Jelajahi Asal-Usul <i class="fa-solid fa-arrow-right-long"></i></div>
+                    <h3 class="card-title"><?= cms_text('fitur_genesis_title', 'Genesis Core') ?></h3>
+                    <p class="card-desc"><?= cms_text('fitur_genesis_desc', 'Inti dari segalanya. Jelajahi asal-usul, filosofi, dan fondasi spiritual yang membangun identitas Expedient Generation.') ?></p>
+                    <div class="launch-btn"><?= cms_text('fitur_genesis_btn', 'Jelajahi Asal-Usul') ?> <i class="fa-solid fa-arrow-right-long"></i></div>
                 </div>
             </a>
 
@@ -164,9 +164,9 @@ Expedient Vault - Koleksi Fitur Premium
                 <div class="card-bg" style="background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2672&auto=format&fit=crop'); filter: hue-rotate(200deg) brightness(0.3);"></div>
                 <i class="fa-solid fa-network-wired card-icon" style="color: #d4af37;"></i>
                 <div class="card-content">
-                    <h3 class="card-title" style="color: #d4af37;">The Nexus</h3>
-                    <p class="card-desc">Algoritma analitik cerdas yang menghubungkan visi Anda dengan Kolega Strategis. Merajut jaringan eksekutif masa depan.</p>
-                    <div class="launch-btn" style="color: #d4af37; border-color: #d4af37;">Inisiasi Analitik <i class="fa-solid fa-arrow-right-long"></i></div>
+                    <h3 class="card-title" style="color: #d4af37;"><?= cms_text('fitur_nexus_title', 'The Nexus') ?></h3>
+                    <p class="card-desc"><?= cms_text('fitur_nexus_desc', 'Algoritma analitik cerdas yang menghubungkan visi Anda dengan Kolega Strategis. Merajut jaringan eksekutif masa depan.') ?></p>
+                    <div class="launch-btn" style="color: #d4af37; border-color: #d4af37;"><?= cms_text('fitur_nexus_btn', 'Inisiasi Analitik') ?> <i class="fa-solid fa-arrow-right-long"></i></div>
                 </div>
             </a>
 
@@ -174,9 +174,9 @@ Expedient Vault - Koleksi Fitur Premium
                 <div class="card-bg" style="background-image: url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=2670&auto=format&fit=crop'); filter: grayscale(50%) brightness(0.3);"></div>
                 <i class="fa-solid fa-calendar-days card-icon"></i>
                 <div class="card-content">
-                    <h3 class="card-title">Agenda & Eksibisi</h3>
-                    <p class="card-desc">Jadwalkan, kelola, dan hadiri pertemuan eksklusif angkatan. Integrasi sistem RSVP pintar untuk entitas Expedient.</p>
-                    <div class="launch-btn">Lihat Jadwal <i class="fa-solid fa-arrow-right-long"></i></div>
+                    <h3 class="card-title"><?= cms_text('fitur_event_title', 'Agenda & Eksibisi') ?></h3>
+                    <p class="card-desc"><?= cms_text('fitur_event_desc', 'Jadwalkan, kelola, dan hadiri pertemuan eksklusif angkatan. Integrasi sistem RSVP pintar untuk entitas Expedient.') ?></p>
+                    <div class="launch-btn"><?= cms_text('fitur_event_btn', 'Lihat Jadwal') ?> <i class="fa-solid fa-arrow-right-long"></i></div>
                 </div>
             </a>
 
@@ -184,9 +184,9 @@ Expedient Vault - Koleksi Fitur Premium
                 <div class="card-bg" style="background-image: url('https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?q=80&w=2670&auto=format&fit=crop'); filter: grayscale(20%) brightness(0.6);"></div>
                 <i class="fa-solid fa-film card-icon" style="color: #fff; text-shadow: 0 0 10px #d4af37;"></i>
                 <div class="card-content">
-                    <h3 class="card-title" style="color: #fff; text-shadow: 0 0 10px #d4af37;">Expedient Wrapped</h3>
-                    <p class="card-desc">Kilas balik interaktif perjalanan digital Anda di The Vault sepanjang tahun ini.</p>
-                    <div class="launch-btn" style="color: #fff; border-color: #d4af37;">Lihat Kilas Balik <i class="fa-solid fa-arrow-right-long"></i></div>
+                    <h3 class="card-title" style="color: #fff; text-shadow: 0 0 10px #d4af37;"><?= cms_text('fitur_wrapped_title', 'Expedient Wrapped') ?></h3>
+                    <p class="card-desc"><?= cms_text('fitur_wrapped_desc', 'Kilas balik interaktif perjalanan digital Anda di The Vault sepanjang tahun ini.') ?></p>
+                    <div class="launch-btn" style="color: #fff; border-color: #d4af37;"><?= cms_text('fitur_wrapped_btn', 'Lihat Kilas Balik') ?> <i class="fa-solid fa-arrow-right-long"></i></div>
                 </div>
             </a>
         </div>

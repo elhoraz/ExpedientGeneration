@@ -342,11 +342,11 @@ Protokol Multazam - VVIP Event Ticketing
 <div class="multazam-wrapper">
     <header class="multazam-header">
         <a href="/fitur" class="btn-back">
-            <i class="fa-solid fa-chevron-left"></i> Vault
+            <i class="fa-solid fa-chevron-left"></i> <?= cms_text('multazam_btn_back', 'Vault') ?>
         </a>
         <div class="header-titles">
-            <h1 class="page-title">Protokol Multazam</h1>
-            <div class="page-subtitle">Sistem Tiket VVIP Eksklusif</div>
+            <h1 class="page-title"><?= cms_text('multazam_title', 'Protokol Multazam') ?></h1>
+            <div class="page-subtitle"><?= cms_text('multazam_subtitle', 'Sistem Tiket VVIP Eksklusif') ?></div>
         </div>
     </header>
 
@@ -354,31 +354,31 @@ Protokol Multazam - VVIP Event Ticketing
     <div class="ticket-container">
         <div class="vip-ticket js-tilt-ticket">
             <div class="ticket-top">
-                <div class="ticket-badge">VVIP PASS</div>
+                <div class="ticket-badge"><?= cms_text('multazam_ticket_badge', 'VVIP PASS') ?></div>
                 <div class="cutout cutout-left"></div>
                 <div class="cutout cutout-right"></div>
             </div>
             <div class="ticket-body">
                 <div>
-                    <h2 class="event-title">Malam Silaturahmi Akbar & Gala Dinner</h2>
-                    <p class="event-desc">Pertemuan tertutup khusus anggota alumni terverifikasi.</p>
+                    <h2 class="event-title"><?= cms_text('multazam_event_title', 'Malam Silaturahmi Akbar & Gala Dinner') ?></h2>
+                    <p class="event-desc"><?= cms_text('multazam_event_desc', 'Pertemuan tertutup khusus anggota alumni terverifikasi.') ?></p>
                     
                     <div class="ticket-details">
                         <div class="detail-item">
-                            <span class="detail-label">Tanggal</span>
-                            <span class="detail-value">24 Nov 2026</span>
+                            <span class="detail-label"><?= cms_text('multazam_label_date', 'Tanggal') ?></span>
+                            <span class="detail-value"><?= cms_text('multazam_val_date', '24 Nov 2026') ?></span>
                         </div>
                         <div class="detail-item">
-                            <span class="detail-label">Waktu</span>
-                            <span class="detail-value">19:00 WIB</span>
+                            <span class="detail-label"><?= cms_text('multazam_label_time', 'Waktu') ?></span>
+                            <span class="detail-value"><?= cms_text('multazam_val_time', '19:00 WIB') ?></span>
                         </div>
                         <div class="detail-item">
-                            <span class="detail-label">Lokasi</span>
-                            <span class="detail-value">The Ritz-Carlton, Jkt</span>
+                            <span class="detail-label"><?= cms_text('multazam_label_loc', 'Lokasi') ?></span>
+                            <span class="detail-value"><?= cms_text('multazam_val_loc', 'The Ritz-Carlton, Jkt') ?></span>
                         </div>
                         <div class="detail-item">
-                            <span class="detail-label">Dresscode</span>
-                            <span class="detail-value">Black Tie / Formal</span>
+                            <span class="detail-label"><?= cms_text('multazam_label_dress', 'Dresscode') ?></span>
+                            <span class="detail-value"><?= cms_text('multazam_val_dress', 'Black Tie / Formal') ?></span>
                         </div>
                     </div>
                 </div>
@@ -386,8 +386,8 @@ Protokol Multazam - VVIP Event Ticketing
                 <div class="qr-section">
                     <div class="qr-code"></div>
                     <div class="seat-info">
-                        <span class="detail-label">Meja VIP</span>
-                        <div class="seat-number">T-12</div>
+                        <span class="detail-label"><?= cms_text('multazam_label_seat', 'Meja VIP') ?></span>
+                        <div class="seat-number"><?= cms_text('multazam_val_seat', 'T-12') ?></div>
                     </div>
                 </div>
             </div>
@@ -397,10 +397,10 @@ Protokol Multazam - VVIP Event Ticketing
     <!-- Action Buttons -->
     <div class="action-buttons">
         <button class="btn-wallet" onclick="addToWallet(this)">
-            <i class="fa-brands fa-apple"></i> Add to Apple Wallet
+            <i class="fa-brands fa-apple"></i> <?= cms_text('multazam_btn_wallet', 'Add to Apple Wallet') ?>
         </button>
         <button class="btn-secondary" id="btnTogglePrayer">
-            <i class="fa-solid fa-hands-praying"></i> Dinding Multazam
+            <i class="fa-solid fa-hands-praying"></i> <?= cms_text('multazam_btn_prayer', 'Dinding Multazam') ?>
         </button>
     </div>
 
@@ -409,14 +409,14 @@ Protokol Multazam - VVIP Event Ticketing
 <!-- PANEL DINDING MULTAZAM (PRAYERS) -->
 <div class="prayer-panel" id="prayerPanel">
     <button class="btn-close-panel" id="btnClosePrayer"><i class="fa-solid fa-xmark"></i></button>
-    <div class="panel-title">Panjatkan Doa</div>
+    <div class="panel-title"><?= cms_text('multazam_panel_title', 'Panjatkan Doa') ?></div>
     <form action="/multazam/store" method="POST" class="prayer-form">
         <?= csrf_field() ?>
-        <textarea name="prayer_text" rows="4" placeholder="Tuliskan harapan, doa, atau munajat Anda..." required></textarea>
-        <button type="submit" class="btn-submit-prayer">Panjatkan</button>
+        <textarea name="prayer_text" rows="4" placeholder="<?= cms_raw('multazam_ph_prayer', 'Tuliskan harapan, doa, atau munajat Anda...') ?>" required></textarea>
+        <button type="submit" class="btn-submit-prayer"><?= cms_text('multazam_btn_submit', 'Panjatkan') ?></button>
     </form>
 
-    <div class="panel-title" style="margin-top:20px;">Dinding Harapan</div>
+    <div class="panel-title" style="margin-top:20px;"><?= cms_text('multazam_wall_title', 'Dinding Harapan') ?></div>
     <?php if(!empty($prayers)): ?>
         <?php foreach($prayers as $p): ?>
             <div class="prayer-card">
@@ -426,7 +426,7 @@ Protokol Multazam - VVIP Event Ticketing
             </div>
         <?php endforeach; ?>
     <?php else: ?>
-        <div style="text-align:center; padding:20px; color:#555; font-size:0.8rem; font-style:italic;">Belum ada munajat yang dipanjatkan.</div>
+        <div style="text-align:center; padding:20px; color:#555; font-size:0.8rem; font-style:italic;"><?= cms_text('multazam_wall_empty', 'Belum ada munajat yang dipanjatkan.') ?></div>
     <?php endif; ?>
 </div>
 <?= $this->endSection() ?>
@@ -463,11 +463,11 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function addToWallet(btn) {
-    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <?= cms_raw('multazam_wallet_process', 'Memproses...') ?>';
     btn.style.pointerEvents = 'none';
     
     setTimeout(() => {
-        btn.innerHTML = '<i class="fa-solid fa-check"></i> Tersimpan di Wallet';
+        btn.innerHTML = '<i class="fa-solid fa-check"></i> <?= cms_raw('multazam_wallet_success', 'Tersimpan di Wallet') ?>';
         btn.style.background = 'var(--neon-green)';
         btn.style.color = '#000';
     }, 1500);

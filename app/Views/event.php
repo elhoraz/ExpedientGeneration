@@ -190,34 +190,34 @@ Agenda & Eksibisi Expedient
 <?= $this->section('content') ?>
 
 <div class="event-header">
-    <h1 class="event-title">Agenda & Eksibisi</h1>
-    <div class="event-subtitle">Pertemuan Para Pelopor Peradaban</div>
+    <h1 class="event-title"><?= cms_text('event_title', 'Agenda & Eksibisi') ?></h1>
+    <div class="event-subtitle"><?= cms_text('event_subtitle', 'Pertemuan Para Pelopor Peradaban') ?></div>
 </div>
 
 <div class="event-container">
 
     <!-- Form Create Event -->
     <div class="create-card">
-        <h3 style="color:#d4af37; font-family:'Playfair Display', serif; font-size:1.5rem; margin-bottom:20px;">Jadwalkan Pertemuan Baru</h3>
+        <h3 style="color:#d4af37; font-family:'Playfair Display', serif; font-size:1.5rem; margin-bottom:20px;"><?= cms_text('event_create_title', 'Jadwalkan Pertemuan Baru') ?></h3>
         <form action="/event/store" method="POST">
             <?= csrf_field() ?>
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
                 <div style="grid-column: 1 / -1;">
-                    <input type="text" name="title" class="luxury-input" placeholder="Nama Agenda / Acara" required style="margin-bottom:0;">
+                    <input type="text" name="title" class="luxury-input" placeholder="<?= cms_raw('event_ph_title', 'Nama Agenda / Acara') ?>" required style="margin-bottom:0;">
                 </div>
                 <div>
-                    <label style="display:block; color:var(--text-secondary); font-size:0.85rem; margin-bottom:8px;">Waktu Pelaksanaan</label>
+                    <label style="display:block; color:var(--text-secondary); font-size:0.85rem; margin-bottom:8px;"><?= cms_text('event_label_time', 'Waktu Pelaksanaan') ?></label>
                     <input type="datetime-local" name="event_date" class="luxury-input" required style="margin-bottom:0;">
                 </div>
                 <div>
-                    <label style="display:block; color:var(--text-secondary); font-size:0.85rem; margin-bottom:8px;">Lokasi / Tautan Panggilan</label>
-                    <input type="text" name="location" class="luxury-input" placeholder="Lokasi Pertemuan" style="margin-bottom:0;">
+                    <label style="display:block; color:var(--text-secondary); font-size:0.85rem; margin-bottom:8px;"><?= cms_text('event_label_loc', 'Lokasi / Tautan Panggilan') ?></label>
+                    <input type="text" name="location" class="luxury-input" placeholder="<?= cms_raw('event_ph_loc', 'Lokasi Pertemuan') ?>" style="margin-bottom:0;">
                 </div>
                 <div style="grid-column: 1 / -1;">
-                    <textarea name="description" class="luxury-input" rows="3" placeholder="Deskripsi dan tujuan agenda..." required style="margin-bottom:0;"></textarea>
+                    <textarea name="description" class="luxury-input" rows="3" placeholder="<?= cms_raw('event_ph_desc', 'Deskripsi dan tujuan agenda...') ?>" required style="margin-bottom:0;"></textarea>
                 </div>
                 <div style="grid-column: 1 / -1;">
-                    <button type="submit" class="btn-gold"><i class="fa-solid fa-calendar-plus" style="margin-right:10px;"></i> Siarkan Agenda</button>
+                    <button type="submit" class="btn-gold"><i class="fa-solid fa-calendar-plus" style="margin-right:10px;"></i> <?= cms_text('event_btn_submit', 'Siarkan Agenda') ?></button>
                 </div>
             </div>
         </form>
@@ -225,7 +225,7 @@ Agenda & Eksibisi Expedient
 
     <!-- Timeline Events -->
     <?php if(empty($events)): ?>
-        <div style="text-align:center; color:var(--text-secondary); padding:50px; font-style:italic;">Belum ada agenda yang dijadwalkan di masa mendatang.</div>
+        <div style="text-align:center; color:var(--text-secondary); padding:50px; font-style:italic;"><?= cms_text('event_empty', 'Belum ada agenda yang dijadwalkan di masa mendatang.') ?></div>
     <?php else: ?>
         <div class="timeline">
             <?php foreach($events as $event): ?>
@@ -235,36 +235,36 @@ Agenda & Eksibisi Expedient
                     <div class="event-desc"><?= nl2br(esc($event['description'])) ?></div>
                     
                     <div class="event-meta">
-                        <div><i class="fa-solid fa-location-dot"></i> <?= esc($event['location'] ?: 'Lokasi belum ditentukan') ?></div>
-                        <div><i class="fa-solid fa-user-pen"></i> Dijadwalkan oleh <?= esc($event['creator_name']) ?></div>
+                        <div><i class="fa-solid fa-location-dot"></i> <?= esc($event['location'] ?: cms_raw('event_no_loc', 'Lokasi belum ditentukan')) ?></div>
+                        <div><i class="fa-solid fa-user-pen"></i> <?= cms_text('event_scheduled_by', 'Dijadwalkan oleh') ?> <?= esc($event['creator_name']) ?></div>
                     </div>
 
                     <div class="rsvp-section">
                         <div class="rsvp-stats">
-                            <div class="stat-badge Hadir"><i class="fa-solid fa-check"></i> <?= $event['stats']['Hadir'] ?> Hadir</div>
-                            <div class="stat-badge Tentatif"><i class="fa-solid fa-question"></i> <?= $event['stats']['Tentatif'] ?> Tentatif</div>
-                            <div class="stat-badge Tidak"><i class="fa-solid fa-xmark"></i> <?= $event['stats']['Tidak Hadir'] ?> Absen</div>
+                            <div class="stat-badge Hadir"><i class="fa-solid fa-check"></i> <?= $event['stats']['Hadir'] ?> <?= cms_text('event_stat_hadir', 'Hadir') ?></div>
+                            <div class="stat-badge Tentatif"><i class="fa-solid fa-question"></i> <?= $event['stats']['Tentatif'] ?> <?= cms_text('event_stat_tentatif', 'Tentatif') ?></div>
+                            <div class="stat-badge Tidak"><i class="fa-solid fa-xmark"></i> <?= $event['stats']['Tidak Hadir'] ?> <?= cms_text('event_stat_absen', 'Absen') ?></div>
                         </div>
 
                         <div class="rsvp-buttons">
-                            <span style="font-size:0.85rem; color:var(--text-secondary); margin-right:10px;">Konfirmasi Anda:</span>
+                            <span style="font-size:0.85rem; color:var(--text-secondary); margin-right:10px;"><?= cms_text('event_label_confirm', 'Konfirmasi Anda:') ?></span>
                             
                             <form action="/event/rsvp/<?= $event['id'] ?>" method="POST">
                                 <?= csrf_field() ?>
                                 <input type="hidden" name="status" value="Hadir">
-                                <button type="submit" class="btn-rsvp <?= $event['my_rsvp'] === 'Hadir' ? 'active' : '' ?>">Hadir</button>
+                                <button type="submit" class="btn-rsvp <?= $event['my_rsvp'] === 'Hadir' ? 'active' : '' ?>"><?= cms_text('event_btn_hadir', 'Hadir') ?></button>
                             </form>
                             
                             <form action="/event/rsvp/<?= $event['id'] ?>" method="POST">
                                 <?= csrf_field() ?>
                                 <input type="hidden" name="status" value="Tentatif">
-                                <button type="submit" class="btn-rsvp <?= $event['my_rsvp'] === 'Tentatif' ? 'active' : '' ?>">Tentatif</button>
+                                <button type="submit" class="btn-rsvp <?= $event['my_rsvp'] === 'Tentatif' ? 'active' : '' ?>"><?= cms_text('event_btn_tentatif', 'Tentatif') ?></button>
                             </form>
 
                             <form action="/event/rsvp/<?= $event['id'] ?>" method="POST">
                                 <?= csrf_field() ?>
                                 <input type="hidden" name="status" value="Tidak Hadir">
-                                <button type="submit" class="btn-rsvp <?= $event['my_rsvp'] === 'Tidak Hadir' ? 'active' : '' ?>">Absen</button>
+                                <button type="submit" class="btn-rsvp <?= $event['my_rsvp'] === 'Tidak Hadir' ? 'active' : '' ?>"><?= cms_text('event_btn_absen', 'Absen') ?></button>
                             </form>
                         </div>
                     </div>

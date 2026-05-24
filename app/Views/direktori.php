@@ -16,19 +16,19 @@ The Archive - 42nd Expedient
 
     <div class="search-wrapper">
         <form action="/direktori" method="GET" style="display:flex; gap:8px; width:100%; max-width:500px; margin:0 auto;">
-            <input type="text" id="searchInput" name="q" class="search-input" placeholder="Temukan Rekam Jejak..." value="<?= esc($search ?? '') ?>">
+            <input type="text" id="searchInput" name="q" class="search-input" placeholder="<?= cms_raw('direktori_search_placeholder', 'Temukan Rekam Jejak...') ?>" value="<?= esc($search ?? '') ?>">
             <button type="submit" style="background:#d4af37; border:none; color:#000; padding:10px 18px; border-radius:10px; cursor:pointer; font-weight:bold; font-size:0.85rem; letter-spacing:1px;"><i class="fa-solid fa-magnifying-glass"></i></button>
         </form>
         <?php if(!empty($search)): ?>
             <div style="text-align:center; margin-top:10px;">
-                <a href="/direktori" style="color:var(--text-secondary); font-size:0.8rem; text-decoration:none;"><i class="fa-solid fa-times"></i> Reset pencarian</a>
+                <a href="/direktori" style="color:var(--text-secondary); font-size:0.8rem; text-decoration:none;"><i class="fa-solid fa-times"></i> <?= cms_text('direktori_btn_reset', 'Reset pencarian') ?></a>
             </div>
         <?php endif; ?>
     </div>
 
     <?php if(empty($alumni)): ?>
         <div class="text-center text-themeSec font-tech w-full py-12">
-            <i class="fa-solid fa-book-open text-4xl text-accent/50 mb-4"></i><br>Arsip belum mencatat histori apapun.
+            <i class="fa-solid fa-book-open text-4xl text-accent/50 mb-4"></i><br><?= cms_text('direktori_empty_state', 'Arsip belum mencatat histori apapun.') ?>
         </div>
     <?php else: ?>
         
@@ -55,15 +55,15 @@ The Archive - 42nd Expedient
                             <div class="card-details">
                                 <?php if (!empty($isLoggedIn)): ?>
                                 <div class="detail-group reveal-item r-1">
-                                    <div class="d-label">Asal</div>
+                                    <div class="d-label"><?= cms_text('direktori_label_asal', 'Asal') ?></div>
                                     <div class="d-value"><?= esc(($user['tempat_lahir'] ?? '-') . (!empty($user['tanggal_lahir']) ? ', ' . date('d F Y', strtotime($user['tanggal_lahir'])) : '')) ?></div>
                                 </div>
                                 <div class="detail-group reveal-item r-2">
-                                    <div class="d-label">Domisili</div>
+                                    <div class="d-label"><?= cms_text('direktori_label_domisili', 'Domisili') ?></div>
                                     <div class="d-value"><?= esc($user['alamat_lengkap'] ?? '-') ?></div>
                                 </div>
                                 <div class="detail-group reveal-item r-3">
-                                    <div class="d-label">Visi & Aspirasi</div>
+                                    <div class="d-label"><?= cms_text('direktori_label_visi', 'Visi & Aspirasi') ?></div>
                                     <div class="d-value"><?= esc($user['cita_cita'] ?? 'Merahasiakan Tujuannya') ?></div>
                                 </div>
 
@@ -83,7 +83,7 @@ The Archive - 42nd Expedient
                                 <?php else: ?>
                                 <div class="reveal-item r-1" style="text-align:center; padding:15px 0;">
                                     <a href="/login" style="color:#d4af37; text-decoration:none; font-size:0.8rem; font-weight:600; letter-spacing:1px;">
-                                        <i class="fa-solid fa-lock" style="margin-right:6px;"></i> Masuk untuk lihat profil lengkap
+                                        <i class="fa-solid fa-lock" style="margin-right:6px;"></i> <?= cms_text('direktori_btn_login', 'Masuk untuk lihat profil lengkap') ?>
                                     </a>
                                 </div>
                                 <?php endif; ?>

@@ -266,18 +266,18 @@ Tarbiyah Nexus - Mentorship & B2B Halal Ecosystem
 <div class="nexus-wrapper">
     <header class="nexus-header">
         <a href="/fitur" class="btn-back">
-            <i class="fa-solid fa-chevron-left"></i> Kembali ke Vault
+            <i class="fa-solid fa-chevron-left"></i> <?= cms_text('tarbiyah_btn_back', 'Kembali ke Vault') ?>
         </a>
         <div class="header-titles">
-            <h1 class="page-title">Tarbiyah Nexus</h1>
-            <p class="page-subtitle">Pusat Bimbingan & Ekosistem Halal B2B</p>
+            <h1 class="page-title"><?= cms_text('tarbiyah_title', 'Tarbiyah Nexus') ?></h1>
+            <p class="page-subtitle"><?= cms_text('tarbiyah_subtitle', 'Pusat Bimbingan & Ekosistem Halal B2B') ?></p>
         </div>
     </header>
 
     <div class="nexus-tabs">
-        <button class="tab-btn active" onclick="switchTab('mentorship')">Jaringan Mentorship</button>
-        <button class="tab-btn" onclick="switchTab('b2b')">Sovereign B2B & Tender</button>
-        <button class="tab-btn" onclick="switchTab('status')">Status Permohonan Saya</button>
+        <button class="tab-btn active" onclick="switchTab('mentorship')"><?= cms_text('tarbiyah_tab_mentorship', 'Jaringan Mentorship') ?></button>
+        <button class="tab-btn" onclick="switchTab('b2b')"><?= cms_text('tarbiyah_tab_b2b', 'Sovereign B2B & Tender') ?></button>
+        <button class="tab-btn" onclick="switchTab('status')"><?= cms_text('tarbiyah_tab_status', 'Status Permohonan Saya') ?></button>
     </div>
 
     <!-- MENTORSHIP TAB -->
@@ -295,7 +295,7 @@ Tarbiyah Nexus - Mentorship & B2B Halal Ecosystem
                 <input type="hidden" name="type" value="Mentorship">
                 <button type="button" class="btn-wax" onclick="sendRequest(this)">
                     <div class="wax-seal"><i class="fa-solid fa-feather-pointed"></i></div>
-                    <span>Ajukan Bimbingan</span>
+                    <span><?= cms_text('tarbiyah_btn_mentorship', 'Ajukan Bimbingan') ?></span>
                 </button>
             </form>
         </div>
@@ -316,7 +316,7 @@ Tarbiyah Nexus - Mentorship & B2B Halal Ecosystem
                 <input type="hidden" name="type" value="Tender">
                 <button type="button" class="btn-wax" onclick="sendRequest(this)">
                     <div class="wax-seal"><i class="fa-solid fa-handshake"></i></div>
-                    <span>Ajukan Proposal</span>
+                    <span><?= cms_text('tarbiyah_btn_b2b', 'Ajukan Proposal') ?></span>
                 </button>
             </form>
         </div>
@@ -327,15 +327,15 @@ Tarbiyah Nexus - Mentorship & B2B Halal Ecosystem
     <div class="nexus-grid" id="status-tab" style="display: none;">
         <?php if (empty($my_requests)): ?>
             <div style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 50px;">
-                Belum ada permohonan yang diajukan.
+                <?= cms_text('tarbiyah_status_empty', 'Belum ada permohonan yang diajukan.') ?>
             </div>
         <?php else: ?>
             <?php foreach ($my_requests as $req): ?>
             <div class="nexus-card" style="border-left: 4px solid <?= $req['status'] == 'Pending' ? '#d4af37' : ($req['status'] == 'Approved' ? '#00ff88' : '#ff3366') ?>">
                 <div class="card-badge"><?= $req['status'] ?></div>
                 <h3 class="card-title"><?= esc($req['target_name']) ?></h3>
-                <div class="card-subtitle">Permohonan: <?= $req['type'] ?></div>
-                <p class="card-desc">Diajukan pada: <?= date('d M Y, H:i', strtotime($req['created_at'])) ?></p>
+                <div class="card-subtitle"><?= cms_text('tarbiyah_status_req', 'Permohonan:') ?> <?= $req['type'] ?></div>
+                <p class="card-desc"><?= cms_text('tarbiyah_status_date', 'Diajukan pada:') ?> <?= date('d M Y, H:i', strtotime($req['created_at'])) ?></p>
             </div>
             <?php endforeach; ?>
         <?php endif; ?>

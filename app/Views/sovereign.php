@@ -132,13 +132,13 @@
 
     <div id="preloader">
         <div class="loader-ring"></div>
-        <span id="loadingText">DECRYPTING OMNIPRESENCE...</span>
+        <span id="loadingText"><?= cms_raw('sov_loading', 'DECRYPTING OMNIPRESENCE...') ?></span>
     </div>
 
     <div class="vault-vignette"></div>
 
     <a href="<?= base_url('fitur') ?>" class="btn-vault-back" id="btnBackToFitur">
-        <i class="fa-solid fa-chevron-left"></i> Exit Vault
+        <i class="fa-solid fa-chevron-left"></i> <?= cms_text('sov_btn_exit', 'Exit Vault') ?>
     </a>
 
     <button class="theme-toggle" id="btnThemeToggle" title="Toggle Day/Night Mode">
@@ -157,7 +157,7 @@
 
     <div class="ux-overlay" id="uxOverlay">
         <i class="fa-solid fa-hand-pointer ux-icon"></i>
-        <span class="ux-text">Berinteraksi <br><span style="font-size:9px; opacity:0.7">Tarik Kartu & Usap Layar</span></span>
+        <span class="ux-text"><?= cms_html('sov_tutor_drag', 'Berinteraksi <br><span style="font-size:9px; opacity:0.7">Tarik Kartu & Usap Layar</span>') ?></span>
     </div>
 
     <div id="canvas-container"></div>
@@ -174,9 +174,9 @@
     <script>
         window.ExpedientData = {
             nama: "<?= esc($user['nama_lengkap']) ?>",
-            jabatan: "SOVEREIGN ENTITY",
+            jabatan: "<?= cms_raw('sov_jabatan', 'SOVEREIGN ENTITY') ?>",
             nomor_id: "EXP-<?= sprintf('%03d', $user['id']) ?>",
-            exp: "VALID THRU FOREVER",
+            exp: "<?= cms_raw('sov_exp', 'VALID THRU FOREVER') ?>",
             foto_url: "<?= $foto_profil ?>",
             qr_url: "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=<?= urlencode(base_url('scan/') . esc($user['public_token'])) ?>"
         };

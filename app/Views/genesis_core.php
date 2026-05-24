@@ -176,24 +176,24 @@
 <body>
 
     <a href="/fitur" class="btn-back-vault">
-        <i class="fa-solid fa-chevron-left"></i> Exit Genesis
+        <i class="fa-solid fa-chevron-left"></i> <?= cms_text('genesis_btn_exit', 'Exit Genesis') ?>
     </a>
 
     <div class="genesis-wrapper">
         <canvas id="canvas1"></canvas>
         
         <div class="hud-overlay" id="hudOverlay">
-            <div class="hud-text">Usap layar untuk mendisrupsi partikel<br>Biarkan untuk membentuk identitas</div>
+            <div class="hud-text"><?= cms_html('genesis_hud_instruction', 'Usap layar untuk mendisrupsi partikel<br>Biarkan untuk membentuk identitas') ?></div>
             <form action="/genesis/log" method="POST">
                 <?= csrf_field() ?>
-                <button type="button" class="btn-singularity" id="btnSingularity">Initiate Singularity</button>
+                <button type="button" class="btn-singularity" id="btnSingularity"><?= cms_text('genesis_btn_singularity', 'Initiate Singularity') ?></button>
             </form>
         </div>
 
         <div class="revelation-box" id="revelationBox">
-            <h1 class="rev-title">WE ARE ONE</h1>
-            <div class="rev-subtitle">Ribuan entitas, satu kekuatan tak tertembus.</div>
-            <a href="/fitur" class="btn-return">Kembali ke Vault</a>
+            <h1 class="rev-title"><?= cms_text('genesis_rev_title', 'WE ARE ONE') ?></h1>
+            <div class="rev-subtitle"><?= cms_text('genesis_rev_subtitle', 'Ribuan entitas, satu kekuatan tak tertembus.') ?></div>
+            <a href="/fitur" class="btn-return"><?= cms_text('genesis_btn_return', 'Kembali ke Vault') ?></a>
         </div>
     </div>
 

@@ -150,3 +150,22 @@ body {
 :root[data-theme="light"] .premium-card:hover .card-icon { color: #aa771c; }
 :root[data-theme="light"] .premium-card::before { background: radial-gradient(circle at 50% 100%, rgba(212,175,55,0.1) 0%, transparent 60%); }
 :root[data-theme="light"] .locked-card { filter: grayscale(100%); opacity: 0.35; }
+
+/* ================= MOBILE RESPONSIVENESS ================= */
+@media (max-width: 768px) {
+    .dashboard-header { margin-bottom: 40px; }
+    .dashboard-title { font-size: 2rem; letter-spacing: 3px; }
+    .dashboard-subtitle { font-size: 0.75rem; letter-spacing: 3px; line-height: 1.5; }
+    
+    .cinematic-grid { gap: 25px; padding: 0 10px; grid-template-columns: 1fr; perspective: none; }
+    
+    .premium-card { height: auto; min-height: 320px; transform-style: flat; }
+    .premium-card .card-bg { filter: grayscale(30%) brightness(0.5) !important; transform: none !important; }
+    
+    .card-content { position: relative; padding: 30px 20px; transform: none; pointer-events: auto; }
+    
+    /* Reveal text elements by default for touch screens */
+    .card-title, .card-desc, .launch-btn { transform: translateY(0); opacity: 1; transition: none; }
+    .card-title { font-size: 1.5rem; margin-top: 60px; }
+    .card-icon { color: var(--gold-main); transform: none; right: 20px; top: 20px; font-size: 1.8rem; }
+}

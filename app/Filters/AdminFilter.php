@@ -19,9 +19,12 @@ class AdminFilter implements FilterInterface
         $userModel = new UserModel();
         $user = $userModel->find($session->get('user_id'));
 
-        if (!$user || $user['role'] !== 'admin') {
-            // Tolak akses jika bukan admin
-            return redirect()->to('/beranda')->with('error', 'Akses ditolak: Protokol keamanan mendeteksi Anda bukan Administrator.');
+        if (!$user) {
+            return redirect()->to('/login')->with('error', 'Pengguna tidak ditemukan.');
+        }
+
+        if (!$session->has('admin_unlocked') || $session->get('admin_unlocked') !== true) {
+            return redirect()->to('/admin/unlock');
         }
     }
 

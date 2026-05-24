@@ -277,11 +277,11 @@ Amanah & Wasiat - The Legacy Vault
 <div class="vault-wrapper">
     <header class="vault-header">
         <a href="/fitur" class="btn-back">
-            <i class="fa-solid fa-chevron-left"></i> Kembali
+            <i class="fa-solid fa-chevron-left"></i> <?= cms_text('wasiat_btn_back', 'Kembali') ?>
         </a>
         <div class="header-titles">
-            <h1 class="page-title">Amanah & Wasiat</h1>
-            <div class="status-badge"><div class="blink-dot"></div> Ruang Rahasia</div>
+            <h1 class="page-title"><?= cms_text('wasiat_title', 'Amanah & Wasiat') ?></h1>
+            <div class="status-badge"><div class="blink-dot"></div> <?= cms_text('wasiat_badge', 'Ruang Rahasia') ?></div>
         </div>
     </header>
 
@@ -291,15 +291,15 @@ Amanah & Wasiat - The Legacy Vault
         <div class="lockbox" style="border-left-color: var(--gold-main); border-color: rgba(212,175,55,0.3);">
             <div class="lockbox-header" style="border-bottom:none; margin-bottom:0; padding-bottom:0;">
                 <div>
-                    <h2 class="box-title" style="color:var(--gold-main); font-size:1.2rem;">+ Segel Amanah Baru</h2>
+                    <h2 class="box-title" style="color:var(--gold-main); font-size:1.2rem;"><?= cms_text('wasiat_box_new_title', '+ Segel Amanah Baru') ?></h2>
                 </div>
             </div>
             <form action="/wasiat/store" method="POST" style="margin-top: 15px;">
                 <?= csrf_field() ?>
-                <textarea name="message" rows="3" required placeholder="Tulis pesan rahasia yang akan dienkripsi..." style="width:100%; background:rgba(0,0,0,0.5); border:1px solid rgba(255,255,255,0.1); color:#fff; padding:10px; font-family:'Courier New'; margin-bottom:10px; border-radius:4px;"></textarea>
+                <textarea name="message" rows="3" required placeholder="<?= cms_raw('wasiat_ph_message', 'Tulis pesan rahasia yang akan dienkripsi...') ?>" style="width:100%; background:rgba(0,0,0,0.5); border:1px solid rgba(255,255,255,0.1); color:#fff; padding:10px; font-family:'Courier New'; margin-bottom:10px; border-radius:4px;"></textarea>
                 <div style="display:flex; gap:10px;">
-                    <input type="password" name="passphrase" required placeholder="Kunci Akses (Passphrase)" style="flex:1; background:rgba(0,0,0,0.5); border:1px solid rgba(255,255,255,0.1); color:#fff; padding:10px; font-family:'Courier New'; border-radius:4px;">
-                    <button type="submit" class="btn-unlock" style="border-color:var(--gold-main); color:var(--gold-main);"><i class="fa-solid fa-lock"></i> SEGEL</button>
+                    <input type="password" name="passphrase" required placeholder="<?= cms_raw('wasiat_ph_pass', 'Kunci Akses (Passphrase)') ?>" style="flex:1; background:rgba(0,0,0,0.5); border:1px solid rgba(255,255,255,0.1); color:#fff; padding:10px; font-family:'Courier New'; border-radius:4px;">
+                    <button type="submit" class="btn-unlock" style="border-color:var(--gold-main); color:var(--gold-main);"><i class="fa-solid fa-lock"></i> <?= cms_text('wasiat_btn_seal', 'SEGEL') ?></button>
                 </div>
             </form>
         </div>
@@ -312,7 +312,7 @@ Amanah & Wasiat - The Legacy Vault
                             <img src="<?= base_url('uploads/profiles/' . ($w['foto_profil'] ?: 'default.webp')) ?>" alt="Foto" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 1px solid var(--gold-dark);">
                             <div>
                                 <div class="box-id">FILE.ID: AMN-<?= str_pad($w['id'], 4, '0', STR_PAD_LEFT) ?></div>
-                                <h2 class="box-title">Amanah dari <?= esc($w['nama_panggilan']) ?></h2>
+                                <h2 class="box-title"><?= cms_text('wasiat_box_title_prefix', 'Amanah dari') ?> <?= esc($w['nama_panggilan']) ?></h2>
                             </div>
                         </div>
                         <div class="box-meta">
@@ -328,15 +328,15 @@ Amanah & Wasiat - The Legacy Vault
                     
                     <form action="/wasiat/unlock/<?= $w['id'] ?>" method="POST" style="display:flex; gap:10px; align-items:center;">
                         <?= csrf_field() ?>
-                        <input type="password" name="passphrase" required placeholder="Masukkan Kunci Akses..." style="background:transparent; border:none; border-bottom:1px dashed var(--danger-red); color:var(--danger-red); padding:5px; font-family:'Courier New'; outline:none; width:200px;">
+                        <input type="password" name="passphrase" required placeholder="<?= cms_raw('wasiat_ph_unlock', 'Masukkan Kunci Akses...') ?>" style="background:transparent; border:none; border-bottom:1px dashed var(--danger-red); color:var(--danger-red); padding:5px; font-family:'Courier New'; outline:none; width:200px;">
                         <button type="submit" class="btn-unlock">
-                            <i class="fa-solid fa-key"></i> Buka Segel
+                            <i class="fa-solid fa-key"></i> <?= cms_text('wasiat_btn_open', 'Buka Segel') ?>
                         </button>
                     </form>
                 </div>
             <?php endforeach; ?>
         <?php else: ?>
-            <div style="text-align:center; padding:50px; color:#555; border:1px dashed #333;">Belum ada amanah yang tersegel di ruang ini.</div>
+            <div style="text-align:center; padding:50px; color:#555; border:1px dashed #333;"><?= cms_text('wasiat_empty', 'Belum ada amanah yang tersegel di ruang ini.') ?></div>
         <?php endif; ?>
 
         <?php if(isset($pager)): ?>
@@ -353,19 +353,19 @@ Amanah & Wasiat - The Legacy Vault
         <i class="fa-solid fa-fingerprint fingerprint-icon" id="fpIcon"></i>
         <div class="scan-line" id="scanLine"></div>
     </div>
-    <div class="scan-text" id="scanText">Meminta Akses Biometrik...</div>
+    <div class="scan-text" id="scanText"><?= cms_text('wasiat_scan_text', 'Meminta Akses Biometrik...') ?></div>
 </div>
 
 <!-- Modal Wasiat Terbuka -->
 <?php if(session()->getFlashdata('unlocked_wasiat')): ?>
 <div id="unsealModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; justify-content:center; align-items:center; flex-direction:column; padding:20px; backdrop-filter:blur(5px);">
     <div class="lockbox" style="border-color:var(--neon-green); border-left-color:var(--neon-green); max-width:600px; width:100%;" id="unsealBox">
-        <h2 style="color:var(--neon-green); font-family:'Playfair Display'; margin-bottom:20px; text-shadow:0 0 15px rgba(0,255,136,0.5);"><i class="fa-solid fa-envelope-open-text"></i> AMANAH TERBUKA</h2>
+        <h2 style="color:var(--neon-green); font-family:'Playfair Display'; margin-bottom:20px; text-shadow:0 0 15px rgba(0,255,136,0.5);"><i class="fa-solid fa-envelope-open-text"></i> <?= cms_text('wasiat_modal_title', 'AMANAH TERBUKA') ?></h2>
         <div style="font-family:'Inter', sans-serif; font-size:1rem; line-height:1.6; color:#fff; word-break:break-word; background:rgba(0,0,0,0.5); padding:20px; border-radius:5px; border:1px dashed rgba(0,255,136,0.3);">
             <?= nl2br(esc(session()->getFlashdata('unlocked_wasiat'))) ?>
         </div>
         <div style="margin-top:30px; text-align:right;">
-            <button onclick="closeUnsealModal()" style="background:transparent; color:var(--neon-green); border:1px solid var(--neon-green); padding:10px 25px; font-weight:bold; cursor:pointer; font-family:'Courier New'; letter-spacing:2px; transition:0.3s;" onmouseover="this.style.background='rgba(0,255,136,0.1)'" onmouseout="this.style.background='transparent'">TUTUP DOKUMEN</button>
+            <button onclick="closeUnsealModal()" style="background:transparent; color:var(--neon-green); border:1px solid var(--neon-green); padding:10px 25px; font-weight:bold; cursor:pointer; font-family:'Courier New'; letter-spacing:2px; transition:0.3s;" onmouseover="this.style.background='rgba(0,255,136,0.1)'" onmouseout="this.style.background='transparent'"><?= cms_text('wasiat_btn_close', 'TUTUP DOKUMEN') ?></button>
         </div>
     </div>
 </div>

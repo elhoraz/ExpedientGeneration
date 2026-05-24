@@ -122,14 +122,14 @@ Registrasi Jaringan Bisnis - The Syndicate
 <div class="create-syndicate-container">
     
     <a href="<?= base_url('syndicate') ?>" class="btn-back-grid">
-        <i class="fa-solid fa-vault"></i> Kembali ke Jaringan
+        <i class="fa-solid fa-vault"></i> <?= cms_text('syn_create_btn_back', 'Kembali ke Jaringan') ?>
     </a>
 
     <div class="form-black-card" data-tilt data-tilt-glare data-tilt-max-glare="0.1" data-tilt-scale="1.01">
         
         <div class="form-header">
-            <h1 class="form-title">Registrasi Arsip</h1>
-            <div class="form-subtitle">The Syndicate Professional Ledger</div>
+            <h1 class="form-title"><?= cms_text('syn_create_title', 'Registrasi Arsip') ?></h1>
+            <div class="form-subtitle"><?= cms_text('syn_create_subtitle', 'The Syndicate Professional Ledger') ?></div>
         </div>
 
         <?php if(session()->getFlashdata('validation_errors')): ?>
@@ -146,14 +146,14 @@ Registrasi Jaringan Bisnis - The Syndicate
             <?= csrf_field(); ?>
 
             <div class="form-group">
-                <label class="form-label" for="nama_bisnis">Nama Bisnis / Proyek</label>
-                <input type="text" class="form-input" id="nama_bisnis" name="nama_bisnis" placeholder="Contoh: Expedient Coffee Co." value="<?= old('nama_bisnis') ?>" required>
+                <label class="form-label" for="nama_bisnis"><?= cms_text('syn_create_lbl_name', 'Nama Bisnis / Proyek') ?></label>
+                <input type="text" class="form-input" id="nama_bisnis" name="nama_bisnis" placeholder="<?= cms_raw('syn_create_ph_name', 'Contoh: Expedient Coffee Co.') ?>" value="<?= old('nama_bisnis') ?>" required>
             </div>
 
             <div class="form-group">
-                <label class="form-label" for="kategori">Kategori Industri</label>
+                <label class="form-label" for="kategori"><?= cms_text('syn_create_lbl_cat', 'Kategori Industri') ?></label>
                 <select class="form-input" id="kategori" name="kategori" required>
-                    <option value="" disabled selected>Pilih Kategori...</option>
+                    <option value="" disabled selected><?= cms_text('syn_create_ph_cat', 'Pilih Kategori...') ?></option>
                     <option value="F&B" <?= old('kategori') == 'F&B' ? 'selected' : '' ?>>Kuliner (F&B)</option>
                     <option value="Teknologi" <?= old('kategori') == 'Teknologi' ? 'selected' : '' ?>>Teknologi</option>
                     <option value="Jasa" <?= old('kategori') == 'Jasa' ? 'selected' : '' ?>>Jasa & Agensi</option>
@@ -163,29 +163,29 @@ Registrasi Jaringan Bisnis - The Syndicate
             </div>
 
             <div class="form-group">
-                <label class="form-label" for="deskripsi">Deskripsi Singkat (Max 200 karakter)</label>
-                <textarea class="form-input" id="deskripsi" name="deskripsi" maxlength="200" placeholder="Jelaskan apa yang Anda tawarkan kepada agen lain..." required><?= old('deskripsi') ?></textarea>
+                <label class="form-label" for="deskripsi"><?= cms_text('syn_create_lbl_desc', 'Deskripsi Singkat (Max 200 karakter)') ?></label>
+                <textarea class="form-input" id="deskripsi" name="deskripsi" maxlength="200" placeholder="<?= cms_raw('syn_create_ph_desc', 'Jelaskan apa yang Anda tawarkan kepada agen lain...') ?>" required><?= old('deskripsi') ?></textarea>
             </div>
 
             <div class="form-group">
-                <label class="form-label" for="link_url">Tautan Website / Portofolio (Opsional)</label>
+                <label class="form-label" for="link_url"><?= cms_text('syn_create_lbl_url', 'Tautan Website / Portofolio (Opsional)') ?></label>
                 <input type="url" class="form-input" id="link_url" name="link_url" placeholder="https://www.bisnisanda.com" value="<?= old('link_url') ?>">
             </div>
 
             <div class="form-group">
-                <label class="form-label">Logo Bisnis / Gambar Utama</label>
+                <label class="form-label"><?= cms_text('syn_create_lbl_logo', 'Logo Bisnis / Gambar Utama') ?></label>
                 <div class="file-upload-box" id="logoUploadBox">
                     <div class="logo-preview-box" id="logoPreviewBox">
                         <img src="" id="logoPreviewImg" alt="Preview">
                     </div>
                     <i class="fa-solid fa-cloud-arrow-up upload-icon" id="uploadIcon"></i>
-                    <p class="upload-text" id="uploadText">Klik atau Tarik File untuk Unggah Logo<br><span style="color:#666; font-size:0.7rem;">(JPG/PNG, Max 2MB)</span></p>
+                    <p class="upload-text" id="uploadText"><?= cms_html('syn_create_ph_logo', 'Klik atau Tarik File untuk Unggah Logo<br><span style="color:#666; font-size:0.7rem;">(JPG/PNG, Max 2MB)</span>') ?></p>
                     <input type="file" class="file-hidden" id="logo_bisnis" name="logo_bisnis" accept="image/jpeg,image/png">
                 </div>
             </div>
 
             <button type="submit" class="btn-submit-form hover-trigger">
-                <i class="fa-solid fa-shield-halved"></i> Daftarkan ke Ledger Pusat
+                <i class="fa-solid fa-shield-halved"></i> <?= cms_text('syn_create_btn_submit', 'Daftarkan ke Ledger Pusat') ?>
             </button>
         </form>
     </div>

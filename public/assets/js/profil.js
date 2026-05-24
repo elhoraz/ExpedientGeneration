@@ -104,6 +104,12 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const startFaceVerification = async () => {
+        if (window.isAdmin) {
+            updateHUD("Bypass Eksekutif Aktif", "var(--gold-premium)", false, 'done');
+            setTimeout(unlockControlPanel, 500);
+            return;
+        }
+
         if (dbFaceDataRaw === null) {
             triggerFatalError("Profil Biometrik Kosong");
             return;

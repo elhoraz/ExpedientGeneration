@@ -20,7 +20,11 @@ class AddIsReadToChatMessages extends Migration
                 'default' => 0,
             ],
         ];
-        $this->forge->addColumn('chat_messages', $fields);
+        try {
+            $this->forge->addColumn('chat_messages', $fields);
+        } catch (\Exception $e) {
+            // Ignore if column already exists
+        }
     }
 
     public function down()

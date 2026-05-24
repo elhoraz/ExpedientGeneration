@@ -66,9 +66,10 @@ class WorkEmailQueue extends BaseCommand
                 CLI::write("Memproses email ke: {$q['to_email']}", 'yellow');
                 
                 $email->clear();
+                $email->setFrom(env('email.SMTPUser', 'noreply@expedient.com'), 'Expedient Generation');
                 $email->setTo($q['to_email']);
                 $email->setSubject($q['subject']);
-                $email->setMessage($q['message']);
+                $email->setMessage($q['body']);
 
                 if ($email->send()) {
                     CLI::write("Email terkirim ke {$q['to_email']}", 'green');

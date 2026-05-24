@@ -114,27 +114,27 @@
             <div class="step-form step-email <?= $step === 'email' ? 'active' : '' ?>" id="stepEmail">
                 <div class="prism-header">
                     <div class="icon-shield"><i class="fa-solid fa-envelope-open-text"></i></div>
-                    <div class="subtitle-spec">Pemulihan Akses</div>
-                    <h1 class="title-holo">Lupa Kata Sandi</h1>
+                    <div class="subtitle-spec"><?= cms_text('forgot_step1_subtitle', 'Pemulihan Akses') ?></div>
+                    <h1 class="title-holo"><?= cms_text('forgot_step1_title', 'Lupa Kata Sandi') ?></h1>
                 </div>
                 <div class="step-indicator">
                     <div class="step-dot active"></div><div class="step-dot"></div><div class="step-dot"></div>
                 </div>
-                <p style="text-align:center;color:var(--text-muted);font-size:clamp(0.75rem,1.5vh,0.85rem);margin-bottom:clamp(15px,3vh,20px);">Masukkan email yang terdaftar untuk menerima kode verifikasi.</p>
+                <p style="text-align:center;color:var(--text-muted);font-size:clamp(0.75rem,1.5vh,0.85rem);margin-bottom:clamp(15px,3vh,20px);"><?= cms_text('forgot_step1_desc', 'Masukkan email yang terdaftar untuk menerima kode verifikasi.') ?></p>
                 <form action="/auth/forgot-password/send" method="POST">
                     <?= csrf_field() ?>
                     <div class="input-group">
                         <input type="email" name="email" id="emailInput" class="input-control" required placeholder=" ">
-                        <label for="emailInput" class="input-label">Surel Terdaftar</label>
+                        <label for="emailInput" class="input-label"><?= cms_text('forgot_label_email', 'Surel Terdaftar') ?></label>
                         <div class="input-neon-line"></div>
                     </div>
                     <button type="submit" class="btn-prime" id="btnSend">
-                        Kirim Kode <i class="fa-solid fa-paper-plane"></i>
+                        <?= cms_text('forgot_btn_send', 'Kirim Kode') ?> <i class="fa-solid fa-paper-plane"></i>
                     </button>
                 </form>
                 <div class="back-link">
                     <i class="fa-solid fa-arrow-left" style="font-size:0.7rem;margin-right:4px;"></i>
-                    <a href="/login">Kembali ke Login</a>
+                    <a href="/login"><?= cms_text('forgot_back_login', 'Kembali ke Login') ?></a>
                 </div>
             </div>
 
@@ -142,13 +142,13 @@
             <div class="step-form step-verify <?= $step === 'verify' ? 'active' : '' ?>" id="stepVerify">
                 <div class="prism-header">
                     <div class="icon-shield"><i class="fa-solid fa-shield-halved"></i></div>
-                    <div class="subtitle-spec">Konfirmasi Identitas</div>
-                    <h1 class="title-holo">Kode Verifikasi</h1>
+                    <div class="subtitle-spec"><?= cms_text('forgot_step2_subtitle', 'Konfirmasi Identitas') ?></div>
+                    <h1 class="title-holo"><?= cms_text('forgot_step2_title', 'Kode Verifikasi') ?></h1>
                 </div>
                 <div class="step-indicator">
                     <div class="step-dot done"></div><div class="step-dot active"></div><div class="step-dot"></div>
                 </div>
-                <p style="text-align:center;color:var(--text-muted);font-size:clamp(0.75rem,1.5vh,0.85rem);margin-bottom:clamp(15px,3vh,20px);">Masukkan 6 digit kode yang telah dikirim ke email Anda.</p>
+                <p style="text-align:center;color:var(--text-muted);font-size:clamp(0.75rem,1.5vh,0.85rem);margin-bottom:clamp(15px,3vh,20px);"><?= cms_text('forgot_step2_desc', 'Masukkan 6 digit kode yang telah dikirim ke email Anda.') ?></p>
                 <form action="/auth/forgot-password/verify" method="POST" id="otpForm">
                     <?= csrf_field() ?>
                     <input type="hidden" name="code" id="otpHidden">
@@ -161,15 +161,15 @@
                         <input type="text" maxlength="1" class="otp-input" data-otp="5" inputmode="numeric" autocomplete="off">
                     </div>
                     <button type="submit" class="btn-prime" id="btnVerify">
-                        Verifikasi Kode <i class="fa-solid fa-check-double"></i>
+                        <?= cms_text('forgot_btn_verify', 'Verifikasi Kode') ?> <i class="fa-solid fa-check-double"></i>
                     </button>
                 </form>
                 <div class="resend-timer" id="resendArea">
-                    <span id="timerText">Kirim ulang dalam <strong id="countdown">60</strong>s</span>
+                    <span id="timerText"><?= cms_text('forgot_resend_wait', 'Kirim ulang dalam') ?> <strong id="countdown">60</strong>s</span>
                 </div>
                 <div class="back-link">
                     <i class="fa-solid fa-arrow-left" style="font-size:0.7rem;margin-right:4px;"></i>
-                    <a href="/auth/forgot-password">Ulangi dari awal</a>
+                    <a href="/auth/forgot-password"><?= cms_text('forgot_restart', 'Ulangi dari awal') ?></a>
                 </div>
             </div>
 
@@ -177,34 +177,34 @@
             <div class="step-form step-reset <?= $step === 'reset' ? 'active' : '' ?>" id="stepReset">
                 <div class="prism-header">
                     <div class="icon-shield"><i class="fa-solid fa-lock-open"></i></div>
-                    <div class="subtitle-spec">Tahap Akhir</div>
-                    <h1 class="title-holo">Sandi Baru</h1>
+                    <div class="subtitle-spec"><?= cms_text('forgot_step3_subtitle', 'Tahap Akhir') ?></div>
+                    <h1 class="title-holo"><?= cms_text('forgot_step3_title', 'Sandi Baru') ?></h1>
                 </div>
                 <div class="step-indicator">
                     <div class="step-dot done"></div><div class="step-dot done"></div><div class="step-dot active"></div>
                 </div>
-                <p style="text-align:center;color:var(--text-muted);font-size:clamp(0.75rem,1.5vh,0.85rem);margin-bottom:clamp(15px,3vh,20px);">Buat kata sandi baru minimal 8 karakter.</p>
+                <p style="text-align:center;color:var(--text-muted);font-size:clamp(0.75rem,1.5vh,0.85rem);margin-bottom:clamp(15px,3vh,20px);"><?= cms_text('forgot_step3_desc', 'Buat kata sandi baru minimal 8 karakter.') ?></p>
                 <form action="/auth/forgot-password/reset" method="POST">
                     <?= csrf_field() ?>
                     <div class="input-group">
                         <input type="password" name="password" id="newPw" class="input-control" required placeholder=" " minlength="8">
-                        <label for="newPw" class="input-label">Kata Sandi Baru</label>
+                        <label for="newPw" class="input-label"><?= cms_text('forgot_label_newpw', 'Kata Sandi Baru') ?></label>
                         <div class="input-neon-line"></div>
                         <i class="fa-solid fa-eye icon-eye" onclick="togglePass('newPw',this)"></i>
                     </div>
                     <div class="input-group">
                         <input type="password" name="password_confirm" id="confirmPw" class="input-control" required placeholder=" " minlength="8">
-                        <label for="confirmPw" class="input-label">Konfirmasi Sandi</label>
+                        <label for="confirmPw" class="input-label"><?= cms_text('forgot_label_confirmpw', 'Konfirmasi Sandi') ?></label>
                         <div class="input-neon-line"></div>
                         <i class="fa-solid fa-eye icon-eye" onclick="togglePass('confirmPw',this)"></i>
                     </div>
                     <button type="submit" class="btn-prime">
-                        Simpan Sandi Baru <i class="fa-solid fa-arrow-right-long"></i>
+                        <?= cms_text('forgot_btn_save', 'Simpan Sandi Baru') ?> <i class="fa-solid fa-arrow-right-long"></i>
                     </button>
                 </form>
                 <div class="back-link">
                     <i class="fa-solid fa-arrow-left" style="font-size:0.7rem;margin-right:4px;"></i>
-                    <a href="/login">Kembali ke Login</a>
+                    <a href="/login"><?= cms_text('forgot_back_login', 'Kembali ke Login') ?></a>
                 </div>
             </div>
 

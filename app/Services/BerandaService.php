@@ -34,7 +34,7 @@ class BerandaService
         // 1. Cache total alumni selama 15 menit
         $totalAlumni = $cache->get('alumni_count');
         if ($totalAlumni === null) {
-            $totalAlumni = $this->userModel->countAllResults();
+            $totalAlumni = $this->userModel->where('role !=', 'admin')->countAllResults();
             $cache->save('alumni_count', $totalAlumni, 900);
         }
 
@@ -73,12 +73,14 @@ class BerandaService
         try {
             $birthdayUsers = $this->userModel
                 ->where('birth_month_day', $todayMonthDay)
+                ->where('role !=', 'admin')
                 ->findAll();
         } catch (\Exception $e) {
             // Fallback ke method lama jika kolom belum ada (pre-migration)
             $birthdayUsers = $this->userModel
                 ->where('MONTH(tanggal_lahir)', $time->format('m'))
                 ->where('DAY(tanggal_lahir)', $time->format('d'))
+                ->where('role !=', 'admin')
                 ->findAll();
         }
 
@@ -86,6 +88,7 @@ class BerandaService
         $leaderboard = $this->db->table('users')
             ->select('nama_lengkap, nama_panggilan, foto_profil, prestise_points')
             ->where('prestise_points >', 0) // Hanya tampilkan yang punya poin
+            ->where('role !=', 'admin') // Sembunyikan admin
             ->orderBy('prestise_points', 'DESC')
             ->limit(5)
             ->get()->getResultArray();
@@ -115,18 +118,16 @@ class BerandaService
             ->orderBy('created_at', 'DESC')
             ->findAll(5);
 
+        // Lorong Kenangan (Galeri)
+        $galleryModel = new \App\Models\BerandaGalleryModel();
+        $galeri = $galleryModel->orderBy('created_at', 'ASC')->findAll();
+
         return [
             'total_alumni'      => $totalAlumni,
             'total_provinsi'    => $totalProvinsi, 
             'tahun_kebangkitan' => date('Y'),
             
-            // Lorong Kenangan
-            'galeri' => [
-                ['file' => '/images/globe.png', 'caption' => 'Memori Pertama'],
-                ['file' => '/images/cincin-emas.png', 'caption' => 'Ikatan Persaudaraan'],
-                ['file' => '/images/mahkota-emas.png', 'caption' => 'Amanah Kepemimpinan'],
-                ['file' => '/images/kristal-puncak.png', 'caption' => 'Visi Puncak'],
-            ],
+            'galeri' => $galeri,
 
             // Berita dinamis dari database
             'berita' => $beritaList,

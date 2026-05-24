@@ -52,6 +52,10 @@ Dashboard Analitik Eksekutif
         box-shadow: 0 10px 30px rgba(212,175,55,0.1);
         border-color: rgba(212,175,55,0.4);
     }
+    .hover-glow-emerald:hover { box-shadow: 0 10px 30px rgba(0, 255, 136, 0.2); border-color: #00ff88; }
+    .hover-glow-gold:hover { box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2); border-color: #d4af37; }
+    .hover-glow-danger:hover { box-shadow: 0 10px 30px rgba(255, 51, 102, 0.2); border-color: #ff3366; }
+    .hover-glow-cyan:hover { box-shadow: 0 10px 30px rgba(0, 191, 255, 0.2); border-color: #00bfff; }
     .metric-value {
         font-size: 3rem;
         font-family: 'Inter', sans-serif;
@@ -136,6 +140,38 @@ Dashboard Analitik Eksekutif
             <div class="metric-value"><?= number_format(array_sum(json_decode($chartVisits))) ?></div>
             <div class="metric-label">Aktivitas 7 Hari Terakhir</div>
         </div>
+    </div>
+
+    <h2 class="panel-title reveal-up" style="margin-top: 50px;">Akses Kontrol Sistem</h2>
+    <div class="metrics-grid" style="margin-bottom: 50px;">
+        <a href="/admin/cms" style="text-decoration:none;">
+            <div class="metric-card reveal-up hover-glow-emerald" style="transition-delay: 0.1s; border-color: rgba(0, 255, 136, 0.4); background: linear-gradient(135deg, rgba(0, 255, 136, 0.05), transparent); display:flex; flex-direction:column; justify-content:center; align-items:center; height:100%;">
+                <div class="metric-value" style="font-size: 2.5rem; color: #00ff88;"><i class="fa-solid fa-pen-nib"></i></div>
+                <div class="metric-label" style="color: #00ff88; font-weight:bold;">CMS Manager</div>
+                <div style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 10px;">Atur konten visual & teks portal</div>
+            </div>
+        </a>
+        <a href="/admin/users" style="text-decoration:none;">
+            <div class="metric-card reveal-up hover-glow-gold" style="transition-delay: 0.2s; border-color: rgba(212,175,55,0.4); background: linear-gradient(135deg, rgba(212,175,55,0.05), transparent); display:flex; flex-direction:column; justify-content:center; align-items:center; height:100%;">
+                <div class="metric-value" style="font-size: 2.5rem;"><i class="fa-solid fa-users-gear"></i></div>
+                <div class="metric-label" style="color: #d4af37; font-weight:bold;">Manajemen Entitas</div>
+                <div style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 10px;">Kelola peran & status akun pengguna</div>
+            </div>
+        </a>
+        <a href="/admin/moderation" style="text-decoration:none;">
+            <div class="metric-card reveal-up hover-glow-danger" style="transition-delay: 0.3s; border-color: rgba(255, 51, 102, 0.4); background: linear-gradient(135deg, rgba(255, 51, 102, 0.05), transparent); display:flex; flex-direction:column; justify-content:center; align-items:center; height:100%;">
+                <div class="metric-value" style="font-size: 2.5rem; color: #ff3366;"><i class="fa-solid fa-shield-halved"></i></div>
+                <div class="metric-label" style="color: #ff3366; font-weight:bold;">Moderasi Konten</div>
+                <div style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 10px;">Pantau & hapus aktivitas ilegal</div>
+            </div>
+        </a>
+        <a href="/admin/export-csv" style="text-decoration:none;">
+            <div class="metric-card reveal-up hover-glow-cyan" style="transition-delay: 0.4s; border-color: rgba(0, 191, 255, 0.4); background: linear-gradient(135deg, rgba(0, 191, 255, 0.05), transparent); display:flex; flex-direction:column; justify-content:center; align-items:center; height:100%;">
+                <div class="metric-value" style="font-size: 2.5rem; color: #00bfff;"><i class="fa-solid fa-file-csv"></i></div>
+                <div class="metric-label" style="color: #00bfff; font-weight:bold;">Ekspor Data CSV</div>
+                <div style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 10px;">Unduh direktori alumni lengkap</div>
+            </div>
+        </a>
     </div>
 
     <div class="charts-grid">

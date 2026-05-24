@@ -274,9 +274,9 @@ Baitul Maal - Constellation of Giving
     
     <header class="maal-header">
         <a href="/fitur" class="btn-back">
-            <i class="fa-solid fa-chevron-left"></i> Vault
+            <i class="fa-solid fa-chevron-left"></i> <?= cms_text('maal_btn_back', 'Vault') ?>
         </a>
-        <h1 class="page-title">Baitul Maal</h1>
+        <h1 class="page-title"><?= cms_text('maal_title', 'Baitul Maal') ?></h1>
     </header>
 
     <!-- Visualizer / Golden Well -->
@@ -284,19 +284,19 @@ Baitul Maal - Constellation of Giving
         <div class="well-outer-ring"></div>
         <div class="well-inner-ring" id="wellInner">
             <h2 class="total-amount" id="totalAmount">Rp <?= number_format($saldo_akhir ?? 0, 0, ',', '.') ?></h2>
-            <div class="amount-label">Total Saldo Kas</div>
+            <div class="amount-label"><?= cms_text('maal_label_saldo', 'Total Saldo Kas') ?></div>
         </div>
     </div>
 
     <!-- Action Button -->
     <?php if(!empty($can_manage)): ?>
     <button class="btn-donate" id="btnTogglePanel">
-        <i class="fa-solid fa-hand-holding-dollar"></i> Catat Transaksi
+        <i class="fa-solid fa-hand-holding-dollar"></i> <?= cms_text('maal_btn_record', 'Catat Transaksi') ?>
     </button>
     <?php else: ?>
     <div style="background: rgba(212,175,55,0.05); border: 1px solid rgba(212,175,55,0.15); border-radius: 16px; padding: 20px 30px; margin-bottom: 60px; text-align: center; max-width: 500px;">
         <i class="fa-solid fa-lock" style="color: rgba(212,175,55,0.4); font-size: 1.5rem; margin-bottom: 10px;"></i>
-        <div style="font-size: 0.85rem; color: #888;">Pencatatan transaksi hanya dapat dilakukan oleh <strong style="color: var(--gold-main);">Bendahara</strong> atau <strong style="color: var(--gold-main);">Admin</strong>.</div>
+        <div style="font-size: 0.85rem; color: #888;"><?= cms_html('maal_notice_role', 'Pencatatan transaksi hanya dapat dilakukan oleh <strong style="color: var(--gold-main);">Bendahara</strong> atau <strong style="color: var(--gold-main);">Admin</strong>.') ?></div>
     </div>
     <?php endif; ?>
 
@@ -304,26 +304,26 @@ Baitul Maal - Constellation of Giving
     <div class="campaign-grid">
         <div class="campaign-card">
             <div class="camp-icon"><i class="fa-solid fa-mosque"></i></div>
-            <h3 class="camp-title">Wakaf Sumur & Masjid</h3>
-            <p class="camp-desc">Pembangunan fasilitas air bersih dan perluasan area shalat di pelosok Nusa Tenggara.</p>
+            <h3 class="camp-title"><?= cms_text('maal_camp1_title', 'Wakaf Sumur & Masjid') ?></h3>
+            <p class="camp-desc"><?= cms_text('maal_camp1_desc', 'Pembangunan fasilitas air bersih dan perluasan area shalat di pelosok Nusa Tenggara.') ?></p>
             <div class="progress-track"><div class="progress-fill" style="width: 75%;"></div></div>
-            <div class="progress-stats"><span>Terkumpul: 75%</span><span>Target: Rp 200 Jt</span></div>
+            <div class="progress-stats"><span><?= cms_text('maal_camp1_current', 'Terkumpul: 75%') ?></span><span><?= cms_text('maal_camp1_target', 'Target: Rp 200 Jt') ?></span></div>
         </div>
 
         <div class="campaign-card">
             <div class="camp-icon"><i class="fa-solid fa-book-open-reader"></i></div>
-            <h3 class="camp-title">Beasiswa Perintis</h3>
-            <p class="camp-desc">Bantuan dana pendidikan penuh untuk 10 santri tahfidz berprestasi hingga sarjana.</p>
+            <h3 class="camp-title"><?= cms_text('maal_camp2_title', 'Beasiswa Perintis') ?></h3>
+            <p class="camp-desc"><?= cms_text('maal_camp2_desc', 'Bantuan dana pendidikan penuh untuk 10 santri tahfidz berprestasi hingga sarjana.') ?></p>
             <div class="progress-track"><div class="progress-fill" style="width: 40%;"></div></div>
-            <div class="progress-stats"><span>Terkumpul: 40%</span><span>Target: Rp 500 Jt</span></div>
+            <div class="progress-stats"><span><?= cms_text('maal_camp2_current', 'Terkumpul: 40%') ?></span><span><?= cms_text('maal_camp2_target', 'Target: Rp 500 Jt') ?></span></div>
         </div>
 
         <div class="campaign-card">
             <div class="camp-icon"><i class="fa-solid fa-heart-pulse"></i></div>
-            <h3 class="camp-title">Dana Darurat Ukhuwah</h3>
-            <p class="camp-desc">Kas siaga untuk membantu entitas angkatan atau keluarga inti yang tertimpa musibah/sakit keras.</p>
+            <h3 class="camp-title"><?= cms_text('maal_camp3_title', 'Dana Darurat Ukhuwah') ?></h3>
+            <p class="camp-desc"><?= cms_text('maal_camp3_desc', 'Kas siaga untuk membantu entitas angkatan atau keluarga inti yang tertimpa musibah/sakit keras.') ?></p>
             <div class="progress-track"><div class="progress-fill" style="width: 90%;"></div></div>
-            <div class="progress-stats"><span>Terkumpul: 90%</span><span>Target: Rp 100 Jt</span></div>
+            <div class="progress-stats"><span><?= cms_text('maal_camp3_current', 'Terkumpul: 90%') ?></span><span><?= cms_text('maal_camp3_target', 'Target: Rp 100 Jt') ?></span></div>
         </div>
     </div>
 </div>
@@ -331,22 +331,22 @@ Baitul Maal - Constellation of Giving
 <!-- Panel Transaksi (Slide) — Hanya untuk Bendahara/Admin -->
 <?php if(!empty($can_manage)): ?>
 <div class="transactions-panel" id="txPanel">
-    <div class="panel-title">Pencatatan Ledger</div>
+    <div class="panel-title"><?= cms_text('maal_panel_title', 'Pencatatan Ledger') ?></div>
     <form action="/baitul-maal/store" method="POST" class="maal-form">
         <?= csrf_field() ?>
         <select name="type" required>
             <option value="Pemasukan">Pemasukan (Khidmah/Infaq)</option>
             <option value="Pengeluaran">Pengeluaran (Operasional)</option>
         </select>
-        <input type="text" name="amount" placeholder="Nominal (Misal: 500000)" required>
-        <textarea name="description" rows="2" placeholder="Keterangan transaksi..." required></textarea>
+        <input type="text" name="amount" placeholder="<?= cms_raw('maal_ph_amount', 'Nominal (Misal: 500000)') ?>" required>
+        <textarea name="description" rows="2" placeholder="<?= cms_raw('maal_ph_desc', 'Keterangan transaksi...') ?>" required></textarea>
         <label style="display:flex; align-items:center; gap:10px; font-size:0.8rem; color:#888; margin-bottom:15px; cursor:pointer;">
-            <input type="checkbox" name="anonim" value="1" style="width:auto; margin:0;"> Hamba Allah (Anonim)
+            <input type="checkbox" name="anonim" value="1" style="width:auto; margin:0;"> <?= cms_text('maal_anon_label', 'Hamba Allah (Anonim)') ?>
         </label>
-        <button type="submit" class="btn-submit-maal">Simpan Transaksi</button>
+        <button type="submit" class="btn-submit-maal"><?= cms_text('maal_btn_submit', 'Simpan Transaksi') ?></button>
     </form>
 
-    <div class="panel-title" style="margin-top:20px;">Riwayat Transaksi</div>
+    <div class="panel-title" style="margin-top:20px;"><?= cms_text('maal_history_title', 'Riwayat Transaksi') ?></div>
     <?php if(!empty($transactions)): ?>
         <?php foreach($transactions as $tx): ?>
             <div class="tx-card">
@@ -361,7 +361,7 @@ Baitul Maal - Constellation of Giving
             </div>
         <?php endforeach; ?>
     <?php else: ?>
-        <div style="text-align:center; padding:20px; color:#555; font-size:0.8rem;">Belum ada catatan transaksi.</div>
+        <div style="text-align:center; padding:20px; color:#555; font-size:0.8rem;"><?= cms_text('maal_history_empty', 'Belum ada catatan transaksi.') ?></div>
     <?php endif; ?>
 </div>
 <?php endif; ?>

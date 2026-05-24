@@ -90,8 +90,8 @@ Kotak Masuk
 <?= $this->section('content') ?>
 <div class="inbox-wrapper">
     <div class="inbox-header reveal-up">
-        <h1 class="inbox-title">Kotak Masuk</h1>
-        <p style="color: var(--text-secondary); letter-spacing: 2px;">SALURAN KOMUNIKASI EKSKLUSIF</p>
+        <h1 class="inbox-title"><?= cms_text('chat_inbox_title', 'Kotak Masuk') ?></h1>
+        <p style="color: var(--text-secondary); letter-spacing: 2px;"><?= cms_text('chat_inbox_subtitle', 'SALURAN KOMUNIKASI EKSKLUSIF') ?></p>
     </div>
 
     <!-- Akses ke The Lounge -->
@@ -100,8 +100,8 @@ Kotak Masuk
             <i class="fa-solid fa-martini-glass"></i>
         </div>
         <div class="chat-info">
-            <div class="chat-name">The Lounge</div>
-            <div class="chat-preview">Ruang Diskusi Eksekutif Angkatan</div>
+            <div class="chat-name"><?= cms_text('chat_inbox_lounge', 'The Lounge') ?></div>
+            <div class="chat-preview"><?= cms_text('chat_inbox_lounge_desc', 'Ruang Diskusi Eksekutif Angkatan') ?></div>
         </div>
         <div class="chat-time"><i class="fa-solid fa-chevron-right"></i></div>
     </a>
@@ -125,7 +125,7 @@ Kotak Masuk
         <?php endforeach; ?>
     <?php else: ?>
         <div style="text-align: center; padding: 40px; color: var(--text-secondary); border: 1px dashed var(--glass-border); border-radius: 16px; margin-top: 20px;">
-            Belum ada riwayat pesan personal. Kunjungi Direktori atau The Nexus untuk mulai terhubung.
+            <?= cms_text('chat_inbox_empty', 'Belum ada riwayat pesan personal. Kunjungi Direktori atau The Nexus untuk mulai terhubung.') ?>
         </div>
     <?php endif; ?>
 </div>

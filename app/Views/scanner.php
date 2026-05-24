@@ -158,8 +158,8 @@ Sovereign Scanner - Expedient
 <?= $this->section('content') ?>
 <div class="scanner-wrapper">
     <div class="scanner-header">
-        <h1 class="scanner-title">Sovereign Scanner</h1>
-        <div class="scanner-subtitle">Pindai KTA untuk Verifikasi Identitas Entitas</div>
+        <h1 class="scanner-title"><?= cms_text('scanner_title', 'Sovereign Scanner') ?></h1>
+        <div class="scanner-subtitle"><?= cms_text('scanner_subtitle', 'Pindai KTA untuk Verifikasi Identitas Entitas') ?></div>
     </div>
 
     <div class="scanner-container" id="scannerContainer">
@@ -169,7 +169,7 @@ Sovereign Scanner - Expedient
     </div>
 
     <a href="/fitur" class="btn-back-scanner">
-        <i class="fa-solid fa-chevron-left"></i> Kembali ke Vault
+        <i class="fa-solid fa-chevron-left"></i> <?= cms_text('scanner_btn_back', 'Kembali ke Vault') ?>
     </a>
 </div>
 <?= $this->endSection() ?>
@@ -195,7 +195,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (decodedText.startsWith('http://') || decodedText.startsWith('https://')) {
             window.location.href = decodedText;
         } else {
-            window.showToast('Error KTA', 'Format KTA tidak dikenali: ' + decodedText, true);
+            window.showToast('<?= cms_raw('scanner_err_title', 'Error KTA') ?>', '<?= cms_raw('scanner_err_msg', 'Format KTA tidak dikenali: ') ?>' + decodedText, true);
             setTimeout(() => { 
                 isScanning = false; 
                 document.getElementById('scannerOverlay').classList.remove('active');

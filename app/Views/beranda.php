@@ -17,13 +17,13 @@ Museum Utama Expedient
         <div class="loader-percent" id="loadPercent">0%</div>
     </div>
     <div class="loader-lore" id="loaderLore">"Sovereign Protocol Initiated..."</div>
-    <div class="loader-status">Mempersiapkan Ruang Pameran</div>
+    <div class="loader-status"><?= cms_text('beranda_loader_status', 'Mempersiapkan Ruang Pameran') ?></div>
 </div>
 
 <div class="mecha-stage" id="stage">
     
     <div class="god-rays" id="godRays"></div>
-    <div class="monumental-text" id="monumentalText">E X P E D I E N T</div>
+    <div class="monumental-text" id="monumentalText"><?= cms_text('beranda_hero_text', 'E X P E D I E N T') ?></div>
 
     <canvas id="constellationCanvas"></canvas>
 
@@ -36,8 +36,8 @@ Museum Utama Expedient
     <div class="merge-flash" id="flashEffect"></div>
     
     <div class="hud-controls">
-        <div class="hud-hint" id="hudHint"><i class="fa-solid fa-arrows-left-right"></i> Tahan & Geser Untuk Memutar</div>
-        <button class="btn-mecha hover-trigger" id="btnAction"><i class="fa-solid fa-expand"></i> Pencar Formasi</button>
+        <div class="hud-hint" id="hudHint"><i class="fa-solid fa-arrows-left-right"></i> <?= cms_text('beranda_hud_hint', 'Tahan & Geser Untuk Memutar') ?></div>
+        <button class="btn-mecha hover-trigger" id="btnAction"><i class="fa-solid fa-expand"></i> <?= cms_text('beranda_btn_pencar', 'Pencar Formasi') ?></button>
     </div>
 
     <i class="fa-solid fa-chevron-down scroll-indicator" style="position: absolute; bottom: 5vh; left: 50%; transform: translateX(-50%); color: #d4af37; font-size: 2rem; animation: bounceIndicator 2s infinite; z-index: 20; opacity: 0.7;"></i>
@@ -55,9 +55,7 @@ Museum Utama Expedient
 
     <section class="hall-section epigraph-section">
         <h1 class="grand-text reveal-up">
-            Kami bukan sekadar angkatan.<br>
-            Kami adalah <span class="highlight-gold">barisan pelopor</span> yang lahir dari rahim Arrisalah,<br>
-            dibentuk oleh waktu, dipersatukan oleh takdir.
+            <?= cms_html('beranda_epigraph', 'Kami bukan sekadar angkatan.<br>Kami adalah <span class="highlight-gold">barisan pelopor</span> yang lahir dari rahim Arrisalah,<br>dibentuk oleh waktu, dipersatukan oleh takdir.') ?>
         </h1>
     </section>
 
@@ -65,49 +63,49 @@ Museum Utama Expedient
         <div class="stats-grid">
             <div class="stat-card glass-panel reveal-up">
                 <h3 class="stat-number"><span class="gsap-counter" data-target="124">0</span>+</h3>
-                <p class="stat-label">Entitas Expedient</p>
+                <p class="stat-label"><?= cms_text('beranda_stat1_label', 'Entitas Expedient') ?></p>
             </div>
             <div class="stat-card glass-panel reveal-up">
                 <h3 class="stat-number"><span class="gsap-counter" data-target="34">0</span></h3>
-                <p class="stat-label">Wilayah Sebaran</p>
+                <p class="stat-label"><?= cms_text('beranda_stat2_label', 'Wilayah Sebaran') ?></p>
             </div>
             <div class="stat-card glass-panel reveal-up">
                 <h3 class="stat-number"><span class="gsap-counter" data-target="2025">0</span></h3>
-                <p class="stat-label">Tahun Kebangkitan</p>
+                <p class="stat-label"><?= cms_text('beranda_stat3_label', 'Tahun Kebangkitan') ?></p>
             </div>
         </div>
     </section>
 
     <section class="hall-section">
-        <h2 class="section-title reveal-up">Lorong Kenangan</h2>
+        <h2 class="section-title reveal-up"><?= cms_text('beranda_sec_lorong_title', 'Lorong Kenangan') ?></h2>
         <div class="horizontal-scroll-snap reveal-up">
-            <div class="echo-frame">
-                <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=400&auto=format&fit=crop" alt="Kenangan">
-                <div class="echo-caption">Kenangan Masa Perjuangan</div>
-            </div>
-            <div class="echo-frame">
-                <img src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=400&auto=format&fit=crop" alt="Visi">
-                <div class="echo-caption">Deklarasi Visi Expedient</div>
-            </div>
-            <div class="echo-frame">
-                <img src="https://images.unsplash.com/photo-1511632765486-a01980e01a18?q=80&w=400&auto=format&fit=crop" alt="Keakraban">
-                <div class="echo-caption">Malam Keakraban Solidaritas</div>
-            </div>
+            <?php if(empty($galeri)): ?>
+                <div class="echo-frame" style="width: 100%; text-align: center; display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.3); border: 1px dashed rgba(255,255,255,0.2);">
+                    <div style="color: var(--text-secondary); padding: 40px;"><i class="fa-solid fa-ghost" style="font-size: 2rem; margin-bottom: 10px; opacity:0.5;"></i><br>Belum ada memori yang terekam.</div>
+                </div>
+            <?php else: ?>
+                <?php foreach($galeri as $g): ?>
+                <div class="echo-frame">
+                    <img src="<?= esc($g['image_url']) ?>" alt="Kenangan" loading="lazy">
+                    <div class="echo-caption"><?= esc($g['caption']) ?></div>
+                </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </div>
     </section>
 
     <section class="hall-section">
-        <h2 class="section-title reveal-up">Manuskrip Sejarah</h2>
+        <h2 class="section-title reveal-up"><?= cms_text('beranda_sec_manuskrip_title', 'Manuskrip Sejarah') ?></h2>
         <div class="news-list">
             <article class="news-item reveal-up" onclick="openArchive('visi')" style="cursor:pointer;">
                 <span class="news-date">30 MARET 2026</span>
-                <h3 class="news-title">Penetapan Visi Angkatan</h3>
-                <a href="javascript:void(0)" class="news-link">BACA DOKUMEN <i class="fa-solid fa-book-open"></i></a>
+                <h3 class="news-title"><?= cms_text('beranda_news1_title', 'Penetapan Visi Angkatan') ?></h3>
+                <a href="javascript:void(0)" class="news-link"><?= cms_text('beranda_btn_baca', 'BACA DOKUMEN') ?> <i class="fa-solid fa-book-open"></i></a>
             </article>
             <article class="news-item reveal-up" onclick="openArchive('simpul')" style="cursor:pointer;">
                 <span class="news-date">15 FEBRUARI 2026</span>
-                <h3 class="news-title">Simpul Kesucian: Menjaga Nilai-Nilai Arrisalah</h3>
-                <a href="javascript:void(0)" class="news-link">BACA DOKUMEN <i class="fa-solid fa-book-open"></i></a>
+                <h3 class="news-title"><?= cms_text('beranda_news2_title', 'Simpul Kesucian: Menjaga Nilai-Nilai Arrisalah') ?></h3>
+                <a href="javascript:void(0)" class="news-link"><?= cms_text('beranda_btn_baca', 'BACA DOKUMEN') ?> <i class="fa-solid fa-book-open"></i></a>
             </article>
         </div>
     </section>
@@ -129,7 +127,7 @@ Museum Utama Expedient
     </div>
 
     <section class="hall-section">
-        <h2 class="section-title reveal-up">Para Kurator</h2>
+        <h2 class="section-title reveal-up"><?= cms_text('beranda_sec_kurator_title', 'Para Kurator') ?></h2>
         <div class="curator-grid">
             <?php foreach ($kurator as $k): ?>
             <div class="curator-card glass-panel reveal-up">
@@ -146,7 +144,7 @@ Museum Utama Expedient
     <!-- SECTION GAMIFIKASI: LEADERBOARD PRESTISE -->
     <?php if (!empty($leaderboard)): ?>
     <section class="hall-section" style="padding-top: 0;">
-        <h2 class="section-title reveal-up" style="font-size: clamp(1.5rem, 4vw, 2.5rem);">Jajaran Kehormatan</h2>
+        <h2 class="section-title reveal-up" style="font-size: clamp(1.5rem, 4vw, 2.5rem);"><?= cms_text('beranda_sec_leaderboard_title', 'Jajaran Kehormatan') ?></h2>
         <div class="leaderboard-container">
             <?php $rank = 1; foreach ($leaderboard as $l): ?>
             <div class="glass-panel reveal-up leaderboard-item" style="border-left: 4px solid <?= $rank == 1 ? '#FFD700' : ($rank == 2 ? '#E5E4E2' : ($rank == 3 ? '#cd7f32' : 'var(--glass-border)')) ?>;">
@@ -156,7 +154,7 @@ Museum Utama Expedient
                     <img src="<?= $foto_profil !== 'default.webp' ? '/uploads/profiles/'.$foto_profil : 'https://ui-avatars.com/api/?name='.urlencode($l['nama_panggilan'] ?: $l['nama_lengkap']).'&background=d4af37&color=000' ?>" class="leaderboard-avatar" alt="Avatar">
                     <div>
                         <div class="leaderboard-name"><?= esc($l['nama_panggilan'] ?: $l['nama_lengkap']) ?></div>
-                        <div class="leaderboard-label">POIN TERAKUMULASI</div>
+                        <div class="leaderboard-label"><?= cms_text('beranda_leaderboard_label', 'POIN TERAKUMULASI') ?></div>
                     </div>
                 </div>
                 <div class="leaderboard-score">
@@ -171,11 +169,11 @@ Museum Utama Expedient
 
     <section class="hall-section monolith-section">
         <div class="monolith-pillar">
-            <h2 class="gold-engraving panca-jiwa" onclick="openJiwa('keikhlasan')">Keikhlasan</h2>
-            <h2 class="gold-engraving panca-jiwa" onclick="openJiwa('kesederhanaan')">Kesederhanaan</h2>
-            <h2 class="gold-engraving panca-jiwa" onclick="openJiwa('kemandirian')">Kemandirian</h2>
-            <h2 class="gold-engraving panca-jiwa" onclick="openJiwa('ukhuwah')">Ukhuwwah Islamiyyah</h2>
-            <h2 class="gold-engraving panca-jiwa" onclick="openJiwa('kebebasan')">Kebebasan</h2>
+            <h2 class="gold-engraving panca-jiwa" onclick="openJiwa('keikhlasan')"><?= cms_text('beranda_jiwa1', 'Keikhlasan') ?></h2>
+            <h2 class="gold-engraving panca-jiwa" onclick="openJiwa('kesederhanaan')"><?= cms_text('beranda_jiwa2', 'Kesederhanaan') ?></h2>
+            <h2 class="gold-engraving panca-jiwa" onclick="openJiwa('kemandirian')"><?= cms_text('beranda_jiwa3', 'Kemandirian') ?></h2>
+            <h2 class="gold-engraving panca-jiwa" onclick="openJiwa('ukhuwah')"><?= cms_text('beranda_jiwa4', 'Ukhuwwah Islamiyyah') ?></h2>
+            <h2 class="gold-engraving panca-jiwa" onclick="openJiwa('kebebasan')"><?= cms_text('beranda_jiwa5', 'Kebebasan') ?></h2>
         </div>
     </section>
 
@@ -192,41 +190,41 @@ Museum Utama Expedient
     </div>
 
     <section class="hall-section">
-        <h2 class="section-title reveal-up">Garis Waktu</h2>
+        <h2 class="section-title reveal-up"><?= cms_text('beranda_sec_waktu_title', 'Garis Waktu') ?></h2>
         <div class="golden-timeline">
             <div class="timeline-node">
                 <div class="node-dot"></div>
                 <div class="node-content glass-panel">
-                    <span class="node-year">AWAL MULA</span>
-                    <p>Angkatan Expedient pertama kali menapakkan jejaknya di bumi Arrisalah, mengikat janji untuk menjadi barisan pelopor peradaban.</p>
+                    <span class="node-year"><?= cms_text('beranda_timeline1_year', 'AWAL MULA') ?></span>
+                    <p><?= cms_text('beranda_timeline1_desc', 'Angkatan Expedient pertama kali menapakkan jejaknya di bumi Arrisalah, mengikat janji untuk menjadi barisan pelopor peradaban.') ?></p>
                 </div>
             </div>
             <div class="timeline-node">
                 <div class="node-dot"></div>
                 <div class="node-content glass-panel">
-                    <span class="node-year">MASA PENEMPAAN</span>
-                    <p>Melewati berbagai ujian dan dinamika pondok yang membentuk mental baja, kemandirian, serta ukhuwah islamiyah yang tak tergoyahkan.</p>
+                    <span class="node-year"><?= cms_text('beranda_timeline2_year', 'MASA PENEMPAAN') ?></span>
+                    <p><?= cms_text('beranda_timeline2_desc', 'Melewati berbagai ujian dan dinamika pondok yang membentuk mental baja, kemandirian, serta ukhuwah islamiyah yang tak tergoyahkan.') ?></p>
                 </div>
             </div>
         </div>
     </section>
 
     <section class="hall-section ledger-section reveal-up">
-        <h2 class="section-title" style="margin-bottom: 20px;">Buku Tamu Eksklusif</h2>
-        <p style="color: var(--text-muted, #5e7a6b); margin-bottom: 40px; font-size: 0.9rem;">Segel kehadiran Anda di dalam sejarah peradaban.</p>
+        <h2 class="section-title" style="margin-bottom: 20px;"><?= cms_text('beranda_sec_tamu_title', 'Buku Tamu Eksklusif') ?></h2>
+        <p style="color: var(--text-muted, #5e7a6b); margin-bottom: 40px; font-size: 0.9rem;"><?= cms_text('beranda_sec_tamu_desc', 'Segel kehadiran Anda di dalam sejarah peradaban.') ?></p>
         
         <?php if (session()->get('logged_in')): ?>
         <form action="/beranda/simpan_pesan" method="POST" class="ledger-form" id="ledgerForm">
             <?= csrf_field() ?>
-            <input type="text" name="nama" class="luxury-input input-signature" placeholder="Tanda Tangan (Nama)" required>
-            <textarea name="pesan" class="luxury-input" placeholder="Tuliskan pesan berharga Anda..." rows="2" required></textarea>
+            <input type="text" name="nama" class="luxury-input input-signature" placeholder="<?= cms_raw('beranda_tamu_placeholder_nama', 'Tanda Tangan (Nama)') ?>" required>
+            <textarea name="pesan" class="luxury-input" placeholder="<?= cms_raw('beranda_tamu_placeholder_pesan', 'Tuliskan pesan berharga Anda...') ?>" rows="2" required></textarea>
             <div>
-                <button type="submit" class="btn-stamp" id="desktopSubmitBtn">STEMPEL KEHADIRAN</button>
+                <button type="submit" class="btn-stamp" id="desktopSubmitBtn"><?= cms_text('beranda_btn_stempel', 'STEMPEL KEHADIRAN') ?></button>
                 
                 <!-- Tuas Segel Emas (Mobile Swipe) -->
                 <div class="swipe-seal-container" id="swipeSealContainer">
                     <div class="swipe-fill" id="swipeFill"></div>
-                    <div class="swipe-text" id="swipeText">GESER UNTUK MENYEGEL <i class="fa-solid fa-arrow-right" style="margin-left:10px;"></i></div>
+                    <div class="swipe-text" id="swipeText"><?= cms_text('beranda_swipe_text', 'GESER UNTUK MENYEGEL') ?> <i class="fa-solid fa-arrow-right" style="margin-left:10px;"></i></div>
                     <div class="swipe-knob" id="swipeKnob"><i class="fa-solid fa-fingerprint"></i></div>
                 </div>
             </div>
@@ -234,14 +232,14 @@ Museum Utama Expedient
         <?php else: ?>
         <div class="guestbook-empty">
             <i class="fa-solid fa-lock guestbook-empty-icon"></i>
-            <p class="guestbook-empty-text">Masuk ke portal untuk menandatangani buku tamu.</p>
-            <a href="/login" class="guestbook-login-link"><i class="fa-solid fa-right-to-bracket"></i> Masuk Sekarang</a>
+            <p class="guestbook-empty-text"><?= cms_text('beranda_tamu_empty', 'Masuk ke portal untuk menandatangani buku tamu.') ?></p>
+            <a href="/login" class="guestbook-login-link"><i class="fa-solid fa-right-to-bracket"></i> <?= cms_text('beranda_btn_login', 'Masuk Sekarang') ?></a>
         </div>
         <?php endif; ?>
 
         <?php if(!empty($buku_tamu)): ?>
         <div class="guestbook-list">
-            <h3 class="guestbook-title">Jejak Terkini</h3>
+            <h3 class="guestbook-title"><?= cms_text('beranda_tamu_terkini_title', 'Jejak Terkini') ?></h3>
             <div class="guestbook-items">
                 <?php foreach($buku_tamu as $bt): ?>
                     <div class="guestbook-item">
@@ -252,7 +250,7 @@ Museum Utama Expedient
                 <?php endforeach; ?>
             </div>
             <div class="guestbook-footer">
-                <a href="/buku-tamu" class="guestbook-more-link">Lihat Seluruh Catatan <i class="fa-solid fa-arrow-right"></i></a>
+                <a href="/buku-tamu" class="guestbook-more-link"><?= cms_text('beranda_btn_semua_tamu', 'Lihat Seluruh Catatan') ?> <i class="fa-solid fa-arrow-right"></i></a>
             </div>
         </div>
         <?php endif; ?>

@@ -179,16 +179,16 @@ Arsip Visual 5D | The Syndicate Yearbook
 
 <div class="portrait-lock">
     <i class="fa-solid fa-mobile-screen"></i>
-    <h2>AKSES TERKUNCI</h2>
-    <p>Ruang Kenangan membutuhkan mode Landscape.<br>Silakan putar perangkat Anda.</p>
+    <h2><?= cms_text('galeri_lock_title', 'AKSES TERKUNCI') ?></h2>
+    <p><?= cms_html('galeri_lock_desc', 'Ruang Kenangan membutuhkan mode Landscape.<br>Silakan putar perangkat Anda.') ?></p>
 </div>
 
 <div class="gallery-stage" id="galleryStage">
     <div class="glitch-overlay" id="glitchOverlay"></div>
-    <div class="ethereal-text" id="etherealText" title="Double Click for Epilogue">THE SYNDICATE</div>
+    <div class="ethereal-text" id="etherealText" title="<?= cms_raw('galeri_tooltip_epilogue', 'Double Click for Epilogue') ?>"><?= cms_text('galeri_ethereal_text', 'THE SYNDICATE') ?></div>
     <canvas id="dustCanvas"></canvas>
     <div class="ambient-light" id="ambientLight"></div>
-    <button class="dimension-shift-btn hover-trigger" id="btnShift"><i class="fa-solid fa-rotate"></i> SHIFT TO OMEGA (PUTRI)</button>
+    <button class="dimension-shift-btn hover-trigger" id="btnShift"><i class="fa-solid fa-rotate"></i> <?= cms_text('galeri_btn_shift', 'SHIFT TO OMEGA (PUTRI)') ?></button>
 
     <div class="dimension-core" id="dimCore">
         <div class="book-scene" id="bookPutra">
@@ -211,12 +211,12 @@ Arsip Visual 5D | The Syndicate Yearbook
     </div>
 
     <!-- TOMBOL WHISPER -->
-    <button class="whisper-btn hover-trigger" id="btnWhisper" title="Dengarkan Pesan Memori"><i class="fa-solid fa-microphone-lines"></i></button>
+    <button class="whisper-btn hover-trigger" id="btnWhisper" title="<?= cms_raw('galeri_tooltip_whisper', 'Dengarkan Pesan Memori') ?>"><i class="fa-solid fa-microphone-lines"></i></button>
 
     <div class="gallery-hud">
-        <button class="btn-icon hover-trigger" id="btnAudio" title="Nyalakan Musik Kenangan"><i class="fa-solid fa-music"></i></button>
-        <button class="btn-icon hover-trigger" id="btnAutoPlay" title="Cinematic Auto-Play"><i class="fa-solid fa-play"></i></button>
-        <button class="btn-icon hover-trigger" id="btnIndex" title="Constellation Grid"><i class="fa-solid fa-border-all"></i></button>
+        <button class="btn-icon hover-trigger" id="btnAudio" title="<?= cms_raw('galeri_tooltip_music', 'Nyalakan Musik Kenangan') ?>"><i class="fa-solid fa-music"></i></button>
+        <button class="btn-icon hover-trigger" id="btnAutoPlay" title="<?= cms_raw('galeri_tooltip_autoplay', 'Cinematic Auto-Play') ?>"><i class="fa-solid fa-play"></i></button>
+        <button class="btn-icon hover-trigger" id="btnIndex" title="<?= cms_raw('galeri_tooltip_grid', 'Constellation Grid') ?>"><i class="fa-solid fa-border-all"></i></button>
         
         <button class="btn-nav hover-trigger" id="btnPrev"><i class="fa-solid fa-arrow-left"></i></button>
         <div class="indicator-wrapper">
@@ -225,10 +225,10 @@ Arsip Visual 5D | The Syndicate Yearbook
         </div>
         <button class="btn-nav hover-trigger" id="btnNext"><i class="fa-solid fa-arrow-right"></i></button>
         
-        <button class="btn-icon hover-trigger" id="btnCloseBook" title="Tutup Buku"><i class="fa-solid fa-book"></i></button>
-        <button class="btn-icon hover-trigger" id="btnPin" title="Simpan Halaman Ini"><i class="fa-regular fa-bookmark"></i></button>
-        <button class="btn-icon hover-trigger" id="btnGoToPin" title="Teleportasi ke Memori" style="display: none;"><i class="fa-solid fa-map-location-dot"></i></button>
-        <button class="btn-icon hover-trigger" id="btnFullscreen" title="Immersive Mode"><i class="fa-solid fa-expand"></i></button>
+        <button class="btn-icon hover-trigger" id="btnCloseBook" title="<?= cms_raw('galeri_tooltip_close', 'Tutup Buku') ?>"><i class="fa-solid fa-book"></i></button>
+        <button class="btn-icon hover-trigger" id="btnPin" title="<?= cms_raw('galeri_tooltip_pin', 'Simpan Halaman Ini') ?>"><i class="fa-regular fa-bookmark"></i></button>
+        <button class="btn-icon hover-trigger" id="btnGoToPin" title="<?= cms_raw('galeri_tooltip_teleport', 'Teleportasi ke Memori') ?>" style="display: none;"><i class="fa-solid fa-map-location-dot"></i></button>
+        <button class="btn-icon hover-trigger" id="btnFullscreen" title="<?= cms_raw('galeri_tooltip_fullscreen', 'Immersive Mode') ?>"><i class="fa-solid fa-expand"></i></button>
     </div>
 </div>
 <?= $this->endSection() ?>
