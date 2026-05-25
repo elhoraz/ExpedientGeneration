@@ -149,11 +149,11 @@ The Syndicate - Ruang Eksekutif 42nd Expedient
     <div class="syn-toolbar">
         <div class="filter-group" id="filterGroup">
             <button class="btn-filter active" data-filter="all"><?= cms_text('syn_filter_all', 'Semua') ?></button>
-            <button class="btn-filter" data-filter="F&B">Kuliner (F&B)</button>
-            <button class="btn-filter" data-filter="Teknologi">Teknologi</button>
-            <button class="btn-filter" data-filter="Jasa">Jasa & Agensi</button>
-            <button class="btn-filter" data-filter="Kreatif">Kreatif</button>
-            <button class="btn-filter" data-filter="Retail">Retail</button>
+            <button class="btn-filter" data-filter="F&B"><?= cms_text('syn_filter_fb', 'Kuliner (F&B)') ?></button>
+            <button class="btn-filter" data-filter="Teknologi"><?= cms_text('syn_filter_tech', 'Teknologi') ?></button>
+            <button class="btn-filter" data-filter="Jasa"><?= cms_text('syn_filter_service', 'Jasa & Agensi') ?></button>
+            <button class="btn-filter" data-filter="Kreatif"><?= cms_text('syn_filter_creative', 'Kreatif') ?></button>
+            <button class="btn-filter" data-filter="Retail"><?= cms_text('syn_filter_retail', 'Retail') ?></button>
         </div>
 
         <a href="<?= base_url('syndicate/create') ?>" class="btn-add-biz">

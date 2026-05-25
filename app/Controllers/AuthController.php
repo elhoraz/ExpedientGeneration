@@ -301,6 +301,13 @@ class AuthController extends BaseController
             $pusherService->notifyNewAlumni($user['nama_panggilan']);
             // =========================================================
 
+            // =========================================================
+            // TRIGGER WHATSAPP: Broadcast ke semua alumni
+            // =========================================================
+            $waService = service('whatsAppService');
+            $waService->notifyNewAlumni($user['nama_panggilan']);
+            // =========================================================
+
             return redirect()->to('/login')->with('success', 'Email berhasil diverifikasi! Silakan login.');
         } else {
             return redirect()->to('/login')->with('error', 'Tautan tidak valid atau email sudah terverifikasi.');

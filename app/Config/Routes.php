@@ -55,6 +55,7 @@ $routes->get('/enigma/reset', 'EnigmaController::reset', ['filter' => 'auth']);
 $routes->get('/genesis', 'GenesisController::index', ['filter' => 'auth']);
 $routes->post('/genesis/log', 'GenesisController::log', ['filter' => 'auth']);
 $routes->get('/celestial', 'CelestialController::index', ['filter' => 'auth']);
+$routes->get('/divine', 'DivineController::index', ['filter' => 'auth']);
 $routes->get('/majlis', 'MajlisController::index', ['filter' => 'auth']);
 $routes->post('/majlis/store', 'MajlisController::store', ['filter' => 'auth']);
 $routes->post('/majlis/vote/(:num)', 'MajlisController::vote/$1', ['filter' => 'auth']);
@@ -187,7 +188,7 @@ $routes->get('/wrapped', 'WrappedController::index', ['filter' => 'auth']);
 // ====================================================================
 // P4: ADMIN & OFFLINE
 // ====================================================================
-$routes->get('/offline', function() { return view('offline'); });
+$routes->get('/offline', function() { helper('cms'); return view('offline'); });
 
 // Admin Dashboard Unlock (Harus login, tapi tidak kena filter admin)
 $routes->get('/admin/unlock', 'Admin\UnlockController::index', ['filter' => 'auth']);
@@ -219,5 +220,11 @@ $routes->post('/admin/announcements/delete/(:num)', 'Admin\AnnouncementControlle
 $routes->get('/admin/cms', 'Admin\CmsController::index', ['filter' => 'admin']);
 $routes->post('/admin/cms/update', 'Admin\CmsController::update', ['filter' => 'admin']);
 $routes->post('/admin/cms/save', 'Admin\CmsController::save_content', ['filter' => 'admin']);
-$routes->post('/admin/cms/gallery/add', 'Admin\CmsController::addGallery', ['filter' => 'admin']);
-$routes->post('/admin/cms/gallery/delete/(:num)', 'Admin\CmsController::deleteGallery/$1', ['filter' => 'admin']);
+$routes->post('/admin/cms/batch_update', 'Admin\CmsController::batchUpdate', ['filter' => 'admin']);
+
+// Admin: WhatsApp Broadcast
+$routes->get('/admin/whatsapp', 'WhatsAppAdminController::index', ['filter' => 'admin']);
+$routes->post('/admin/whatsapp/blast', 'WhatsAppAdminController::blast', ['filter' => 'admin']);
+$routes->post('/admin/whatsapp/retry', 'WhatsAppAdminController::retryFailed', ['filter' => 'admin']);
+$routes->post('/admin/whatsapp/process-now', 'WhatsAppAdminController::processNow', ['filter' => 'admin']);
+$routes->get('/admin/whatsapp/diagnose', 'WhatsAppAdminController::diagnose', ['filter' => 'admin']);

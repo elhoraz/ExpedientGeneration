@@ -7,16 +7,18 @@ Baitul Maal - Constellation of Giving
 <?= $this->section('styles') ?>
 <style>
     :root {
-        --gold-light: #fff2cd;
+        --gold-light: #f9f5e8;
         --gold-main: #d4af37;
         --gold-dark: #aa771c;
         --islamic-green: #021a0f;
-        --bg-dark: #010402;
+        --bg-dark: #050505;
+        --card-bg: rgba(15, 15, 18, 0.85);
+        --text-muted: #8b9ba8;
     }
 
     body {
         background-color: var(--bg-dark);
-        background-image: radial-gradient(circle at 50% 10%, rgba(212,175,55,0.1) 0%, transparent 80%);
+        background-image: radial-gradient(circle at 50% 0%, rgba(212,175,55,0.1) 0%, transparent 70%);
         font-family: 'Inter', sans-serif;
         color: #fff;
         min-height: 100vh;
@@ -26,13 +28,12 @@ Baitul Maal - Constellation of Giving
     .maal-wrapper {
         position: relative;
         width: 100%;
-        max-width: 1200px;
+        max-width: 1000px;
         margin: 0 auto;
-        padding: 40px 20px;
+        padding: 60px 20px;
         z-index: 10;
         display: flex;
         flex-direction: column;
-        align-items: center;
     }
 
     /* HEADER */
@@ -41,7 +42,7 @@ Baitul Maal - Constellation of Giving
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 50px;
+        margin-bottom: 40px;
     }
 
     .btn-back {
@@ -50,107 +51,91 @@ Baitul Maal - Constellation of Giving
         gap: 10px;
         color: var(--gold-main);
         text-decoration: none;
-        font-size: 0.85rem;
+        font-size: 0.9rem;
         letter-spacing: 2px;
         text-transform: uppercase;
-        font-weight: 600;
+        font-weight: 500;
         transition: all 0.4s;
-        padding: 10px 20px;
-        border-radius: 30px;
-        border: 1px solid rgba(212,175,55,0.2);
-        background: rgba(0,0,0,0.4);
-        backdrop-filter: blur(10px);
     }
     .btn-back:hover {
-        background: rgba(212,175,55,0.1);
+        color: #fff;
         transform: translateX(-5px);
-        box-shadow: 0 5px 15px rgba(212,175,55,0.1);
     }
 
     .page-title {
         font-family: 'Playfair Display', serif;
-        font-size: 2.5rem;
+        font-size: 2.2rem;
         color: var(--gold-main);
         margin: 0;
         text-align: right;
+        letter-spacing: 2px;
     }
 
-    /* THE GOLDEN WELL (Visualizer) */
-    .well-container {
-        position: relative;
-        width: 350px;
-        height: 350px;
-        margin: 40px 0 80px 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+    /* FINANCIAL DASHBOARD (3-Pillar) */
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        margin-bottom: 50px;
     }
 
-    .well-outer-ring {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        border: 2px dashed rgba(212,175,55,0.3);
-        animation: spin 30s linear infinite;
-    }
-
-    .well-inner-ring {
-        position: absolute;
-        width: 80%;
-        height: 80%;
-        border-radius: 50%;
-        border: 1px solid rgba(212,175,55,0.6);
-        box-shadow: 0 0 50px rgba(212,175,55,0.1), inset 0 0 50px rgba(212,175,55,0.1);
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        background: radial-gradient(circle, rgba(2,26,15,0.8) 0%, rgba(0,0,0,0.9) 100%);
+    .stat-card {
+        background: var(--card-bg);
+        border: 1px solid rgba(212,175,55,0.2);
+        border-radius: 12px;
+        padding: 30px 20px;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         backdrop-filter: blur(10px);
-        z-index: 10;
-        transition: box-shadow 0.5s;
+        position: relative;
+        overflow: hidden;
+    }
+    .stat-card.primary {
+        background: radial-gradient(circle at top, rgba(212,175,55,0.15) 0%, rgba(10,10,12,0.9) 100%);
+        border-color: var(--gold-main);
+        grid-column: span 3;
+        padding: 50px 20px;
+    }
+    .stat-card.primary .stat-value {
+        font-size: 3.5rem;
+        text-shadow: 0 0 30px rgba(212,175,55,0.5);
+        margin-bottom: 10px;
     }
 
-    .well-inner-ring.glow {
-        box-shadow: 0 0 100px rgba(212,175,55,0.5), inset 0 0 80px rgba(212,175,55,0.4);
-    }
-
-    @keyframes spin { 100% { transform: rotate(360deg); } }
-
-    .total-amount {
-        font-family: 'Playfair Display', serif;
-        font-size: 2.5rem;
-        color: #fff;
-        margin: 0;
-        text-shadow: 0 0 20px rgba(212,175,55,0.5);
-    }
-    .amount-label {
-        color: var(--gold-dark);
-        font-size: 0.8rem;
+    .stat-label {
+        font-size: 0.85rem;
+        color: var(--text-muted);
         letter-spacing: 3px;
         text-transform: uppercase;
-        margin-top: 5px;
+        margin-bottom: 15px;
+        font-weight: 600;
+    }
+    .stat-value {
+        font-family: 'Playfair Display', serif;
+        font-size: 2rem;
+        color: #fff;
+        margin: 0;
+    }
+    
+    .stat-icon {
+        position: absolute;
+        bottom: -20px;
+        right: -20px;
+        font-size: 6rem;
+        opacity: 0.05;
+        color: var(--gold-main);
     }
 
-    /* PARTICLES */
-    .particle {
-        position: absolute;
-        width: 10px; height: 10px;
-        background: var(--gold-main);
-        border-radius: 50%;
-        box-shadow: 0 0 15px var(--gold-light), 0 0 30px var(--gold-main);
-        pointer-events: none;
-        z-index: 20;
-    }
+    .text-in { color: #00ff88 !important; }
+    .text-out { color: #ff5555 !important; }
 
     /* ACTION BUTTON */
     .btn-donate {
-        background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold-main) 100%);
+        background: var(--gold-main);
         color: #000;
         border: none;
         padding: 15px 40px;
-        font-size: 1.1rem;
+        font-size: 1rem;
         font-weight: bold;
         letter-spacing: 2px;
         text-transform: uppercase;
@@ -158,113 +143,122 @@ Baitul Maal - Constellation of Giving
         cursor: pointer;
         box-shadow: 0 10px 30px rgba(212,175,55,0.3);
         transition: transform 0.3s, box-shadow 0.3s;
-        display: flex;
+        display: inline-flex;
         align-items: center;
         gap: 15px;
-        margin-bottom: 60px;
+        margin: 0 auto 50px auto;
     }
     .btn-donate:hover {
-        transform: translateY(-5px) scale(1.05);
+        transform: translateY(-5px);
         box-shadow: 0 15px 40px rgba(212,175,55,0.5);
     }
-    .btn-donate i { font-size: 1.3rem; }
 
-    /* CAMPAIGN CARDS */
-    .campaign-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 30px;
-        width: 100%;
-    }
-
-    .campaign-card {
-        background: rgba(10, 15, 12, 0.6);
-        border: 1px solid rgba(212,175,55,0.15);
-        border-radius: 20px;
+    /* THE OPEN LEDGER */
+    .ledger-section {
+        background: var(--card-bg);
+        border: 1px solid rgba(255,255,255,0.05);
+        border-radius: 12px;
         padding: 30px;
-        position: relative;
-        backdrop-filter: blur(10px);
-        transition: transform 0.4s;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.4);
     }
-    .campaign-card:hover {
-        transform: translateY(-10px);
-        border-color: rgba(212,175,55,0.4);
-    }
-
-    .camp-icon {
-        width: 50px; height: 50px;
-        background: rgba(212,175,55,0.1);
-        border-radius: 50%;
-        display: flex; justify-content: center; align-items: center;
-        color: var(--gold-main);
-        font-size: 1.5rem;
-        margin-bottom: 20px;
-        border: 1px solid rgba(212,175,55,0.3);
-    }
-
-    .camp-title {
-        font-family: 'Playfair Display', serif;
-        font-size: 1.3rem;
-        margin: 0 0 10px 0;
-    }
-    .camp-desc {
-        font-size: 0.85rem;
-        color: #8899a6;
-        line-height: 1.6;
-        margin-bottom: 20px;
-    }
-
-    .progress-track {
-        width: 100%;
-        height: 6px;
-        background: rgba(255,255,255,0.1);
-        border-radius: 3px;
-        overflow: hidden;
-        margin-bottom: 10px;
-    }
-    .progress-fill {
-        height: 100%;
-        background: var(--gold-main);
-        box-shadow: 0 0 10px var(--gold-main);
-        border-radius: 3px;
-    }
-    .progress-stats {
+    
+    .ledger-header {
         display: flex;
         justify-content: space-between;
-        font-size: 0.75rem;
-        color: var(--gold-main);
-        font-weight: bold;
+        align-items: center;
+        margin-bottom: 30px;
+        padding-bottom: 15px;
+        border-bottom: 1px dashed rgba(255,255,255,0.1);
+    }
+    .ledger-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.5rem;
+        color: var(--gold-light);
+        margin: 0;
+    }
+    .ledger-subtitle {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        letter-spacing: 1px;
     }
 
-    /* PANEL TRANSAKSI */
+    .tx-item { 
+        padding: 20px 0; 
+        border-bottom: 1px solid rgba(255,255,255,0.05); 
+        display: flex; 
+        align-items: center; 
+        justify-content: space-between;
+        gap: 20px; 
+        transition: background 0.3s;
+    }
+    .tx-item:last-child { border-bottom: none; }
+    .tx-item:hover { background: rgba(255,255,255,0.02); }
+
+    .tx-left {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        flex: 1;
+    }
+
+    .tx-type-icon { 
+        width: 50px; height: 50px; 
+        border-radius: 50%; 
+        display: flex; justify-content: center; align-items: center; 
+        font-size: 1.2rem; 
+        flex-shrink: 0;
+    }
+    .tx-in-bg { background: rgba(0,255,136,0.1); color: #00ff88; border: 1px solid rgba(0,255,136,0.2); }
+    .tx-out-bg { background: rgba(255,85,85,0.1); color: #ff5555; border: 1px solid rgba(255,85,85,0.2); }
+
+    .tx-details { flex: 1; }
+    .tx-title { font-family: 'Inter', sans-serif; font-size: 1.1rem; font-weight: 600; color: #fff; margin-bottom: 8px; line-height: 1.4; }
+    .tx-meta { display: flex; gap: 15px; font-size: 0.8rem; color: var(--text-muted); }
+    
+    .tx-amount { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: bold; text-align: right; white-space: nowrap; }
+    .tx-amount.in { color: #00ff88; text-shadow: 0 0 10px rgba(0,255,136,0.3); }
+    .tx-amount.out { color: #ff5555; text-shadow: 0 0 10px rgba(255,85,85,0.3); }
+
+    .donor-name { color: var(--gold-main); font-weight: 500; font-style: italic; }
+
+    /* PANEL TRANSAKSI (Form Admin Saja) */
     .transactions-panel {
         position: fixed; top: 0; right: -450px; width: 400px; height: 100vh;
-        background: rgba(10, 15, 12, 0.95); backdrop-filter: blur(20px);
+        background: rgba(10, 10, 12, 0.98); backdrop-filter: blur(20px);
         border-left: 1px solid rgba(212,175,55,0.3); z-index: 1000;
         transition: right 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         padding: 40px 30px; display: flex; flex-direction: column; gap: 20px;
-        overflow-y: auto; color: #fff; box-shadow: -20px 0 50px rgba(0,0,0,0.8);
+        box-shadow: -20px 0 50px rgba(0,0,0,0.8);
     }
     .transactions-panel.open { right: 0; }
     
-    .panel-title { font-family: 'Playfair Display', serif; color: var(--gold-main); font-size: 1.5rem; letter-spacing: 2px; border-bottom: 1px solid rgba(212,175,55,0.3); padding-bottom: 10px; margin-bottom: 10px; }
-    .maal-form input, .maal-form select, .maal-form textarea {
-        width: 100%; background: rgba(0,0,0,0.5); border: 1px solid rgba(212,175,55,0.3);
-        color: #fff; padding: 12px; margin-bottom: 15px; border-radius: 5px; font-family: 'Inter', sans-serif;
-    }
-    .btn-submit-maal { width: 100%; background: var(--gold-main); color: #000; border: none; padding: 12px; font-weight: bold; cursor: pointer; border-radius: 5px; letter-spacing: 2px; text-transform: uppercase; }
+    .panel-title { font-family: 'Playfair Display', serif; color: var(--gold-main); font-size: 1.5rem; letter-spacing: 2px; border-bottom: 1px solid rgba(212,175,55,0.3); padding-bottom: 10px; margin-bottom: 20px; }
     
-    .tx-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin-bottom: 10px; display: flex; align-items: center; gap: 15px; }
-    .tx-type-icon { width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; }
-    .tx-in { background: rgba(0,255,136,0.1); color: #00ff88; }
-    .tx-out { background: rgba(255,51,102,0.1); color: #ff3366; }
+    .maal-form label { display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 5px; letter-spacing: 1px; }
+    .maal-form input, .maal-form select, .maal-form textarea {
+        width: 100%; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);
+        color: #fff; padding: 12px; margin-bottom: 20px; border-radius: 6px; font-family: 'Inter', sans-serif;
+        transition: border-color 0.3s;
+    }
+    .maal-form input:focus, .maal-form select:focus, .maal-form textarea:focus { border-color: var(--gold-main); outline: none; }
+    
+    .btn-submit-maal { width: 100%; background: var(--gold-main); color: #000; border: none; padding: 15px; font-weight: bold; cursor: pointer; border-radius: 6px; letter-spacing: 2px; text-transform: uppercase; transition: background 0.3s; }
+    .btn-submit-maal:hover { background: var(--gold-light); }
+    
+    .btn-close-panel { position: absolute; top: 20px; right: 20px; background: transparent; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; opacity: 0.5; transition: opacity 0.3s; }
+    .btn-close-panel:hover { opacity: 1; }
 
     @media (max-width: 768px) {
         .maal-header { flex-direction: column-reverse; gap: 20px; align-items: center; }
         .page-title { text-align: center; }
-        .well-container { width: 280px; height: 280px; }
-        .total-amount { font-size: 2rem; }
+        .dashboard-grid { grid-template-columns: 1fr; gap: 15px; }
+        .stat-card.primary { grid-column: span 1; padding: 30px 20px; }
+        .stat-card.primary .stat-value { font-size: 2.5rem; }
         .transactions-panel { width: 100%; right: -100%; }
+        .tx-item { flex-direction: column; align-items: flex-start; gap: 15px; }
+        .tx-left { width: 100%; }
+        .tx-meta { flex-direction: column; gap: 5px; }
+        .tx-amount { text-align: left; font-size: 1.3rem; }
     }
 </style>
 <?= $this->endSection() ?>
@@ -274,97 +268,118 @@ Baitul Maal - Constellation of Giving
     
     <header class="maal-header">
         <a href="/fitur" class="btn-back">
-            <i class="fa-solid fa-chevron-left"></i> <?= cms_text('maal_btn_back', 'Vault') ?>
+            <i class="fa-solid fa-arrow-left-long"></i> <?= cms_text('maal_btn_back', 'Kembali ke Vault') ?>
         </a>
         <h1 class="page-title"><?= cms_text('maal_title', 'Baitul Maal') ?></h1>
     </header>
 
-    <!-- Visualizer / Golden Well -->
-    <div class="well-container" id="goldenWell">
-        <div class="well-outer-ring"></div>
-        <div class="well-inner-ring" id="wellInner">
-            <h2 class="total-amount" id="totalAmount">Rp <?= number_format($saldo_akhir ?? 0, 0, ',', '.') ?></h2>
-            <div class="amount-label"><?= cms_text('maal_label_saldo', 'Total Saldo Kas') ?></div>
+    <!-- FINANCIAL DASHBOARD -->
+    <div class="dashboard-grid" id="financeDashboard">
+        <div class="stat-card primary">
+            <i class="fa-solid fa-scale-balanced stat-icon"></i>
+            <div class="stat-label"><?= cms_text('maal_label_saldo', 'Total Saldo Kas Terkini') ?></div>
+            <h2 class="stat-value">Rp <?= number_format($saldo_akhir ?? 0, 0, ',', '.') ?></h2>
+        </div>
+        
+        <div class="stat-card">
+            <i class="fa-solid fa-arrow-turn-down stat-icon" style="color:#00ff88;"></i>
+            <div class="stat-label"><?= cms_text('maal_label_in', 'Total Pemasukan') ?></div>
+            <h2 class="stat-value text-in">Rp <?= number_format($total_pemasukan ?? 0, 0, ',', '.') ?></h2>
+        </div>
+        
+        <div class="stat-card">
+            <i class="fa-solid fa-arrow-turn-up stat-icon" style="color:#ff5555;"></i>
+            <div class="stat-label"><?= cms_text('maal_label_out', 'Total Pengeluaran') ?></div>
+            <h2 class="stat-value text-out">Rp <?= number_format($total_pengeluaran ?? 0, 0, ',', '.') ?></h2>
         </div>
     </div>
 
-    <!-- Action Button -->
+    <!-- Action Button (Admin Only) -->
     <?php if(!empty($can_manage)): ?>
-    <button class="btn-donate" id="btnTogglePanel">
-        <i class="fa-solid fa-hand-holding-dollar"></i> <?= cms_text('maal_btn_record', 'Catat Transaksi') ?>
-    </button>
-    <?php else: ?>
-    <div style="background: rgba(212,175,55,0.05); border: 1px solid rgba(212,175,55,0.15); border-radius: 16px; padding: 20px 30px; margin-bottom: 60px; text-align: center; max-width: 500px;">
-        <i class="fa-solid fa-lock" style="color: rgba(212,175,55,0.4); font-size: 1.5rem; margin-bottom: 10px;"></i>
-        <div style="font-size: 0.85rem; color: #888;"><?= cms_html('maal_notice_role', 'Pencatatan transaksi hanya dapat dilakukan oleh <strong style="color: var(--gold-main);">Bendahara</strong> atau <strong style="color: var(--gold-main);">Admin</strong>.') ?></div>
+    <div style="text-align: center;">
+        <button class="btn-donate" id="btnTogglePanel">
+            <i class="fa-solid fa-file-invoice-dollar"></i> <?= cms_text('maal_btn_record', 'Catat Transaksi Baru') ?>
+        </button>
     </div>
     <?php endif; ?>
 
-    <!-- Specific Campaigns -->
-    <div class="campaign-grid">
-        <div class="campaign-card">
-            <div class="camp-icon"><i class="fa-solid fa-mosque"></i></div>
-            <h3 class="camp-title"><?= cms_text('maal_camp1_title', 'Wakaf Sumur & Masjid') ?></h3>
-            <p class="camp-desc"><?= cms_text('maal_camp1_desc', 'Pembangunan fasilitas air bersih dan perluasan area shalat di pelosok Nusa Tenggara.') ?></p>
-            <div class="progress-track"><div class="progress-fill" style="width: 75%;"></div></div>
-            <div class="progress-stats"><span><?= cms_text('maal_camp1_current', 'Terkumpul: 75%') ?></span><span><?= cms_text('maal_camp1_target', 'Target: Rp 200 Jt') ?></span></div>
+    <!-- THE OPEN LEDGER (Public Transparency) -->
+    <div class="ledger-section" id="openLedger">
+        <div class="ledger-header">
+            <div>
+                <h2 class="ledger-title"><?= cms_text('maal_history_title', 'Buku Besar Kas') ?></h2>
+                <div class="ledger-subtitle"><?= cms_text('maal_history_subtitle', 'Laporan Transparansi Arus Keuangan') ?></div>
+            </div>
+            <div><i class="fa-solid fa-book-open" style="color:var(--gold-main); font-size:2rem; opacity:0.5;"></i></div>
         </div>
-
-        <div class="campaign-card">
-            <div class="camp-icon"><i class="fa-solid fa-book-open-reader"></i></div>
-            <h3 class="camp-title"><?= cms_text('maal_camp2_title', 'Beasiswa Perintis') ?></h3>
-            <p class="camp-desc"><?= cms_text('maal_camp2_desc', 'Bantuan dana pendidikan penuh untuk 10 santri tahfidz berprestasi hingga sarjana.') ?></p>
-            <div class="progress-track"><div class="progress-fill" style="width: 40%;"></div></div>
-            <div class="progress-stats"><span><?= cms_text('maal_camp2_current', 'Terkumpul: 40%') ?></span><span><?= cms_text('maal_camp2_target', 'Target: Rp 500 Jt') ?></span></div>
-        </div>
-
-        <div class="campaign-card">
-            <div class="camp-icon"><i class="fa-solid fa-heart-pulse"></i></div>
-            <h3 class="camp-title"><?= cms_text('maal_camp3_title', 'Dana Darurat Ukhuwah') ?></h3>
-            <p class="camp-desc"><?= cms_text('maal_camp3_desc', 'Kas siaga untuk membantu entitas angkatan atau keluarga inti yang tertimpa musibah/sakit keras.') ?></p>
-            <div class="progress-track"><div class="progress-fill" style="width: 90%;"></div></div>
-            <div class="progress-stats"><span><?= cms_text('maal_camp3_current', 'Terkumpul: 90%') ?></span><span><?= cms_text('maal_camp3_target', 'Target: Rp 100 Jt') ?></span></div>
+        
+        <div class="ledger-list">
+            <?php if(!empty($transactions)): ?>
+                <?php foreach($transactions as $tx): ?>
+                    <div class="tx-item">
+                        <div class="tx-left">
+                            <div class="tx-type-icon <?= $tx['transaction_type'] == 'Pemasukan' ? 'tx-in-bg' : 'tx-out-bg' ?>">
+                                <i class="fa-solid <?= $tx['transaction_type'] == 'Pemasukan' ? 'fa-arrow-down' : 'fa-arrow-up' ?>"></i>
+                            </div>
+                            <div class="tx-details">
+                                <div class="tx-title"><?= esc($tx['description']) ?></div>
+                                <div class="tx-meta">
+                                    <div><i class="fa-regular fa-user"></i> <span class="donor-name"><?= $tx['user_id'] ? esc($tx['nama_panggilan']) : 'Hamba Allah' ?></span></div>
+                                    <div><i class="fa-regular fa-calendar"></i> <?= date('d M Y, H:i', strtotime($tx['created_at'])) ?></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tx-amount <?= $tx['transaction_type'] == 'Pemasukan' ? 'in' : 'out' ?>">
+                            <?= $tx['transaction_type'] == 'Pemasukan' ? '+' : '-' ?> Rp <?= number_format($tx['amount'], 0, ',', '.') ?>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <div style="text-align:center; padding:50px 20px; color:var(--text-muted);">
+                    <i class="fa-solid fa-folder-open" style="font-size:3rem; margin-bottom:15px; opacity:0.3;"></i><br>
+                    <?= cms_text('maal_history_empty', 'Belum ada catatan transaksi di dalam buku besar ini.') ?>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
+
 </div>
 
-<!-- Panel Transaksi (Slide) — Hanya untuk Bendahara/Admin -->
+<!-- Panel Transaksi (Form Slide) — Hanya untuk Bendahara/Admin -->
 <?php if(!empty($can_manage)): ?>
 <div class="transactions-panel" id="txPanel">
-    <div class="panel-title"><?= cms_text('maal_panel_title', 'Pencatatan Ledger') ?></div>
+    <button class="btn-close-panel" id="btnClosePanel"><i class="fa-solid fa-xmark"></i></button>
+    <div class="panel-title"><?= cms_text('maal_panel_title', 'Pencatatan Entri') ?></div>
+    
+    <div style="font-size:0.85rem; color:var(--text-muted); margin-bottom:20px; line-height:1.5;">
+        Anda login sebagai otoritas pengelola kas. Harap pastikan data dimasukkan dengan teliti untuk menjaga integritas Buku Besar.
+    </div>
+
     <form action="/baitul-maal/store" method="POST" class="maal-form">
         <?= csrf_field() ?>
+        
+        <label>JENIS TRANSAKSI</label>
         <select name="type" required>
-            <option value="Pemasukan">Pemasukan (Khidmah/Infaq)</option>
-            <option value="Pengeluaran">Pengeluaran (Operasional)</option>
+            <option value="Pemasukan"><?= cms_text('maal_opt_in', 'Pemasukan (Khidmah/Infaq)') ?></option>
+            <option value="Pengeluaran"><?= cms_text('maal_opt_out', 'Pengeluaran (Operasional)') ?></option>
         </select>
-        <input type="text" name="amount" placeholder="<?= cms_raw('maal_ph_amount', 'Nominal (Misal: 500000)') ?>" required>
-        <textarea name="description" rows="2" placeholder="<?= cms_raw('maal_ph_desc', 'Keterangan transaksi...') ?>" required></textarea>
-        <label style="display:flex; align-items:center; gap:10px; font-size:0.8rem; color:#888; margin-bottom:15px; cursor:pointer;">
-            <input type="checkbox" name="anonim" value="1" style="width:auto; margin:0;"> <?= cms_text('maal_anon_label', 'Hamba Allah (Anonim)') ?>
+        
+        <label>NOMINAL (RUPIAH)</label>
+        <input type="number" name="amount" placeholder="<?= cms_raw('maal_ph_amount', 'Contoh: 500000') ?>" required min="1">
+        
+        <label>KETERANGAN/TUJUAN</label>
+        <textarea name="description" rows="3" placeholder="<?= cms_raw('maal_ph_desc', 'Deskripsi detail transaksi...') ?>" required></textarea>
+        
+        <label style="display:flex; align-items:center; gap:10px; flex-direction:row; cursor:pointer; margin-bottom: 25px;">
+            <input type="checkbox" name="anonim" value="1" style="width:auto; margin:0;"> 
+            <span style="color:#fff; font-size:0.9rem;"><?= cms_text('maal_anon_label', 'Catat Sebagai Hamba Allah (Anonim)') ?></span>
         </label>
-        <button type="submit" class="btn-submit-maal"><?= cms_text('maal_btn_submit', 'Simpan Transaksi') ?></button>
+        
+        <button type="submit" class="btn-submit-maal"><i class="fa-solid fa-file-signature"></i> <?= cms_text('maal_btn_submit', 'Otorisasi Entri') ?></button>
     </form>
-
-    <div class="panel-title" style="margin-top:20px;"><?= cms_text('maal_history_title', 'Riwayat Transaksi') ?></div>
-    <?php if(!empty($transactions)): ?>
-        <?php foreach($transactions as $tx): ?>
-            <div class="tx-card">
-                <div class="tx-type-icon <?= $tx['transaction_type'] == 'Pemasukan' ? 'tx-in' : 'tx-out' ?>">
-                    <i class="fa-solid <?= $tx['transaction_type'] == 'Pemasukan' ? 'fa-arrow-down' : 'fa-arrow-up' ?>"></i>
-                </div>
-                <div style="flex:1;">
-                    <div style="font-weight:bold; font-size:1.1rem;">Rp <?= number_format($tx['amount'], 0, ',', '.') ?></div>
-                    <div style="font-size:0.8rem; color:var(--gold-main);"><?= $tx['user_id'] ? esc($tx['nama_panggilan']) : 'Hamba Allah' ?></div>
-                    <div style="font-size:0.75rem; color:#888; margin-top:3px;"><?= esc($tx['description']) ?></div>
-                </div>
-            </div>
-        <?php endforeach; ?>
-    <?php else: ?>
-        <div style="text-align:center; padding:20px; color:#555; font-size:0.8rem;"><?= cms_text('maal_history_empty', 'Belum ada catatan transaksi.') ?></div>
-    <?php endif; ?>
 </div>
 <?php endif; ?>
+
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
@@ -373,23 +388,30 @@ Baitul Maal - Constellation of Giving
 document.addEventListener("DOMContentLoaded", () => {
     // Intro Animations
     gsap.from(".maal-header", { y: -30, opacity: 0, duration: 1, ease: "power3.out" });
-    gsap.from(".well-container", { scale: 0.5, opacity: 0, duration: 1.5, ease: "back.out(1.5)" });
-    gsap.from(".btn-donate", { y: 30, opacity: 0, duration: 1, delay: 0.5, ease: "power2.out" });
-    gsap.from(".campaign-card", { y: 50, opacity: 0, duration: 0.8, stagger: 0.2, delay: 0.8, ease: "power2.out" });
+    gsap.from(".stat-card", { y: 40, opacity: 0, duration: 0.8, stagger: 0.15, ease: "back.out(1.2)" });
+    gsap.from(".ledger-section", { y: 50, opacity: 0, duration: 1, delay: 0.4, ease: "power2.out" });
 
     // Toggle Panel (hanya jika user adalah bendahara/admin)
     const btnToggle = document.getElementById('btnTogglePanel');
+    const btnClose = document.getElementById('btnClosePanel');
     const txPanel = document.getElementById('txPanel');
     
-    if (btnToggle && txPanel) {
-        btnToggle.addEventListener('click', () => {
-            txPanel.classList.toggle('open');
-            if(navigator.vibrate) navigator.vibrate(20);
-        });
+    if (txPanel) {
+        if (btnToggle) {
+            btnToggle.addEventListener('click', () => {
+                txPanel.classList.add('open');
+                if(navigator.vibrate) navigator.vibrate(20);
+            });
+        }
+        if (btnClose) {
+            btnClose.addEventListener('click', () => {
+                txPanel.classList.remove('open');
+            });
+        }
 
         // Auto-open panel on flashdata success/error
         <?php if(session()->getFlashdata('success') || session()->getFlashdata('error')): ?>
-            txPanel.classList.add('open');
+            // txPanel.classList.add('open'); // Kita matikan auto-open agar user bisa melihat toast notification
         <?php endif; ?>
     }
 });

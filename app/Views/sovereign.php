@@ -124,7 +124,9 @@
         @media (max-width: 768px) {
             .btn-vault-back { top: 20px; left: 20px; padding: 8px 15px; font-size: 10px; }
             .theme-toggle { top: 20px; right: 20px; width: 35px; height: 35px; font-size: 14px; }
+            .btn-export { top: 65px; right: 20px; width: 35px; height: 35px; font-size: 14px; }
             .tactical-hud { display: none; }
+            .ux-overlay { bottom: 20px; }
         }
     </style>
 </head>

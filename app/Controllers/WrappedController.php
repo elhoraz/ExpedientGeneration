@@ -7,6 +7,8 @@ use CodeIgniter\Controller;
 
 class WrappedController extends BaseController
 {
+    protected $helpers = ['cms'];
+
     public function index()
     {
         $userId = session()->get('user_id');
@@ -23,15 +25,18 @@ class WrappedController extends BaseController
         $totalPrestise = $user['prestise_points'] ?? 0;
         
         // Cek login harian / kunjungan
-        $loginCount = $db->table('activity_logs')
-            ->where('user_id', $userId)
-            ->where('action_type', 'LOGIN')
-            ->countAllResults();
+        $loginCount = 0;
+        if ($db->tableExists('activity_logs')) {
+            $loginCount = $db->table('activity_logs')
+                ->where('user_id', $userId)
+                ->where('type', 'LOGIN')
+                ->countAllResults();
+        }
             
         if ($loginCount == 0 && $db->tableExists('prestise_logs')) {
              $loginCount = $db->table('prestise_logs')
                  ->where('user_id', $userId)
-                 ->where('reason', 'LOGIN_DAILY')
+                 ->where('activity_name', 'LOGIN_DAILY')
                  ->countAllResults();
         }
 
@@ -39,11 +44,11 @@ class WrappedController extends BaseController
         $totalSedekah = 0;
         if ($db->tableExists('baitul_maal')) {
             $bmResult = $db->table('baitul_maal')
-                ->selectSum('nominal')
+                ->selectSum('amount')
                 ->where('user_id', $userId)
-                ->where('tipe', 'masuk')
+                ->where('transaction_type', 'Pemasukan')
                 ->get()->getRow();
-            $totalSedekah = $bmResult->nominal ?? 0;
+            $totalSedekah = $bmResult->amount ?? 0;
         }
 
         // 3. Majlis (Total partisipasi vote/diskusi)

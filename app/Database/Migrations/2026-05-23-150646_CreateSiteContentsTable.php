@@ -39,7 +39,7 @@ class CreateSiteContentsTable extends Migration
             ],
         ]);
         $this->forge->addKey('id', true);
-        $this->forge->createTable('site_contents');
+        $this->forge->createTable('site_contents', true);
     }
 
     public function down()

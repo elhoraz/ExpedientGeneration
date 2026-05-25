@@ -116,6 +116,25 @@ Profil Eksklusif - Expedient
                         </div>
                     </div>
 
+                    <!-- WA Notification Toggle -->
+                    <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(37,211,102,0.05); border: 1px solid rgba(37,211,102,0.2); border-radius: 16px; padding: 16px 20px; margin-bottom: 24px;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div style="width: 36px; height: 36px; border-radius: 50%; background: rgba(37,211,102,0.15); display: flex; align-items: center; justify-content: center; color: #25d366; font-size: 1rem; flex-shrink: 0;">
+                                <i class="fa-brands fa-whatsapp"></i>
+                            </div>
+                            <div>
+                                <div style="font-size: 0.8rem; font-weight: 600; color: var(--text-primary); letter-spacing: 0.5px;">Notifikasi WhatsApp</div>
+                                <div style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 2px;">Event baru, pengumuman, & alumni bergabung</div>
+                            </div>
+                        </div>
+                        <label class="wa-toggle-switch" style="position: relative; display: inline-block; width: 48px; height: 26px; flex-shrink: 0; cursor: pointer;">
+                            <input type="checkbox" name="wa_notif_opt_in" id="waToggle" value="1" style="opacity: 0; width: 0; height: 0;" <?= !empty($user['wa_notif_opt_in']) ? 'checked' : '' ?>>
+                            <span style="position: absolute; inset: 0; background: <?= !empty($user['wa_notif_opt_in']) ? '#25d366' : 'rgba(255,255,255,0.1)' ?>; border-radius: 26px; transition: 0.3s; border: 1px solid rgba(255,255,255,0.1);" id="waToggleTrack">
+                                <span style="position: absolute; content: ''; height: 20px; width: 20px; left: 3px; bottom: 2px; background: white; border-radius: 50%; transition: 0.3s; transform: <?= !empty($user['wa_notif_opt_in']) ? 'translateX(22px)' : 'translateX(0)' ?>;" id="waToggleThumb"></span>
+                            </span>
+                        </label>
+                    </div>
+
                     <div class="form-group">
                         <input type="text" name="nama_lengkap" class="form-input" id="inp_lengkap" placeholder=" " value="<?= esc($user['nama_lengkap']) ?>" required>
                         <label class="form-label" for="inp_lengkap"><?= cms_text('profil_lbl_lengkap', 'Nama Lengkap Resmi') ?></label>
@@ -254,6 +273,22 @@ Profil Eksklusif - Expedient
 <script>
     window.dbFaceDataRaw = <?= empty($face_data_db) || $face_data_db === 'null' ? 'null' : $face_data_db ?>;
     window.isAdmin = false;
+
+    // ── WA Toggle Animation ──
+    const waToggle = document.getElementById('waToggle');
+    const waTrack  = document.getElementById('waToggleTrack');
+    const waThumb  = document.getElementById('waToggleThumb');
+    if (waToggle) {
+        waToggle.addEventListener('change', function () {
+            if (this.checked) {
+                waTrack.style.background = '#25d366';
+                waThumb.style.transform  = 'translateX(22px)';
+            } else {
+                waTrack.style.background = 'rgba(255,255,255,0.1)';
+                waThumb.style.transform  = 'translateX(0)';
+            }
+        });
+    }
 </script>
 <script src="/assets/js/profil.js"></script>
 <?= $this->endSection() ?>

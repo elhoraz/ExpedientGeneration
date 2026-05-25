@@ -62,7 +62,7 @@ class NexusService
     private function getAllUsersWithSyndicateExcept(int $userId)
     {
         return $this->db->table('users')
-            ->select('users.id, users.nama_lengkap, users.nama_panggilan, users.foto_profil, users.cita_cita, users.motivasi_hidup, syndicate.kategori as syndicate_category')
+            ->select('users.id, users.public_token, users.nama_lengkap, users.nama_panggilan, users.foto_profil, users.cita_cita, users.motivasi_hidup, syndicate.kategori as syndicate_category')
             ->join('syndicate', 'syndicate.user_id = users.id', 'left')
             ->where('users.id !=', $userId)
             ->get()->getResultArray();

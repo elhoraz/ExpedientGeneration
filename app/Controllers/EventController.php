@@ -72,12 +72,20 @@ class EventController extends BaseController
         $gamificationService = service('gamificationService');
         $gamificationService->addPrestise($userId, 'CREATE_EVENT', 20);
 
-        // Broadcast Notification
+        // Broadcast Notification via Pusher
         $pusher = service('pusherService');
         $pusher->broadcastNotification(
             'Agenda Baru',
             $this->request->getPost('title') . ' telah dijadwalkan.',
             '/event'
+        );
+
+        // Broadcast Notification via WhatsApp
+        $waService = service('whatsAppService');
+        $waService->notifyNewEvent(
+            $this->request->getPost('title'),
+            date('d M Y', strtotime($this->request->getPost('event_date'))),
+            $this->request->getPost('location') ?? ''
         );
 
         return redirect()->to('/event')->with('success', 'Agenda berhasil dipublikasikan.');

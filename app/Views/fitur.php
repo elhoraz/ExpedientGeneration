@@ -40,15 +40,6 @@ Expedient Vault - Koleksi Fitur Premium
                 </div>
             </a>
 
-            <a href="/profil" class="premium-card js-tilt-card">
-                <div class="card-bg" style="background-image: url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2670&auto=format&fit=crop');"></div>
-                <i class="fa-solid fa-id-badge card-icon"></i>
-                <div class="card-content">
-                    <h3 class="card-title"><?= cms_text('fitur_profil_title', 'Profil Entitas') ?></h3>
-                    <p class="card-desc"><?= cms_text('fitur_profil_desc', 'Pusat manajemen data pribadi dan pengaturan kunci keamanan fisik (Passkey).') ?></p>
-                    <div class="launch-btn"><?= cms_text('fitur_profil_btn', 'Kelola Profil') ?> <i class="fa-solid fa-arrow-right-long"></i></div>
-                </div>
-            </a>
 
             <a href="/wasiat" class="premium-card js-tilt-card">
                 <div class="card-bg" style="background-image: url('https://images.unsplash.com/photo-1614064641913-a520f596a247?q=80&w=2574&auto=format&fit=crop'); filter: grayscale(80%) brightness(0.3);"></div>
@@ -199,6 +190,17 @@ Expedient Vault - Koleksi Fitur Premium
 <script src="/vendor/gsap/gsap.min.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
+    // === SCROLL RESTORATION LOGIC ===
+    const savedScroll = sessionStorage.getItem('vaultScrollPos');
+    
+    // Save scroll position whenever leaving the page (more reliable than click events)
+    window.addEventListener('beforeunload', () => {
+        const mainWrapper = document.querySelector('.main-wrapper');
+        if (mainWrapper) {
+            sessionStorage.setItem('vaultScrollPos', mainWrapper.scrollTop);
+        }
+    });
+    
     // === MAGNETIC 3D TILT EFFECT (AWWWARDS JS) ===
     const cards = document.querySelectorAll('.js-tilt-card');
     cards.forEach(card => {
@@ -223,11 +225,28 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Intro Animation
-    gsap.from(".dashboard-header", { opacity: 0, y: -50, duration: 1.5, ease: "expo.out" });
-    gsap.from(".premium-card", { 
-        opacity: 0, y: 100, rotationX: -20, duration: 1.2, 
-        stagger: 0.15, ease: "back.out(1.5)", delay: 0.2 
+    // Delay animation and scroll restoration until full page load
+    window.addEventListener("load", () => {
+        if (savedScroll && parseInt(savedScroll) > 0) {
+            // Skip intro animation to prevent visual jumping
+            gsap.set(".dashboard-header", { opacity: 1, y: 0 });
+            gsap.set(".premium-card", { opacity: 1, y: 0, rotationX: 0 });
+            
+            // Restore scroll position after the global loader has been dismissed
+            setTimeout(() => {
+                const mainWrapper = document.querySelector('.main-wrapper');
+                if (mainWrapper) {
+                    mainWrapper.scrollTo({ top: parseInt(savedScroll), left: 0, behavior: 'instant' });
+                }
+            }, 350);
+        } else {
+            // Intro Animation for fresh visits
+            gsap.from(".dashboard-header", { opacity: 0, y: -50, duration: 1.5, ease: "expo.out" });
+            gsap.from(".premium-card", { 
+                opacity: 0, y: 100, rotationX: -20, duration: 1.2, 
+                stagger: 0.15, ease: "back.out(1.5)", delay: 0.2 
+            });
+        }
     });
 });
 </script>

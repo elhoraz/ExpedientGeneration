@@ -7,10 +7,10 @@
     
     <meta name="csrf-token" content="<?= csrf_hash() ?>">
     <meta name="theme-color" content="#030504">
-    <meta name="description" content="Museum Galeri Digital VVIP & Arsip Direktori Expedient Generation.">
-    <meta property="og:title" content="<?= $this->renderSection('title') ?> - Expedient Generation">
-    <meta property="og:description" content="Akses portal eksklusif peninggalan dan jejak langkah Expedient.">
-    <meta property="og:image" content="<?= base_url('images/logo-utuh.png') ?>">
+    <meta name="description" content="<?= cms_raw('global_meta_desc', 'Museum Galeri Digital VVIP & Arsip Direktori Expedient Generation.') ?>">
+    <meta property="og:title" content="<?= $this->renderSection('title') ?> - <?= cms_raw('global_meta_title', 'Expedient Generation') ?>">
+    <meta property="og:description" content="<?= cms_raw('global_meta_og_desc', 'Akses portal eksklusif peninggalan dan jejak langkah Expedient.') ?>">
+    <meta property="og:image" content="<?= base_url(cms_raw('global_meta_og_image', 'images/logo-utuh.png')) ?>">
     <meta property="og:url" content="<?= current_url() ?>">
     <meta property="og:type" content="website">
 
@@ -72,8 +72,8 @@
     <div id="aegisToast" class="aegis-toast">
         <i class="fa-solid fa-compass-drafting aegis-icon"></i>
         <div class="aegis-content">
-            <span class="aegis-title">Entitas Terdeteksi Masuk</span>
-            <strong id="radarName" class="aegis-name">Seseorang</strong>
+            <span class="aegis-title"><?= cms_text('global_toast_title', 'Entitas Terdeteksi Masuk') ?></span>
+            <strong id="radarName" class="aegis-name"><?= cms_text('global_toast_name', 'Seseorang') ?></strong>
         </div>
     </div>
 
@@ -109,10 +109,10 @@
     <!-- ================= NOTIFICATION DROPDOWN ================= -->
     <div id="notifDropdown" class="notif-dropdown">
         <div style="padding:15px 20px; border-bottom:1px solid rgba(212,175,55,0.2); font-family:'Playfair Display',serif; color:#d4af37; font-size:1.1rem; font-weight:700;">
-            Pemberitahuan
+            <?= cms_text('global_notif_title', 'Pemberitahuan') ?>
         </div>
         <div id="notifList" style="max-height:300px; overflow-y:auto; padding:10px;">
-            <div style="text-align:center; padding:20px; color:var(--text-secondary); font-size:0.85rem;">Tidak ada pesan baru.</div>
+            <div style="text-align:center; padding:20px; color:var(--text-secondary); font-size:0.85rem;"><?= cms_text('global_notif_empty', 'Tidak ada pesan baru.') ?></div>
         </div>
     </div>
     <?php endif; ?>
@@ -134,7 +134,7 @@
     </a>
     <?php else: ?>
     <!-- Guest: tombol login & register -->
-    <a href="/login" class="guest-auth-btn hover-trigger" id="guestLoginBtn" title="Masuk ke Portal" style="
+    <a href="/login" class="guest-auth-btn hover-trigger" id="guestLoginBtn" title="<?= cms_raw('global_btn_login_tooltip', 'Masuk ke Portal') ?>" style="
         position: fixed; top: 30px; right: 160px; z-index: 100;
         background: linear-gradient(135deg, rgba(212,175,55,0.2), rgba(212,175,55,0.05));
         backdrop-filter: blur(20px); border: 1px solid rgba(212,175,55,0.5);
@@ -145,7 +145,7 @@
         display: flex; align-items: center; gap: 8px;
         box-shadow: 0 8px 25px rgba(0,0,0,0.2);
     ">
-        <i class="fa-solid fa-right-to-bracket"></i> Masuk
+        <i class="fa-solid fa-right-to-bracket"></i> <?= cms_text('global_btn_login', 'Masuk') ?>
     </a>
     <?php endif; ?>
 

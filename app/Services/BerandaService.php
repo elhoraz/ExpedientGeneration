@@ -118,9 +118,19 @@ class BerandaService
             ->orderBy('created_at', 'DESC')
             ->findAll(5);
 
-        // Lorong Kenangan (Galeri)
-        $galleryModel = new \App\Models\BerandaGalleryModel();
-        $galeri = $galleryModel->orderBy('created_at', 'ASC')->findAll();
+        // Lorong Kenangan (Galeri) - Dinamis dari CMS Global
+        $cmsModel = new \App\Models\SiteContentModel();
+        $galleryKeys = $cmsModel->like('content_key', 'beranda_kenangan_img')->orderBy('content_key', 'ASC')->findAll();
+        
+        $galeri = [];
+        foreach ($galleryKeys as $gk) {
+            $num = str_replace('beranda_kenangan_img', '', $gk['content_key']);
+            $capRow = $cmsModel->where('content_key', 'beranda_kenangan_cap' . $num)->first();
+            $galeri[] = [
+                'image_url' => $gk['content_value'],
+                'caption'   => $capRow ? $capRow['content_value'] : 'Kenangan'
+            ];
+        }
 
         return [
             'total_alumni'      => $totalAlumni,

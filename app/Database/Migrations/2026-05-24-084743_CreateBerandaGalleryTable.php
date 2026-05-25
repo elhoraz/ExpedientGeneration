@@ -34,7 +34,7 @@ class CreateBerandaGalleryTable extends Migration
             ],
         ]);
         $this->forge->addKey('id', true);
-        $this->forge->createTable('beranda_gallery');
+        $this->forge->createTable('beranda_gallery', true);
     }
 
     public function down()

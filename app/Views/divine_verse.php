@@ -113,12 +113,42 @@
           .to('#verseCard', { opacity:1, y:0, scale:1, duration:1, ease:"power3.out" }, 0.8)
           .to('#btnReveal', { opacity:1, y:0, duration:0.8, ease:"power3.out" }, 1.2);
 
+        const surahMap = {
+            'Al-Fatihah': 1, 'Al-Baqarah': 2, 'Ali Imran': 3, 'An-Nisa': 4, 'Al-Ma\'idah': 5, 'Al-An\'am': 6, 'Al-A\'raf': 7, 'Al-Anfal': 8, 'At-Taubah': 9, 'Yunus': 10,
+            'Hud': 11, 'Yusuf': 12, 'Ar-Ra\'d': 13, 'Ibrahim': 14, 'Al-Hijr': 15, 'An-Nahl': 16, 'Al-Isra': 17, 'Al-Kahf': 18, 'Maryam': 19, 'Taha': 20,
+            'Al-Anbiya': 21, 'Al-Hajj': 22, 'Al-Mu\'minun': 23, 'An-Nur': 24, 'Al-Furqan': 25, 'Asy-Syu\'ara': 26, 'An-Naml': 27, 'Al-Qasas': 28, 'Al-\'Ankabut': 29, 'Ar-Rum': 30,
+            'Luqman': 31, 'As-Sajdah': 32, 'Al-Ahzab': 33, 'Saba': 34, 'Fatir': 35, 'Yasin': 36, 'As-Saffat': 37, 'Sad': 38, 'Az-Zumar': 39, 'Ghafir': 40,
+            'Fussilat': 41, 'Asy-Syura': 42, 'Az-Zukhruf': 43, 'Ad-Dukhan': 44, 'Al-Jasiyah': 45, 'Al-Ahqaf': 46, 'Muhammad': 47, 'Al-Fath': 48, 'Al-Hujurat': 49, 'Qaf': 50,
+            'Az-Zariyat': 51, 'At-Tur': 52, 'An-Najm': 53, 'Al-Qamar': 54, 'Ar-Rahman': 55, 'Al-Waqi\'ah': 56, 'Al-Hadid': 57, 'Al-Mujadilah': 58, 'Al-Hasyr': 59, 'Al-Mumtahanah': 60,
+            'As-Saff': 61, 'Al-Jumu\'ah': 62, 'Al-Munafiqun': 63, 'At-Tagabun': 64, 'At-Talaq': 65, 'At-Tahrim': 66, 'Al-Mulk': 67, 'Al-Qalam': 68, 'Al-Haqqah': 69, 'Al-Ma\'arij': 70,
+            'Nuh': 71, 'Al-Jinn': 72, 'Al-Muzzammil': 73, 'Al-Muddassir': 74, 'Al-Qiyamah': 75, 'Al-Insan': 76, 'Al-Mursalat': 77, 'An-Naba': 78, 'An-Nazi\'at': 79, '\'Abasa': 80,
+            'At-Takwir': 81, 'Al-Infitar': 82, 'Al-Mutaffifin': 83, 'Al-Insyiqaq': 84, 'Al-Buruj': 85, 'At-Tariq': 86, 'Al-A\'la': 87, 'Al-Gasyiyah': 88, 'Al-Fajr': 89, 'Al-Balad': 90,
+            'Asy-Syams': 91, 'Al-Lail': 92, 'Ad-Duha': 93, 'Al-Insyirah': 94, 'At-Tin': 95, 'Al-\'Alaq': 96, 'Al-Qadr': 97, 'Al-Bayyinah': 98, 'Az-Zalzalah': 99, 'Al-\'Adiyat': 100,
+            'Al-Qari\'ah': 101, 'At-Takasur': 102, 'Al-\'Asr': 103, 'Al-Humazah': 104, 'Al-Fil': 105, 'Quraisy': 106, 'Al-Ma\'un': 107, 'Al-Kausar': 108, 'Al-Kafirun': 109, 'An-Nasr': 110,
+            'Al-Lahab': 111, 'Al-Ikhlas': 112, 'Al-Falaq': 113, 'An-Nas': 114
+        };
+        let currentAudio = null;
+
         function revealVerse() {
+            if (!verses || verses.length === 0) {
+                document.getElementById('ayatArabic').innerText = "Data Kosong";
+                document.getElementById('ayatLatin').innerText = "";
+                document.getElementById('ayatMeaning').innerText = "Belum ada kalam yang terdaftar di database. Silakan jalankan database seeder.";
+                document.getElementById('ayatSource').innerText = "SYSTEM";
+                
+                document.getElementById('btnReveal').style.display = 'none';
+                
+                const reveal = gsap.timeline();
+                reveal.to('#ayatArabic', { opacity:1, y:0, duration:1.2, ease:"power3.out" })
+                      .to('#ayatMeaning', { opacity:1, y:0, duration:0.8, ease:"power3.out" }, 0.5)
+                      .to('#ayatSource', { opacity:1, duration:0.6, ease:"power3.out" }, 1.0);
+                return;
+            }
             const v = verses[Math.floor(Math.random() * verses.length)];
-            document.getElementById('ayatArabic').innerText = v.ar;
-            document.getElementById('ayatLatin').innerText = '"' + v.lt + '"';
-            document.getElementById('ayatMeaning').innerText = v.mn;
-            document.getElementById('ayatSource').innerText = v.src;
+            document.getElementById('ayatArabic').innerText = v.arabic;
+            document.getElementById('ayatLatin').innerText = '"' + v.latin + '"';
+            document.getElementById('ayatMeaning').innerText = v.meaning;
+            document.getElementById('ayatSource').innerText = v.source;
 
             document.getElementById('btnReveal').style.display = 'none';
             if (navigator.vibrate) navigator.vibrate([30, 50, 30]);
@@ -134,9 +164,39 @@
                       document.getElementById('btnNew').style.display = 'inline-block';
                       gsap.from('#btnNew', { opacity:0, y:10, duration:0.5 });
                   });
+
+            // Audio Logic
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+            }
+            
+            const match = v.source.match(/QS\.\s+(.+?):\s+(\d+)/);
+            if (match) {
+                const surahName = match[1];
+                const ayahNum = parseInt(match[2], 10);
+                const surahNum = surahMap[surahName];
+                
+                if (surahNum) {
+                    const s = String(surahNum).padStart(3, '0');
+                    const a = String(ayahNum).padStart(3, '0');
+                    // Menggunakan audio Misyari Rasyid Alafasy dari CDN Quran.com
+                    const audioUrl = `https://audio.qurancdn.com/Alafasy/mp3/${s}${a}.mp3`;
+                    
+                    currentAudio = new Audio(audioUrl);
+                    currentAudio.play().catch(e => {
+                        console.log("Audio autoplay blocked by browser: " + e);
+                    });
+                }
+            }
         }
 
         function resetVerse() {
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+            }
+
             gsap.set(['#bismillah','#ayatArabic','#divider','#ayatLatin','#ayatMeaning','#ayatSource'], { opacity:0 });
             gsap.set(['#ayatArabic','#ayatLatin','#ayatMeaning'], { y:15 });
             gsap.set('#divider', { width:0 });
@@ -145,7 +205,10 @@
         }
 
         document.getElementById('btnReveal').addEventListener('click', revealVerse);
-        document.getElementById('btnNew').addEventListener('click', () => { resetVerse(); setTimeout(revealVerse, 300); });
+        document.getElementById('btnNew').addEventListener('click', () => { 
+            resetVerse(); 
+            revealVerse(); 
+        });
     });
     </script>
 </body>

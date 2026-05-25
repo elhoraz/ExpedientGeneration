@@ -98,4 +98,12 @@ class Services extends BaseService
         }
         return new \App\Services\AnalyticsService();
     }
+
+    public static function whatsAppService($getShared = true)
+    {
+        if ($getShared) {
+            return static::getSharedInstance('whatsAppService');
+        }
+        return new \App\Services\WhatsAppService();
+    }
 }

@@ -73,7 +73,7 @@
             top: 30px;
             bottom: 0;
             width: 50%;
-            z-index: 90;
+            z-index: 15;
             cursor: pointer;
         }
         .nav-left { left: 0; }
@@ -98,6 +98,7 @@
             background-position: center;
             background-repeat: no-repeat;
             z-index: 10;
+            pointer-events: none;
         }
         .slide.active {
             opacity: 1;
@@ -260,7 +261,7 @@
                 </div>
             </div>
             
-            <button onclick="window.location.href='/fitur'" class="gs-anim" style="margin-top:40px; padding:15px 30px; background:var(--gold); color:#000; font-weight:bold; border:none; border-radius:30px; letter-spacing:2px; font-family:'Inter'; cursor:pointer;"><?= cms_text('wrapped_btn_back', 'KEMBALI KE VAULT') ?></button>
+            <button onclick="window.location.href='/fitur'" class="gs-anim" style="pointer-events: auto; margin-top:40px; padding:15px 30px; background:var(--gold); color:#000; font-weight:bold; border:none; border-radius:30px; letter-spacing:2px; font-family:'Inter'; cursor:pointer;"><?= cms_text('wrapped_btn_back', 'KEMBALI KE VAULT') ?></button>
             <canvas class="confetti-canvas" id="confettiCanvas"></canvas>
         </div>
 

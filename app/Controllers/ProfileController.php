@@ -65,14 +65,15 @@ class ProfileController extends BaseController
         }
 
         $dataUpdate = [
-            'nama_lengkap'   => $this->request->getPost('nama_lengkap'),
-            'nama_panggilan' => $this->request->getPost('nama_panggilan'),
-            'email'          => $this->request->getPost('email'),
-            'no_whatsapp'    => $this->request->getPost('no_whatsapp'),
-            'motivasi_hidup' => $this->request->getPost('motivasi_hidup'),
-            'cita_cita'      => $this->request->getPost('cita_cita'),
-            'akun_ig'        => $this->request->getPost('akun_ig'),
-            'akun_tiktok'    => $this->request->getPost('akun_tiktok'),
+            'nama_lengkap'    => $this->request->getPost('nama_lengkap'),
+            'nama_panggilan'  => $this->request->getPost('nama_panggilan'),
+            'email'           => $this->request->getPost('email'),
+            'no_whatsapp'     => $this->request->getPost('no_whatsapp'),
+            'motivasi_hidup'  => $this->request->getPost('motivasi_hidup'),
+            'cita_cita'       => $this->request->getPost('cita_cita'),
+            'akun_ig'         => $this->request->getPost('akun_ig'),
+            'akun_tiktok'     => $this->request->getPost('akun_tiktok'),
+            'wa_notif_opt_in' => $this->request->getPost('wa_notif_opt_in') ? 1 : 0,
         ];
 
         // Proses Foto Profil Base64 menggunakan ProfileService

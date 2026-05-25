@@ -23,13 +23,9 @@ class CmsController extends BaseController
             $groupedContents[$prefix][] = $c;
         }
 
-        $galleryModel = new \App\Models\BerandaGalleryModel();
-        $galleries = $galleryModel->orderBy('created_at', 'DESC')->findAll();
-
         $data = [
             'title' => 'CMS Manager',
-            'groupedContents' => $groupedContents,
-            'galleries' => $galleries
+            'groupedContents' => $groupedContents
         ];
 
         return view('admin/cms_manager', $data);
@@ -109,48 +105,89 @@ class CmsController extends BaseController
             'new_value' => $value
         ]);
     }
-    public function addGallery()
+    public function batchUpdate()
     {
-        $file = $this->request->getFile('image_file');
-        $caption = $this->request->getPost('caption');
-
-        if ($file && $file->isValid() && !$file->hasMoved()) {
-            $newName = $file->getRandomName();
-            // Ensure directory exists
-            if (!is_dir(FCPATH . 'uploads/gallery/')) {
-                mkdir(FCPATH . 'uploads/gallery/', 0777, true);
-            }
-            $file->move(FCPATH . 'uploads/gallery/', $newName);
-            
-            $model = new \App\Models\BerandaGalleryModel();
-            $model->insert([
-                'image_url' => '/uploads/gallery/' . $newName,
-                'caption'   => $caption
-            ]);
-            
-            ActivityLogger::log('ADMIN_CMS', "Menambahkan gambar baru ke Galeri Beranda", session()->get('user_id'));
-            return redirect()->to('/admin/cms')->with('success', 'Gambar berhasil ditambahkan ke Galeri.');
+        if (!$this->request->isAJAX()) {
+            return $this->response->setStatusCode(403)->setJSON(['status' => 'error', 'message' => 'Hanya AJAX']);
         }
 
-        return redirect()->to('/admin/cms')->with('error', 'Gagal mengunggah gambar.');
-    }
-
-    public function deleteGallery($id)
-    {
-        $model = new \App\Models\BerandaGalleryModel();
-        $item = $model->find($id);
+        $model = new SiteContentModel();
         
-        if ($item) {
-            $filePath = FCPATH . ltrim($item['image_url'], '/');
-            if (file_exists($filePath)) {
-                unlink($filePath);
+        $updatesStr = $this->request->getPost('updates');
+        $deletionsStr = $this->request->getPost('deletions');
+        $newKeysStr = $this->request->getPost('new_keys');
+
+        $updates = json_decode($updatesStr, true) ?? [];
+        $deletions = json_decode($deletionsStr, true) ?? [];
+        $newKeys = json_decode($newKeysStr, true) ?? [];
+
+        // 1. Proses Updates
+        foreach ($updates as $id => $val) {
+            $row = $model->find($id);
+            if (!$row) continue;
+            
+            if ($val === '[NEW_FILE]') {
+                $file = $this->request->getFile('file_' . $id);
+                if ($file && $file->isValid() && !$file->hasMoved()) {
+                    $newName = $file->getRandomName();
+                    $file->move(FCPATH . 'uploads/cms/', $newName);
+                    $val = '/uploads/cms/' . $newName;
+                } else {
+                    continue; // Skip jika upload gagal
+                }
             }
             
-            $model->delete($id);
-            ActivityLogger::log('ADMIN_CMS', "Menghapus gambar dari Galeri Beranda", session()->get('user_id'));
-            return redirect()->to('/admin/cms')->with('success', 'Gambar berhasil dihapus dari Galeri.');
+            $model->update($id, ['content_value' => $val]);
+            \Config\Services::cache()->delete('cms_content_' . $row['content_key']);
         }
-        
-        return redirect()->to('/admin/cms')->with('error', 'Gambar tidak ditemukan.');
+
+        // 2. Proses Deletions
+        foreach ($deletions as $id) {
+            $row = $model->find($id);
+            if ($row) {
+                // If it's an image, delete the physical file
+                if ($row['content_type'] == 'image') {
+                    $filePath = FCPATH . ltrim($row['content_value'], '/');
+                    if (file_exists($filePath)) @unlink($filePath);
+                }
+                $model->delete($id);
+                \Config\Services::cache()->delete('cms_content_' . $row['content_key']);
+            }
+        }
+
+        // 3. Proses New Keys
+        foreach ($newKeys as $idx => $nk) {
+            $val = $nk['value'];
+            if ($val === '[NEW_FILE]') {
+                $file = $this->request->getFile('new_file_' . $idx);
+                if ($file && $file->isValid() && !$file->hasMoved()) {
+                    $newName = $file->getRandomName();
+                    $file->move(FCPATH . 'uploads/cms/', $newName);
+                    $val = '/uploads/cms/' . $newName;
+                } else {
+                    $val = '';
+                }
+            }
+
+            // Check if key already exists
+            $existing = $model->where('content_key', $nk['key'])->first();
+            if ($existing) {
+                $model->update($existing['id'], ['content_value' => $val, 'content_type' => $nk['type']]);
+            } else {
+                $model->insert([
+                    'content_key' => $nk['key'],
+                    'content_value' => $val,
+                    'content_type' => $nk['type']
+                ]);
+            }
+            \Config\Services::cache()->delete('cms_content_' . $nk['key']);
+        }
+
+        ActivityLogger::log('ADMIN_CMS', "Melakukan Bulk Update CMS", session()->get('user_id'));
+
+        return $this->response->setJSON([
+            'status' => 'success',
+            'message' => 'Perubahan CMS berhasil disimpan.'
+        ]);
     }
 }

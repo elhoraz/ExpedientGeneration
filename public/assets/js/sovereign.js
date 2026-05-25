@@ -24,14 +24,15 @@ import * as THREE from 'three';
             // FOG
             scene.fog = new THREE.FogExp2(0x020202, 0.015);
 
-            const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 200);
-            camera.position.set(0, 0, 28); 
+            const isMobile = window.innerWidth < 768;
+            const camera = new THREE.PerspectiveCamera(isMobile ? 55 : 45, window.innerWidth / window.innerHeight, 0.1, 200);
+            camera.position.set(0, 0, isMobile ? 26 : 28); 
 
-            // Renderer Murni
-            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "high-performance", preserveDrawingBuffer: true });
+            // Renderer Murni (Optimized for Mobile)
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "high-performance" });
             renderer.setClearColor( 0x000000, 0 ); 
             renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1 : 2));
             renderer.shadowMap.enabled = true;
             renderer.shadowMap.type = THREE.PCFSoftShadowMap;
             renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -52,8 +53,8 @@ import * as THREE from 'three';
             spotLight.angle = Math.PI / 4;
             spotLight.penumbra = 0.8;
             spotLight.castShadow = true;
-            spotLight.shadow.mapSize.width = 2048;
-            spotLight.shadow.mapSize.height = 2048;
+            spotLight.shadow.mapSize.width = isMobile ? 1024 : 2048;
+            spotLight.shadow.mapSize.height = isMobile ? 1024 : 2048;
             scene.add(spotLight);
 
             const rimLight = new THREE.PointLight(PURE_GOLD, 60, 40); 
@@ -393,7 +394,11 @@ import * as THREE from 'three';
             const kFrontTex = createKTAFrontTexture(false); const kFrontBump = createKTAFrontTexture(true);
             const kBackTex = createKTABackTexture(false);   const kBackBump = createKTABackTexture(true);
 
-            const cardMaterialProps = { 
+            const cardMaterialProps = isMobile ? {
+                roughness: 0.3,
+                metalness: 0.5,
+                bumpScale: 0.015
+            } : { 
                 roughness: 0.15, 
                 metalness: 0.6, 
                 clearcoat: 1.0, 
@@ -446,7 +451,9 @@ import * as THREE from 'three';
                 const control2 = new THREE.Vector3(clipGlobalPos.x, clipGlobalPos.y + (stringLength * 0.3) + sag, clipGlobalPos.z - 1);
                 
                 const curve = new THREE.CubicBezierCurve3(anchorPos, control1, control2, clipGlobalPos);
-                const tubeGeo = new THREE.TubeGeometry(curve, 40, 0.12, 8, false);
+                
+                // Kurangi poligon tali secara drastis di mobile untuk mengurangi beban Garbage Collection
+                const tubeGeo = new THREE.TubeGeometry(curve, isMobile ? 12 : 40, 0.12, isMobile ? 4 : 8, false);
 
                 if (lanyardMesh) {
                     lanyardMesh.geometry.dispose(); 
@@ -473,7 +480,8 @@ import * as THREE from 'three';
             ktaMesh.castShadow = true;
             scene.add(ktaMesh);
 
-            const ktaRestPos = new THREE.Vector3(-8, 0, -2); 
+            const ktaRestPos = new THREE.Vector3(); 
+            if (window.innerWidth < 768) { ktaRestPos.set(-4, -5, -4); } else { ktaRestPos.set(-8, 0, -2); }
             ktaMesh.position.copy(ktaRestPos);
 
             // ==========================================
@@ -513,17 +521,101 @@ import * as THREE from 'three';
             });
 
             // ==========================================
-            // EXPORT ID CARD (PNG)
+            // EXPORT ID CARD (COMPOSITE 2D POSTER)
             // ==========================================
             const btnExportId = document.getElementById('btnExportId');
             if (btnExportId) {
                 btnExportId.addEventListener('click', () => {
-                    // Paksa render frame terbaru sebelum ditangkap
-                    renderer.render(scene, camera);
+                    if (!texFront.image || !texBack.image || !kFrontTex.image || !kBackTex.image) return;
+
+                    // Buat Canvas komposit 2D
+                    const compCanvas = document.createElement('canvas');
+                    const ctx = compCanvas.getContext('2d');
                     
-                    const dataURL = renderer.domElement.toDataURL('image/png');
+                    // Resolusi poster eksklusif
+                    compCanvas.width = 2400;
+                    compCanvas.height = 1800;
+
+                    // Latar Belakang Gelap Elegan
+                    const bgGrad = ctx.createLinearGradient(0, 0, compCanvas.width, compCanvas.height);
+                    bgGrad.addColorStop(0, '#1a1d24');
+                    bgGrad.addColorStop(1, '#050505');
+                    ctx.fillStyle = bgGrad;
+                    ctx.fillRect(0, 0, compCanvas.width, compCanvas.height);
+
+                    // Ornamen Teks Latar
+                    ctx.fillStyle = 'rgba(212, 175, 55, 0.05)';
+                    ctx.font = '900 150px "Playfair Display", serif';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('SOVEREIGN DIRECTIVE', 1200, 300);
+
+                    // Fungsi untuk menggambar kartu dengan efek khusus
+                    function drawCard(img, dx, dy, dw, dh, isKTA=false) {
+                        ctx.save();
+                        // Bayangan realistis
+                        ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
+                        ctx.shadowBlur = 40;
+                        ctx.shadowOffsetX = 15;
+                        ctx.shadowOffsetY = 25;
+                        
+                        // Buat clipping mask berujung membulat
+                        ctx.beginPath();
+                        ctx.roundRect(dx, dy, dw, dh, isKTA ? 30 : 50);
+                        ctx.clip();
+                        
+                        // Gambar tekstur kartu asli (yang belum terkena shader 3D)
+                        ctx.drawImage(img, dx, dy, dw, dh);
+                        ctx.restore();
+                        
+                        // Beri efek highlight emas di pinggiran
+                        ctx.save();
+                        ctx.strokeStyle = 'rgba(212, 175, 55, 0.5)';
+                        ctx.lineWidth = 4;
+                        ctx.beginPath();
+                        ctx.roundRect(dx, dy, dw, dh, isKTA ? 30 : 50);
+                        ctx.stroke();
+                        ctx.restore();
+                    }
+
+                    // Tali / Lanyard (Simulasi 2D elegan)
+                    ctx.save();
+                    ctx.strokeStyle = '#111';
+                    ctx.lineWidth = 15;
+                    ctx.lineCap = 'round';
+                    ctx.shadowColor = 'rgba(0,0,0,0.5)';
+                    ctx.shadowBlur = 10;
+                    ctx.shadowOffsetY = 10;
+                    
+                    // Tali Kiri
+                    ctx.beginPath(); ctx.moveTo(400, -100); ctx.bezierCurveTo(400, 200, 500, 400, 500, 500); ctx.stroke();
+                    // Tali Kanan
+                    ctx.beginPath(); ctx.moveTo(600, -100); ctx.bezierCurveTo(600, 200, 500, 400, 500, 500); ctx.stroke();
+                    
+                    // Klip Baja Emas
+                    ctx.fillStyle = '#d4af37';
+                    ctx.fillRect(470, 480, 60, 40);
+                    ctx.fillStyle = '#222';
+                    ctx.fillRect(490, 520, 20, 30); // penyambung ke ID
+                    ctx.restore();
+
+                    // Dimensi ID Card (Rasio 5.4 : 8.6)
+                    const idW = 600; const idH = 955;
+                    // Draw Front ID Card
+                    drawCard(texFront.image, 200, 550, idW, idH);
+                    // Draw Back ID Card
+                    drawCard(texBack.image, 900, 550, idW, idH);
+
+                    // Dimensi KTA (Rasio 5.4 : 3.4)
+                    const ktaW = 600; const ktaH = 377;
+                    // Draw Front KTA
+                    drawCard(kFrontTex.image, 1600, 550, ktaW, ktaH, true);
+                    // Draw Back KTA
+                    drawCard(kBackTex.image, 1600, 1000, ktaW, ktaH, true);
+
+                    // Unduh hasil komposit
+                    const dataURL = compCanvas.toDataURL('image/png', 1.0);
                     const link = document.createElement('a');
-                    link.download = `Expedient_ID_${expedientData.nama.replace(/\s+/g, '_')}.png`;
+                    link.download = `Sovereign_ID_${expedientData.nama.replace(/\s+/g, '_')}.png`;
                     link.href = dataURL;
                     document.body.appendChild(link);
                     link.click();
@@ -770,6 +862,7 @@ import * as THREE from 'three';
             // ==========================================
             // RENDER LOOP
             // ==========================================
+            let lastCardPos = new THREE.Vector3();
             function animate() {
                 requestAnimationFrame(animate);
                 const time = Date.now() * 0.001;
@@ -846,15 +939,20 @@ import * as THREE from 'three';
                     ktaMesh.rotation.z += (floatRotZ - ktaMesh.rotation.z) * 0.05; 
                 }
 
-                updateLanyardGeometry();
+                // Cek apakah kartu bergerak untuk menghentikan loop geometri tali (optimasi CPU)
+                if (idCard.position.distanceToSquared(lastCardPos) > 0.0001) {
+                    updateLanyardGeometry();
+                    lastCardPos.copy(idCard.position);
+                }
+
                 renderer.render(scene, camera); 
             }
             animate();
 
             window.addEventListener('resize', () => {
                 camera.aspect = window.innerWidth / window.innerHeight;
-                camera.fov = window.innerWidth < 600 ? 65 : 45;
-                if(window.innerWidth < 600) { ktaRestPos.set(-4, -5, -4); } else { ktaRestPos.set(-8, 0, -2); }
+                camera.fov = window.innerWidth < 768 ? 65 : 45;
+                if(window.innerWidth < 768) { ktaRestPos.set(-4, -5, -4); } else { ktaRestPos.set(-8, 0, -2); }
                 camera.updateProjectionMatrix();
                 renderer.setSize(window.innerWidth, window.innerHeight);
             });

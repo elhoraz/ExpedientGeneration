@@ -29,6 +29,7 @@ class UserModel extends Model
         'birth_month_day',     // Optimasi query birthday (format MM-DD)
         'remember_token',      // Keep Login token
         'remember_token_expires', // Token expiry date
+        'wa_notif_opt_in',     // Preferensi notifikasi WhatsApp
         // NOTE: 'role', 'is_active', 'prestise_points' SENGAJA tidak disertakan
         // untuk mencegah mass assignment. Update via $db->table() secara eksplisit.
     ];
